@@ -2,7 +2,9 @@
 NAME = cub3D
 
 # sources
-_SRC =	core/main.c
+_SRC =	core/main.c			\
+		hooks/hooks.c		\
+		utils/utils.c		\
 
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)

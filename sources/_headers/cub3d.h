@@ -18,4 +18,10 @@
 // Keycodes
 # define ESC_KEY 53
 
+// Hooks
+int	key_hook(int keycode, t_mlx_data *m_d);
+int	die_hook(t_mlx_data *m_d);
+// Utils
+void	error_die(t_mlx_data *m_d, char *error_text, int exit_status);
+
 #endif
