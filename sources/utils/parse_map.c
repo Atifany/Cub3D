@@ -43,15 +43,15 @@ static char	**multiply_by_64(char **cut_text)
 		j = 0;
 		while (j < (int)ft_strlen(cut_text[i/TILE_SPLIT]) * TILE_SPLIT)
 		{
-			if (cut_text[i/TILE_SPLIT][j/TILE_SPLIT] == 'N')
-			{
-				if (i % TILE_SPLIT == TILE_SPLIT/2 && j % TILE_SPLIT == TILE_SPLIT/2)
-					map[i][j] = cut_text[i/TILE_SPLIT][j/TILE_SPLIT];
-				else
-					map[i][j] = '0';
-			}
-			else
-				map[i][j] = cut_text[i/TILE_SPLIT][j/TILE_SPLIT];
+			//if (cut_text[i/TILE_SPLIT][j/TILE_SPLIT] == 'N')
+			//{
+				//if (i % TILE_SPLIT == TILE_SPLIT/2 && j % TILE_SPLIT == TILE_SPLIT/2)
+					map[i][j] = cut_text[i/TILE_SPLIT][j/TILE_SPLIT] - 48;
+				//else
+				//	map[i][j] = '0';
+			//}
+			//else
+			//	map[i][j] = cut_text[i/TILE_SPLIT][j/TILE_SPLIT];
 			j++;
 		}
 		i++;
@@ -150,6 +150,6 @@ bool	parse_file(t_game_data *g_d, char *file_path)
 	display_charpp(cut_text);
 	g_d->map = multiply_by_64(cut_text);
 	printf("Ready to use:\n");
-	display_charpp(g_d->map);
+	//display_charpp(g_d->map);
 	return (true);
 }

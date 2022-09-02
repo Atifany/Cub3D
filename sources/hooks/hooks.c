@@ -28,14 +28,14 @@ int loop_hook(t_game_data *g_d)
 {
 	static int clock = 0;
 
-	if (clock++ < 10)
+	if (clock++ < 2000)
 		return 0;
 	else
 	{
 		clock = 0;
-		//g_d->player->view_angle += 1;
-		//if (g_d->player->view_angle == 361)
-		//	g_d->player->view_angle = 0;
+		// g_d->player->view_angle += 1;
+		// if (g_d->player->view_angle == 361)
+		// 	g_d->player->view_angle = 0;
 		mlx_clear_window(g_mlx->mlx, g_mlx->win);
 		draw_frame(g_d);
 	}

@@ -18,7 +18,7 @@
 # define WRITE 1	// never touch 'em
 # define WIN_WIDTH 1920
 # define WIN_HEIGHT 1080
-# define TILE_SPLIT 3
+# define TILE_SPLIT 64
 // Keycodes
 # define ESC_KEY 53
 
