@@ -13,5 +13,9 @@
 // General macros
 # define READ 0		// never touch 'em
 # define WRITE 1	// never touch 'em
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+// Keycodes
+# define ESC_KEY 53
 
 #endif
