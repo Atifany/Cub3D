@@ -4,6 +4,7 @@
 // Standart libs
 # include <stdio.h>
 # include <stdbool.h>
+# include <math.h>
 // Embedded libs
 # include "../../libs/libft/libft.h"
 # include "../../libs/mlx/mlx.h"
@@ -19,5 +20,10 @@
 # define ESC_KEY 53
 
 int do_smt(t_mlx_data	*mlx_data);
+// Hooks
+int	key_hook(int keycode, t_mlx_data *m_d);
+int	die_hook(t_mlx_data *m_d);
+// Utils
+void	error_die(t_mlx_data *m_d, char *error_text, int exit_status);
 
 #endif

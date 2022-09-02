@@ -1,57 +1,31 @@
 
 #include "../_headers/cub3d.h"
 
-
-// Just rewinded how to use mlx there.
-// Destroy when work it seriously.
-
-
-int	init_window(t_mlx_data *mlx_data)
+int	init_window(t_mlx_data *m_d)
 {
-	mlx_data->mlx = mlx_init();
-	if (!mlx_data->mlx)
+	m_d->mlx = mlx_init();
+	if (!m_d->mlx)
 		return (1);
-	mlx_data->win = mlx_new_window(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT, "cub3D");
-	if (!mlx_data->win)
+	m_d->win = mlx_new_window(m_d->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
+	if (!m_d->win)
 		return (1);
-	for (size_t i = 150; i < 250; i++)
-	{
-		for (size_t j = 350; j < 550; j++)
-		{
-			mlx_pixel_put(mlx_data->mlx, mlx_data->win, i, j, 0x00FF0000);
-		}
-	}
 	return (0);
 }
 
-int	end_program_hook(int keycode, t_mlx_data *mlx_data)
+int	body(t_mlx_data *m_d)
 {
-	if (keycode == ESC_KEY)
-	{
-		mlx_destroy_window(mlx_data->mlx, mlx_data->win);
-		//clear_on_exit();
-		exit(0);
-	}
-	
-	return (0);
-}
-
-int	body(t_mlx_data *mlx_data)
-{
-	mlx_key_hook(mlx_data->win, end_program_hook, mlx_data);
-	mlx_loop(mlx_data->mlx);
+	mlx_key_hook(m_d->win, key_hook, m_d);
+	mlx_hook(m_d->win, 17, 0L, die_hook, m_d);
+	mlx_loop(m_d->mlx);
 	return (0);
 }
 
 int	main()
 {
-	t_mlx_data	mlx_data;
+	t_mlx_data	m_d;
 
-	if (init_window(&mlx_data))
-	{
-		printf("Error: init failed\n");
-		return (1);
-	}
-	do_smt(&mlx_data);
-	return (body(&mlx_data));
+	if (init_window(&m_d))
+		error_die(&m_d, "Cub3D: Error: Initialization failed.\n", 1);
+	do_smt(&m_d);
+	return (body(&m_d));
 }
