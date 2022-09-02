@@ -2,7 +2,7 @@
 NAME = cub3D
 
 # sources
-_SRC =	core/main.c
+_SRC =	core/main.c graphics/draw.c
 
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)
@@ -20,7 +20,7 @@ LIBS =	$(LIBFT:%=$(LIBFT_DIR)%) \
 
 # Make commands
 CC = gcc
-C_FLAGS = -O2 -Wall -Wextra -Werror
+#C_FLAGS = -O2 -Wall -Wextra -Werror
 MLX_FLAGS = -framework OpenGL -framework AppKit
 RM = rm -f
 

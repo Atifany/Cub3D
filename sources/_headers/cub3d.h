@@ -18,4 +18,6 @@
 // Keycodes
 # define ESC_KEY 53
 
+int do_smt(t_mlx_data	*mlx_data);
+
 #endif

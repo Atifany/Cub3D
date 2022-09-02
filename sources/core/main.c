@@ -1,5 +1,5 @@
 
-#include "../headers/cub3d.h"
+#include "../_headers/cub3d.h"
 
 
 // Just rewinded how to use mlx there.
@@ -52,5 +52,6 @@ int	main()
 		printf("Error: init failed\n");
 		return (1);
 	}
+	do_smt(&mlx_data);
 	return (body(&mlx_data));
 }
