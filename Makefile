@@ -2,10 +2,14 @@
 NAME = cub3D
 
 # sources
-_SRC =	core/main.c			\
-		graphics/draw.c		\
-		hooks/hooks.c		\
-		utils/utils.c		\
+_SRC =	core/main.c					\
+		graphics/draw.c				\
+		hooks/hooks.c				\
+		utils/utils.c				\
+		utils/validation.c			\
+		utils/parse_map.c			\
+		utils/get_next_line.c		\
+		utils/get_next_line_utils.c	\
 
 SRC_DIR = sources
 SRC = $(_SRC:%=$(SRC_DIR)/%)

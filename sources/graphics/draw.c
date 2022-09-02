@@ -1,45 +1,83 @@
 #include "../_headers/cub3d.h"
 #include "../_headers/data_structures.h"
 
-int draw_line(int x, char *line)
+double	deg_to_rad(float a)
 {
-    int i;
-
-    while (i < 480);
-        mlx_pixel_put(m_d->mlx, m_d->win, x, i, 0x00FFFFFF);
+	return (a * M_PI / 180);
 }
 
-t_point *cast_ray(t_game_data *gd, int ang)
+int distance(t_point p1, t_point p2)
 {
-    t_point end = {gd->player.position.x + (640 * cos(gd->player.view + ang)), 
-    gd->player.position.y + (640 * sin(gd->player.view + ang))};
-    int p = abs(gd->player.position.x - end.x) + abs(gd->player.position.y - end.y);
+    return (sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2)));
+}
 
-    int i = -1;
-    while (++i < p+1)
+int draw_line(int col, t_point collision, t_game_data *gd)
+{
+    //printf("drawing_line\n");
+    int i;
+    int d = distance(collision, (gd->player->position));
+    int color = 0x00ffffff;
+
+    if ((d < 256))
     {
-        int x = gd->player.position.x + i * (end.x - gd->player.position.x) / p;
-        int y = gd->player.position.y + i * (end.y - gd->player.position.y) / p;
-        if (gd->map[x][y])
+        color -= (0x00010101*(d));
+        int h = 0;
+        if (d > 40)
+            h = 19200/d;
+        
+        
+        i = 480-h /2;
+        printf("%d %d\n", h, d);
+        while (h--)
         {
-            return {x, y};
+            mlx_pixel_put(g_mlx->mlx, g_mlx->win, col, i, color);
+            i++;
         }
     }
 }
 
-int draw_frame(t_game_data gd)
+t_point cast_ray(t_game_data *gd, int col)
 {
-    int i;
-    
-    i = -1;
-    while (++i < gd->fov)
-        draw_line(i, cast_ray(gd, i));
+    t_point end = {gd->player->position.x + (640 * cos(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col))), 
+    gd->player->position.y + (640 * sin(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col)))};
+    int p = abs(gd->player->position.x - end.x) + abs(gd->player->position.y - end.y);
+    t_point ret;
+
+    printf("casting_ray to x: %d y: %d\n", end.x, end.y);
+    printf(" at angle %.6f\n", gd->player->view_angle + (float)gd->fov / (float)640 * (float)col);
+
+    int i = -1;
+    while (++i < p+1)
+    {
+        int x = gd->player->position.x + i * (end.x - gd->player->position.x) / p;
+        int y = gd->player->position.y + i * (end.y - gd->player->position.y) / p;
+        if (gd->map[x][y])
+        {
+            ret.x = x;
+            ret.y = y;
+            printf("ray_collision at %d %d\n", ret.x, ret.y);
+            //mlx_pixel_put(g_mlx->mlx, g_mlx->win, ret.x+10, ret.y+10, 0x00ffffff);
+            return ret;
+        }
+    }
 }
 
-int do_smt(t_mlx_data	*m_d)
+int draw_frame(t_game_data *gd)
 {
-    draw_square(m_d, 100, 100);
-    //draw_line(m_d, 100,100,100 + 1000, 100 + 1);git 
-    draw_square(m_d, 500, 900);
-    return 0;
+    // printf("drawing_frame\n");
+    // for (int i = 0; i < 5*64; i++)
+    // {
+    //     for (int j = 0; j < 5*64; j++)
+    //     {
+    //         if (i == 70 && j == 70)
+    //             printf("P");    
+    //         else
+    //             printf("%d", gd->map[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+    int i;
+    i = -1;
+    while (++i < 640)
+        draw_line(i, cast_ray(gd, i), gd);
 }
