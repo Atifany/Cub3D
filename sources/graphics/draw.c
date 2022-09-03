@@ -3,7 +3,7 @@
 
 double	deg_to_rad(float a)
 {
-	return (a * M_PI / 180);
+	return (a * M_PI / 180); // уменьшить точность Пи для увеличения производительности
 }
 
 int distance(t_point p1, t_point p2)
@@ -38,9 +38,9 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 
 t_point cast_ray(t_game_data *gd, int col)
 {
-    t_point end = {gd->player->position.x + (640 * cos(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col))), 
-    gd->player->position.y + (640 * sin(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col)))};
-    int p = abs(gd->player->position.x - end.x) + abs(gd->player->position.y - end.y);
+    t_point end = {gd->player->position.x + (640 * cos(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col))), // приведение к флоат занимает много времени 
+    gd->player->position.y + (640 * sin(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col)))}; // триг. функции работают очень долго(можно составить массив заранее вычисленных значений)
+    int p = abs(gd->player->position.x - end.x) + abs(gd->player->position.y - end.y);                                    // Можно использовать другой способ вычисления точки в которую пускается луч или использовать другой алгоритм пуска луча 
     t_point ret;
 
    // printf("casting_ray to x: %d y: %d\n", end.x, end.y);
@@ -49,34 +49,35 @@ t_point cast_ray(t_game_data *gd, int col)
     int i = -1;
     while (++i < p+1)
     {
-        int x = gd->player->position.x + i * (end.x - gd->player->position.x) / p;
-        int y = gd->player->position.y + i * (end.y - gd->player->position.y) / p;
+        int x = gd->player->position.x + i * (end.x - gd->player->position.x) / p; // Заместо этого можно создать флотовый вектор направления
+        int y = gd->player->position.y + i * (end.y - gd->player->position.y) / p; // и прибавлять его в этом цикле к координатам игрока
         if (gd->map[x][y])
         {
             ret.x = x;
             ret.y = y;
-            if (ret.x<= 0 || ret.y <= 0 || ret.x > 5*64|| ret.y > 6*64)
-				return ret;
+            //if (ret.x<= 0 || ret.y <= 0 || ret.x > 5*64|| ret.y > 6*64)
+		//		return ret;
 
 			//printf("ray_collision at %d %d\n", ret.x, ret.y);
-            mlx_pixel_put(g_mlx->mlx, g_mlx->win, ret.x+10, ret.y+10, 0x00ffffff);
-                    }
+		mlx_pixel_put(g_mlx->mlx, g_mlx->win, ret.x+10, ret.y+10, 0x00ffffff);
+		return ret;
+       }
     }
 }
 
 int draw_frame(t_game_data *gd)
 {
-    printf("drawing_frame\n");
-    for (int i = 0; i < 5*64; i++)
-    {
-        for (int j = 0; j < 5*64; j++)
-        {
-                printf("%d", gd->map[i][j]);
-        }
-        printf("\n");
-    }
+    //printf("drawing_frame\n");
+    //for (int i = 0; i < 5*64; i++)
+    //{
+    //    for (int j = 0; j < 5*64; j++)
+    //    {
+    //            printf("%d", gd->map[i][j]);
+    //    }
+    //    printf("\n");
+    //}
     int i;
     i = -1;
-    while (++i < 640)
+    while (++i < 640) // можно ууменьшить разрешение
         draw_line(i, cast_ray(gd, i), gd);
 }
