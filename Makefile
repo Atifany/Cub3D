@@ -32,7 +32,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     MLX_FLAGS += -lXext -lX11
     LIBS += -lm
-    MLX_DIR = libs/mlx_linux/
+    MLX_DIR = libs/mlx_linux_1/
 else
     MLX_FLAGS += -framework OpenGL -framework AppKit
     MLX_DIR = libs/mlx/
