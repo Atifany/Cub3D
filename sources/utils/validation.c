@@ -3,7 +3,7 @@
 
 bool	is_valid_file(char *file_path)
 {
-	if (ft_strnstr(file_path, ".cub", INT32_MAX)
+	if (ft_strnstr(file_path, ".cub", INT_MAX)
 		!= (int)ft_strlen(file_path) - (int)ft_strlen(".cub"))
 		return (false);
 	return (true);

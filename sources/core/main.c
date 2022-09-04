@@ -3,13 +3,13 @@
 
 t_mlx_data	*g_mlx;
 
-int	init_window(void)
+int	init_window(t_game_data *g_d)
 {
 	g_mlx = (t_mlx_data *)ft_calloc(1, sizeof(t_mlx_data));
 	g_mlx->mlx = mlx_init();
 	if (!g_mlx->mlx)
 		return (1);
-	g_mlx->win = mlx_new_window(g_mlx->mlx, WIN_WIDTH, WIN_HEIGHT, "Cub3D");
+	g_mlx->win = mlx_new_window(g_mlx->mlx, g_d->resolution.x, g_d->resolution.y, "Cub3D");
 	if (!g_mlx->win)
 		return (1);
 	// for (size_t i = 0; i < 1900; i++)
@@ -48,12 +48,12 @@ int	main(int argc, char **argv)
 	file_name = gnl_join(&maps_path, ft_strdup(argv[1]), ft_strlen(argv[1]));
 	if (!parse_file(&g_d, file_name))
 		error_die(&g_d, "Cub3D: Error: Parsing file failed.\n", 1);
-	if (init_window())
+	if (init_window(&g_d))
 		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
 	g_d.player = malloc(sizeof(t_transform));
-	g_d.player->position.x = 78;
-	g_d.player->position.y = 255;
-	g_d.player->view_angle = 45;
+	g_d.player->position.x = 70;
+	g_d.player->position.y = 70;
+	g_d.player->view_angle = 0;
 	
 	// g_d.map = calloc(65*5, sizeof(int *));
 	// for (int i = 0; i < 64 * 5; i++)

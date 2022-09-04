@@ -8,7 +8,16 @@
 # include <math.h>
 // Embedded libs
 # include "../../libs/libft/libft.h"
-# include "../../libs/mlx/mlx.h"
+
+# ifdef __APPLE__
+#  include "../../libs/mlx/mlx.h"
+#  include "keycodes_macos.h"
+
+# elif __linux__
+#  include "../../libs/mlx_linux/mlx.h"
+#  include "keycodes_linux.h"
+# endif
+
 // Embedded headers
 # include "data_structures.h"
 # include "get_next_line.h"
@@ -16,11 +25,8 @@
 // General macros
 # define READ 0		// never touch 'em
 # define WRITE 1	// never touch 'em
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
 # define TILE_SPLIT 64
-// Keycodes
-# define ESC_KEY 53
+# define TICKS_PER_UPDATE 10000
 
 // Global
 # ifndef GLOBAL
@@ -37,6 +43,8 @@ int	die_hook(t_game_data *g_d);
 void	error_die(t_game_data *g_d, char *error_text, int exit_status);
 void	init_g_d_defaults(t_game_data *g_d);
 void	free_array(char **arr);
+double	dabs(double x);
+double	deg_to_rad(float a);
 // Map processing
 bool	is_valid_input(int argc);
 bool	parse_file(t_game_data *g_d, char *file_path);

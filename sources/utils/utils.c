@@ -1,11 +1,19 @@
 
 #include "../_headers/cub3d.h"
 
+double	dabs(double x)
+{
+	if (x < 0)
+		x *= -1;
+	return (x);
+}
+
 void	init_g_d_defaults(t_game_data *g_d)
 {
 	g_d->map = NULL;
 	g_d->fov = 90;
 	g_d->player = NULL;
+	g_d->resolution = (t_point){1920, 1080};
 }
 
 void	free_array(char **arr)

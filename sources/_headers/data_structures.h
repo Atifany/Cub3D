@@ -36,6 +36,7 @@ typedef struct s_game_data
 	char		**map;
 	t_transform	*player;
 	int			fov;
+	t_point		resolution;
 }	t_game_data;
 
 #endif

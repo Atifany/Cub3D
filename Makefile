@@ -20,15 +20,26 @@ DPS = $(SRC:%.c=%.d)
 # libraries
 LIBFT_DIR = libs/libft/
 LIBFT = libft.a
-MLX_DIR = libs/mlx/
+
 MLX = libmlx.a
 LIBS =	$(LIBFT:%=$(LIBFT_DIR)%) \
 		$(MLX:%=$(MLX_DIR)%)
 
+# flags
+C_FLAGS = -O2 -Wall -Wextra -Werror
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    MLX_FLAGS += -lXext -lX11
+    LIBS += -lm
+    MLX_DIR = libs/mlx_linux/
+else
+    MLX_FLAGS += -framework OpenGL -framework AppKit
+    MLX_DIR = libs/mlx/
+endif
+
 # Make commands
 CC = gcc
-#C_FLAGS = -O2 -Wall -Wextra -Werror
-MLX_FLAGS = -framework OpenGL -framework AppKit
 RM = rm -f
 
 # rules

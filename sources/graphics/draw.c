@@ -34,6 +34,7 @@ int draw_line(int col, t_point collision, t_game_data *gd)
             i++;
         }
     }
+	return (0);
 }
 
 t_point cast_ray(t_game_data *gd, int col)
@@ -63,6 +64,7 @@ t_point cast_ray(t_game_data *gd, int col)
 		return ret;
        }
     }
+	return (ret);
 }
 
 int draw_frame(t_game_data *gd)
@@ -76,8 +78,10 @@ int draw_frame(t_game_data *gd)
     //    }
     //    printf("\n");
     //}
-    int i;
+    int	i;
+	
     i = -1;
-    while (++i < 640) // можно ууменьшить разрешение
-        draw_line(i, cast_ray(gd, i), gd);
+	while (++i < 640) // можно уменьшить разрешение
+		draw_line(i, cast_ray(gd, i), gd);
+	return (0);
 }
