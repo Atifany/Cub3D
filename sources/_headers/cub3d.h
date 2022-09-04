@@ -14,7 +14,7 @@
 #  include "keycodes_macos.h"
 
 # elif __linux__
-#  include "../../libs/mlx_linux/mlx.h"
+#  include "../../libs/mlx_linux_1/mlx.h"
 #  include "keycodes_linux.h"
 # endif
 
