@@ -1,6 +1,8 @@
 #include "../_headers/cub3d.h"
 #include "../_headers/data_structures.h"
 
+////define PI 3.14159265359
+
 double	deg_to_rad(float a)
 {
 	return (a * M_PI / 180); // уменьшить точность Пи для увеличения производительности
@@ -8,7 +10,7 @@ double	deg_to_rad(float a)
 
 int distance(t_point p1, t_point p2)
 {
-    return (sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2)));
+    return (sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2))); // написать свою функцию нахождения квадратов от 1 до дальности прорисовки^2 (это дохуя)
 }
 
 int draw_line(int col, t_point collision, t_game_data *gd)
@@ -37,30 +39,62 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 	return (0);
 }
 
+float create_sin_table(float *arr, t_game_data *gd)
+{
+	float c = gd->resolution.x/gd->fov;
+	arr = malloc(360*c*sizeof(float));
+	int i = 0;
+	
+	while(i < 360*c)
+	{
+		arr[i] = sin(deg_to_rad((float)i/c));
+		i++;
+	}
+	return (0.0f);
+}
+
+float create_cos_table(float *arr, t_game_data *gd)
+{
+	float c = gd->resolution.x/gd->fov;
+	arr = malloc(360*c*sizeof(float));
+	int i = 0;
+	
+	while(i < 360*c)
+	{
+		arr[i] = cos(deg_to_rad((float)i/c));
+		i++;
+	}
+	return (0.0f);
+}
+		 
+
 t_point cast_ray(t_game_data *gd, int col)
 {
-    t_point end = {gd->player->position.x + (640 * cos(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col))), // приведение к флоат занимает много времени 
-    gd->player->position.y + (640 * sin(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col)))}; // триг. функции работают очень долго(можно составить массив заранее вычисленных значений)
-    int p = abs(gd->player->position.x - end.x) + abs(gd->player->position.y - end.y);                                    // Можно использовать другой способ вычисления точки в которую пускается луч или использовать другой алгоритм пуска луча 
     t_point ret;
 
    // printf("casting_ray to x: %d y: %d\n", end.x, end.y);
    // printf(" at angle %.6f\n", gd->player->view_angle + (float)gd->fov / (float)640 * (float)col);
-
+	
+    //
+	float dir_x = cos(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col));// триг. функции работают очень долго(можно составить массив заранее вычисленных значений)
+	float dir_y = sin(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col));// 360*разрешение экрана/на угол обзора
+																									 // sin_tab[gd->player->view_angle * gd.x_res / gd.fov + col]
+	float fx = gd->player->position.x;
+	float fy = gd->player->position.y;
+	//	
     int i = -1;
-    while (++i < p+1)
+    while (++i < 512)
     {
-        int x = gd->player->position.x + i * (end.x - gd->player->position.x) / p; // Заместо этого можно создать флотовый вектор направления
-        int y = gd->player->position.y + i * (end.y - gd->player->position.y) / p; // и прибавлять его в этом цикле к координатам игрока
-        if (gd->map[x][y])
+		fx += dir_x;
+		fy += dir_y;
+        if (gd->map[(int)fx][(int)fy])
         {
-            ret.x = x;
-            ret.y = y;
+            ret.x = (int)fx;
+            ret.y = (int)fy;
             //if (ret.x<= 0 || ret.y <= 0 || ret.x > 5*64|| ret.y > 6*64)
 		//		return ret;
-
-			//printf("ray_collision at %d %d\n", ret.x, ret.y);
-		mlx_pixel_put(g_mlx->mlx, g_mlx->win, ret.x+10, ret.y+10, 0x00ffffff);
+		//printf("ray_collision at %d %d\n", ret.x, ret.y);
+		//mlx_pixel_put(g_mlx->mlx, g_mlx->win, ret.x+10, ret.y+10, 0x00ffffff);
 		return ret;
        }
     }
