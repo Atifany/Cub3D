@@ -51,8 +51,8 @@ int	main(int argc, char **argv)
 	if (init_window(&g_d))
 		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
 	g_d.player = malloc(sizeof(t_transform));
-	g_d.player->position.x = 70;
-	g_d.player->position.y = 70;
+	g_d.player->position.x = 100;
+	g_d.player->position.y = 100;
 	g_d.player->view_angle = 0;
 	
 	// g_d.map = calloc(65*5, sizeof(int *));
@@ -68,7 +68,6 @@ int	main(int argc, char **argv)
 	// }
 	// printf("%d\n", g_d.map);
 	// printf("%d\n", g_d.map[0][0]);
-	
-	draw_frame(&g_d);
+
 	return (body(&g_d));
 }

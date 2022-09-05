@@ -59,4 +59,6 @@ void	display_charpp(char **arr);
 int draw_frame(t_game_data *gd);
 int loop_hook(t_game_data *g_d);
 
+#include <time.h>
+
 #endif

@@ -3,6 +3,14 @@
 
 ////define PI 3.14159265359
 
+void	my_pixel_put(int x, int y, int color)
+{
+	char	*dst;
+
+	dst = g_mlx->addr + (y * g_mlx->line_length + x * (g_mlx->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
+}
+
 double	deg_to_rad(float a)
 {
 	return (a * M_PI / 180); // уменьшить точность Пи для увеличения производительности
@@ -33,7 +41,7 @@ int draw_line(int col, t_point collision, t_game_data *gd)
        // printf("%d %d\n", h, d);
         while (h--)
         {
-            mlx_pixel_put(g_mlx->mlx, g_mlx->win, col, i, color);
+            my_pixel_put(col, i, color);
             i++;
         }
     }
@@ -104,17 +112,11 @@ t_point cast_ray(t_game_data *gd, int col)
 
 int draw_frame(t_game_data *gd)
 {
-    //printf("drawing_frame\n");
-    //for (int i = 0; i < 5*64; i++)
-    //{
-    //    for (int j = 0; j < 5*64; j++)
-    //    {
-    //            printf("%d", gd->map[i][j]);
-    //    }
-    //    printf("\n");
-    //}
     int	i;
-	
+    
+    g_mlx->img = mlx_new_image(g_mlx->mlx, 1920, 1080);
+    g_mlx->addr = mlx_get_data_addr(g_mlx->img, &g_mlx->bits_per_pixel, &g_mlx->line_length,
+								&g_mlx->endian);
     i = -1;
 	while (++i < 640) // можно уменьшить разрешение
 		draw_line(i, cast_ray(gd, i), gd);
