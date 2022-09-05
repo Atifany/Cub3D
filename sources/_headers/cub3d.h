@@ -39,6 +39,10 @@ extern t_mlx_data	*g_mlx;
 // Hooks
 int	key_hook(int keycode, t_game_data *g_d);
 int	die_hook(t_game_data *g_d);
+int	move_player(int keycode, t_game_data *g_d);
+int	rotate_player(int keycode, t_game_data *g_d);
+void	update(t_game_data *g_d);
+int loop_hook(t_game_data *g_d);
 // Utils
 void	error_die(t_game_data *g_d, char *error_text, int exit_status);
 void	init_g_d_defaults(t_game_data *g_d);

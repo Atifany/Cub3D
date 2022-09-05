@@ -24,9 +24,10 @@ int draw_line(int col, t_point collision, t_game_data *gd)
     {
         color -= (0x00010101*(d));
         int h = 0;
-        if (d > 40)
-            h = 19200/d;
-        
+        if (d > 20)
+            h = 19200/d/2;
+        else
+            h = 480;
         
         i = 480-h /2;
        // printf("%d %d\n", h, d);
