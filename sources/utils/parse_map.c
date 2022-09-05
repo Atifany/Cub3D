@@ -14,122 +14,236 @@ void	display_charpp(char **arr)
 	}
 }
 
-static int	usefull_len(char *line)
+void	ddisplay_charpp(char **arr)
 {
-	int len;
+	int j = 0;
+	int i = 0;
 
-	len = (int)ft_strlen(line) - 1;
-	while (ft_isspace(line[len]))
-		len--;
-	return (len + 1);
+	if (!arr || !*arr)
+		printf("DEBUG: array is empty.\n");
+	while (arr[i])
+	{
+		j = 0;
+		while (j < 5 * MAP_SIZE_MULTI)
+		{
+			printf("%d", arr[i][j]);
+			j++;
+		}
+		printf("|\n");
+		i++;
+	}
 }
 
-static char	**multiply_by_64(char **cut_text)
+// static int	usefull_len(char *line)
+// {
+// 	int	i;
+// 	int ans;
+// 
+// 	ans = 0;
+// 	i = (int)ft_strlen(line) - 1;
+// 	while (ft_isspace(line[i]))
+// 		i--;
+// 	ans += i + 1;
+// 	if (ans == 0)
+// 	{
+// 		printf("Line usefull length is: %d\n", ans);
+// 		return (ans);
+// 	}
+// 	i = 0;
+// 	while (ft_isspace(line[i]))
+// 		i++;
+// 	ans -= i;
+// 	printf("Line usefull length is: %d\n", ans);
+// 	return (ans);
+// }
+
+static int	count_items_charpp(char **charpp)
+{
+	int	i;
+
+	i = 0;
+	while (charpp && charpp[i])
+		i++;
+	return (i);
+}
+
+static char	*multiply_line(char *line)
+{
+	int		i;
+	int		j;
+	char	*extended_line;
+
+	extended_line = (char *)ft_calloc(
+		ft_strlen(line) * MAP_SIZE_MULTI + 1, sizeof(char));
+	i = 0;
+	while (line[i])
+	{
+		j = i * MAP_SIZE_MULTI;
+		while (j < (i + 1) * MAP_SIZE_MULTI)
+			extended_line[j++] = line[i];
+		i++;
+	}
+	return (extended_line);
+}
+
+static bool	is_spawner(char c)
+{
+	if (c == 'W' || c == 'E' || c == 'S' || c == 'N')
+		return (true);
+	return (false);
+}
+
+static int	find_left_border(char *line)
+{
+	int	ans;
+
+	ans = 0;
+	while (line[ans] && ft_isspace(line[ans]))
+		ans++;
+	return (ans);
+}
+
+static int	find_right_border(char *line)
+{
+	int	ans;
+
+	ans = ft_strlen(line) - 1;
+	while (line[ans] && ft_isspace(line[ans]))
+		ans--;
+	return (ans);
+}
+
+static char	**read_file(char *file_path)
+{
+	int		i;
+	int		fd;
+	char	*str;
+	char	**file_text;
+
+	file_text = NULL;
+	fd = open(file_path, O_RDONLY, 0777);
+	if (fd == -1)
+		return (NULL);
+	i = 0;
+	str = get_next_line(fd);
+	while (str)
+	{
+		i++;
+		file_text = realloc(file_text, i * sizeof(char *));
+		file_text[i - 1] = ft_strdup(str);
+		free(str);
+		str = get_next_line(fd);
+	}
+	file_text = realloc(file_text, (i + 1) * sizeof(char *));
+	file_text[i] = NULL;
+	return (file_text);
+}
+
+static char	**cut_trailings(char **file_text)
+{
+	int		leftest_border;
+	int		rightest_border;
+	int		i;
+	char	**cut_text;
+
+	leftest_border = INT_MAX;
+	rightest_border = 0;
+	i = 0;
+	while (file_text[i])
+	{
+		if (find_left_border(file_text[i]) < leftest_border)
+			leftest_border = find_left_border(file_text[i]);
+		if (find_right_border(file_text[i]) > rightest_border)
+			rightest_border = find_right_border(file_text[i]);
+		i++;
+	}
+	cut_text = (char **)ft_calloc(i + 1, sizeof(char *));
+	i = 0;
+	while (file_text[i])
+	{
+		cut_text[i] = ft_substr(file_text[i],
+			leftest_border, find_right_border(file_text[i]) - leftest_border + 1);
+		i++;
+	}
+	cut_text[i] = NULL;
+	return (cut_text);
+}
+
+static void	clean_spaces(t_game_data *g_d, char **cut_text)
+{
+	t_point	position;
+	int		view_angle;
+	int		i;
+	int		j;
+
+	view_angle = 135;
+	i = 0;
+	while (cut_text[i])
+	{
+		j = 0;
+		while (cut_text[i][j])
+		{
+			if (ft_isspace(cut_text[i][j]))
+				cut_text[i][j] = '1';
+			else if (is_spawner(cut_text[i][j]))
+			{
+				position.x =
+					(i + 1) * MAP_SIZE_MULTI - MAP_SIZE_MULTI / 2;
+				position.y =
+					(j + 1) * MAP_SIZE_MULTI - MAP_SIZE_MULTI / 2;
+				if (cut_text[i][j] == 'W')
+					view_angle = 225;
+				else if (cut_text[i][j] == 'E')
+					view_angle = 45;
+				else if (cut_text[i][j] == 'S')
+					view_angle = 315;
+				set_player_transform(g_d, position, view_angle);
+				cut_text[i][j] = '0';
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+static char	**multiply_size(char **cut_text)
 {
 	int		j;
 	int		i;
-	int		rows;
+	char	*line_cpy;
 	char	**map;
 
-	rows = 0;
-	while (cut_text[rows])
-		rows++;
-	map = (char **)ft_calloc((rows + 1) * TILE_SPLIT, sizeof(char *));
+	map = (char **)ft_calloc(
+		count_items_charpp(cut_text) * MAP_SIZE_MULTI + 1, sizeof(char *));
 	i = 0;
-	while (i < rows * TILE_SPLIT)
+	while (cut_text[i])
 	{
-		map[i] = (char *)ft_calloc(
-			ft_strlen(cut_text[i/TILE_SPLIT]) * TILE_SPLIT, sizeof(char));
-		j = 0;
-		while (j < (int)ft_strlen(cut_text[i/TILE_SPLIT]) * TILE_SPLIT)
-		{
-			//if (cut_text[i/TILE_SPLIT][j/TILE_SPLIT] == 'N')
-			//{
-				//if (i % TILE_SPLIT == TILE_SPLIT/2 && j % TILE_SPLIT == TILE_SPLIT/2)
-					map[i][j] = cut_text[i/TILE_SPLIT][j/TILE_SPLIT] - 48;
-				//else
-				//	map[i][j] = '0';
-			//}
-			//else
-			//	map[i][j] = cut_text[i/TILE_SPLIT][j/TILE_SPLIT];
-			j++;
-		}
+		line_cpy = multiply_line(cut_text[i]);
+		j = i * MAP_SIZE_MULTI;
+		while (j < (i + 1) * MAP_SIZE_MULTI)
+			map[j++] = ft_strdup(line_cpy);
+		free(line_cpy);
 		i++;
 	}
 	return (map);
 }
 
-static char	**cut_trailings(char **file_text)
+static void	to_binary(char **map)
 {
-	char	**cut_text;
-	int		max_row_length;
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
-	max_row_length = 0;
 	i = 0;
-	while (file_text[i])
-	{
-		j = usefull_len(file_text[i]);
-		if (j > max_row_length)
-			max_row_length = j;
-		i++;
-	}
-	cut_text = ft_calloc(i + 1, sizeof(char *));
-	i = 0;
-	while (file_text[i])
+	while (map[i])
 	{
 		j = 0;
-		cut_text[i] = ft_calloc(max_row_length + 1, sizeof(char));
-		while (j < max_row_length)
+		while (map[i][j])
 		{
-			if (j <= (int)ft_strlen(file_text[i]) - 1 && !ft_isspace(file_text[i][j]))
-				cut_text[i][j] = file_text[i][j];
-			else
-				cut_text[i][j] = '0';
+			map[i][j] -= '0';
 			j++;
 		}
 		i++;
 	}
-	return (cut_text);
-}
-
-static char	**read_file(char *file_path)
-{
-	int		fd;
-	int		i;
-	char	**file_text;
-	char	*str;
-	int		rows;
-
-	rows = 0;
-	fd = open(file_path, O_RDWR, 0777);
-	if (fd < 0)
-		return (NULL);
-	str = get_next_line(fd);
-	while (str)
-	{
-		rows++;
-		free(str);
-		str = get_next_line(fd);
-	}
-	close(fd);
-	file_text = (char **)ft_calloc(rows + 1, sizeof(char *));
-	fd = open(file_path, O_RDWR, 0777);
-	if (fd < 0)
-		return (NULL);
-	str = get_next_line(fd);
-	i = 0;
-	while (str)
-	{
-		file_text[i] = ft_strdup(str);
-		free(str);
-		str = get_next_line(fd);
-		i++;
-	}
-	file_text[i] = NULL;
-	close(fd);
-	return (file_text);
 }
 
 bool	parse_file(t_game_data *g_d, char *file_path)
@@ -142,14 +256,32 @@ bool	parse_file(t_game_data *g_d, char *file_path)
 	file_text = read_file(file_path);
 	if (!file_text)
 		error_die(g_d, "Cub3D: Error: Cannot open given file.\n", 1);
-	// is_valid(file_text);
-	printf("Raw:\n");
-	display_charpp(file_text);
+	// printf("Raw:\n");
+	// display_charpp(file_text);
+
+	// for validation: no ISSPACE and '0' symbols are to stay next to each other.
+	// and do not forget to check forbidden symbols.
+	// is_valid_header(file_text);
+
 	cut_text = cut_trailings(file_text);
-	printf("Cut:\n");
-	display_charpp(cut_text);
-	g_d->map = multiply_by_64(cut_text);
-	printf("Ready to use:\n");
-	//display_charpp(g_d->map);
+	free_array(file_text);
+	//printf("Cut:\n");
+	//display_charpp(cut_text);
+
+	clean_spaces(g_d, cut_text);
+	//printf("Cleaned:\n");
+	//display_charpp(cut_text);
+
+	g_d->map = multiply_size(cut_text);
+	free_array(cut_text);
+	//printf("Ready to use:\n");
+	display_charpp(g_d->map);
+
+	to_binary(g_d->map);
+
+	printf("\n\n");
+	ddisplay_charpp(g_d->map);
+
+	printf("Parser finished\n");
 	return (true);
 }

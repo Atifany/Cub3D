@@ -50,10 +50,10 @@ int	main(int argc, char **argv)
 		error_die(&g_d, "Cub3D: Error: Parsing file failed.\n", 1);
 	if (init_window(&g_d))
 		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
-	g_d.player = malloc(sizeof(t_transform));
-	g_d.player->position.x = 70;
-	g_d.player->position.y = 70;
-	g_d.player->view_angle = 0;
+	// g_d.player = malloc(sizeof(t_transform));
+	// g_d.player->position.x = 70;
+	// g_d.player->position.y = 70;
+	// g_d.player->view_angle = 0;
 	
 	// g_d.map = calloc(65*5, sizeof(int *));
 	// for (int i = 0; i < 64 * 5; i++)
@@ -69,6 +69,10 @@ int	main(int argc, char **argv)
 	// printf("%d\n", g_d.map);
 	// printf("%d\n", g_d.map[0][0]);
 	
-	draw_frame(&g_d);
+	printf("Player start transform:\nPosition={%d:%d}\nViewAngle={%f}\n",
+		g_d.player->position.x,
+		g_d.player->position.y,
+		g_d.player->view_angle);
+	//draw_frame(&g_d);
 	return (body(&g_d));
 }

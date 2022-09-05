@@ -25,7 +25,7 @@
 // General macros
 # define READ 0		// never touch 'em
 # define WRITE 1	// never touch 'em
-# define TILE_SPLIT 64
+# define MAP_SIZE_MULTI 64
 # define TICKS_PER_UPDATE 10000
 
 // Global
@@ -45,6 +45,7 @@ void	init_g_d_defaults(t_game_data *g_d);
 void	free_array(char **arr);
 double	dabs(double x);
 double	deg_to_rad(float a);
+void	set_player_transform(t_game_data *g_d, t_point position, int view_angle);
 // Map processing
 bool	is_valid_input(int argc);
 bool	parse_file(t_game_data *g_d, char *file_path);

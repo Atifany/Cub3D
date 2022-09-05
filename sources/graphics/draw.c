@@ -67,7 +67,6 @@ float create_cos_table(float *arr, t_game_data *gd)
 	return (0.0f);
 }
 		 
-
 t_point cast_ray(t_game_data *gd, int col)
 {
     t_point ret;
