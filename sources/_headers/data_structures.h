@@ -32,7 +32,7 @@ typedef struct s_point
 typedef struct s_player_transform
 {
 	t_point	position;
-	float		view_angle;
+	float	view_angle;
 }	t_transform;
 
 // Stores gameplay info

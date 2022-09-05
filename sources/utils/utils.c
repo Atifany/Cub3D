@@ -8,6 +8,14 @@ double	dabs(double x)
 	return (x);
 }
 
+void	set_player_transform(t_game_data *g_d, t_point position, int view_angle)
+{
+	if (!g_d->player)
+		g_d->player = (t_transform *)ft_calloc(1, sizeof(t_transform));
+	g_d->player->position = position;
+	g_d->player->view_angle = view_angle;
+}
+
 void	init_g_d_defaults(t_game_data *g_d)
 {
 	g_d->map = NULL;

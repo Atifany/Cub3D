@@ -55,10 +55,10 @@ int	key_hook(int keycode, t_game_data *g_d)
 		error_die(g_d, "Cub3D: Esc key was presssed.\n", 0);
 	if (move_player(keycode, g_d) && rotate_player(keycode, g_d))
 		printf("Uncaught key was pressed: %d\n", keycode);
-	printf("Transform:\nX=%d Y=%d\nViewAngle=%f\n",
-		g_d->player->position.x,
-		g_d->player->position.y,
-		g_d->player->view_angle + 45);
+	// printf("Transform:\nX=%d Y=%d\nViewAngle=%f\n",
+	// 	g_d->player->position.x,
+	// 	g_d->player->position.y,
+	// 	g_d->player->view_angle + 45);
 	return (0);
 }
 
