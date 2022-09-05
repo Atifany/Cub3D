@@ -9,6 +9,7 @@ int	init_window(t_game_data *g_d)
 	g_mlx->mlx = mlx_init();
 	if (!g_mlx->mlx)
 		return (1);
+	g_mlx->line_length = g_d->resolution.x;
 	g_mlx->win = mlx_new_window(g_mlx->mlx, g_d->resolution.x, g_d->resolution.y, "Cub3D");
 	if (!g_mlx->win)
 		return (1);
