@@ -25,7 +25,7 @@
 // General macros
 # define READ 0		// never touch 'em
 # define WRITE 1	// never touch 'em
-# define MAP_SIZE_MULTI 64
+# define MAP_RES 64
 # define TICKS_PER_UPDATE 10000
 
 // Global

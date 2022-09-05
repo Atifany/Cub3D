@@ -24,7 +24,7 @@ void	ddisplay_charpp(char **arr)
 	while (arr[i])
 	{
 		j = 0;
-		while (j < 5 * MAP_SIZE_MULTI)
+		while (j < 5 * MAP_RES)
 		{
 			printf("%d", arr[i][j]);
 			j++;
@@ -74,12 +74,12 @@ static char	*multiply_line(char *line)
 	char	*extended_line;
 
 	extended_line = (char *)ft_calloc(
-		ft_strlen(line) * MAP_SIZE_MULTI + 1, sizeof(char));
+		ft_strlen(line) * MAP_RES + 1, sizeof(char));
 	i = 0;
 	while (line[i])
 	{
-		j = i * MAP_SIZE_MULTI;
-		while (j < (i + 1) * MAP_SIZE_MULTI)
+		j = i * MAP_RES;
+		while (j < (i + 1) * MAP_RES)
 			extended_line[j++] = line[i];
 		i++;
 	}
@@ -188,9 +188,9 @@ static void	clean_spaces(t_game_data *g_d, char **cut_text)
 			else if (is_spawner(cut_text[i][j]))
 			{
 				position.x =
-					(i + 1) * MAP_SIZE_MULTI - MAP_SIZE_MULTI / 2;
+					(i + 1) * MAP_RES - MAP_RES / 2;
 				position.y =
-					(j + 1) * MAP_SIZE_MULTI - MAP_SIZE_MULTI / 2;
+					(j + 1) * MAP_RES - MAP_RES / 2;
 				if (cut_text[i][j] == 'W')
 					view_angle = 225;
 				else if (cut_text[i][j] == 'E')
@@ -214,13 +214,13 @@ static char	**multiply_size(char **cut_text)
 	char	**map;
 
 	map = (char **)ft_calloc(
-		count_items_charpp(cut_text) * MAP_SIZE_MULTI + 1, sizeof(char *));
+		count_items_charpp(cut_text) * MAP_RES + 1, sizeof(char *));
 	i = 0;
 	while (cut_text[i])
 	{
 		line_cpy = multiply_line(cut_text[i]);
-		j = i * MAP_SIZE_MULTI;
-		while (j < (i + 1) * MAP_SIZE_MULTI)
+		j = i * MAP_RES;
+		while (j < (i + 1) * MAP_RES)
 			map[j++] = ft_strdup(line_cpy);
 		free(line_cpy);
 		i++;

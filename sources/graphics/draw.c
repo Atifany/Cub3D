@@ -25,12 +25,12 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 {
     //printf("drawing_line\n");
     int i;
-    int d = distance(collision, (gd->player->position));
+    int d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
     int color = 0x00ffffff;
 
-    if ((d < 4*TILE_SPLIT))
+    if ((d < 256))
     {
-        color -= (0x00010101*(d*64/TILE_SPLIT));
+        color -= (0x00010101*(d));
         int h = 0;
         h = gd->resolution.y*10/d;    
         if (h > gd->resolution.y)
@@ -82,14 +82,14 @@ t_point cast_ray(t_game_data *gd, int col)
    // printf(" at angle %.6f\n", gd->player->view_angle + (float)gd->fov / (float)640 * (float)col);
 	
     //
-	float dir_x = cos(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)gd->resolution.x * (float)col));// триг. функции работают очень долго(можно составить массив заранее вычисленных значений)
-	float dir_y = sin(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)gd->resolution.x * (float)col));// 360*разрешение экрана/на угол обзора
+	float dir_x = cos(deg_to_rad(gd->player->view_angle + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)));// триг. функции работают очень долго(можно составить массив заранее вычисленных значений)
+	float dir_y = sin(deg_to_rad(gd->player->view_angle + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)));// 360*разрешение экрана/на угол обзора
 																									 // sin_tab[gd->player->view_angle * gd.x_res / gd.fov + col]
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
 	//	
     int i = -1;
-    while (++i < TILE_SPLIT*8)
+    while (++i < MAP_RES*8)
     {
 		fx += dir_x;
 		fy += dir_y;
