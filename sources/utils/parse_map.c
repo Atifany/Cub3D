@@ -275,12 +275,12 @@ bool	parse_file(t_game_data *g_d, char *file_path)
 	g_d->map = multiply_size(cut_text);
 	free_array(cut_text);
 	//printf("Ready to use:\n");
-	display_charpp(g_d->map);
+	//display_charpp(g_d->map);
 
 	to_binary(g_d->map);
 
-	printf("\n\n");
-	ddisplay_charpp(g_d->map);
+	//printf("\n\n");
+	//ddisplay_charpp(g_d->map);
 
 	printf("Parser finished\n");
 	return (true);
