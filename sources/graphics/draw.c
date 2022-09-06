@@ -25,21 +25,19 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 {
     //printf("drawing_line\n");
     int i;
-    int d = distance(collision, (gd->player->position));
+    int d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
     int color = 0x00ffffff;
 
     if ((d < 256))
     {
         color -= (0x00010101*(d));
         int h = 0;
-        if (d > 20)
-            h = 19200/d/2;
-        else
-            h = 480;
-        
-        i = 480-h /2;
-       // printf("%d %d\n", h, d);
-        while (h--)
+        h = gd->resolution.y*10/d;    
+        if (h > gd->resolution.y)
+            h = gd->resolution.y; 
+        i = (gd->resolution.y - h) / 2;
+        // printf("%d %d\n", h, d);
+        while (h-- && i < gd->resolution.y)
         {
             my_pixel_put(col, i, color);
             i++;
@@ -84,14 +82,14 @@ t_point cast_ray(t_game_data *gd, int col)
    // printf(" at angle %.6f\n", gd->player->view_angle + (float)gd->fov / (float)640 * (float)col);
 	
     //
-	float dir_x = cos(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col));// триг. функции работают очень долго(можно составить массив заранее вычисленных значений)
-	float dir_y = sin(deg_to_rad(gd->player->view_angle + (float)gd->fov / (float)640 * (float)col));// 360*разрешение экрана/на угол обзора
+	float dir_x = cos(deg_to_rad(gd->player->view_angle + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)));// триг. функции работают очень долго(можно составить массив заранее вычисленных значений)
+	float dir_y = sin(deg_to_rad(gd->player->view_angle + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)));// 360*разрешение экрана/на угол обзора
 																									 // sin_tab[gd->player->view_angle * gd.x_res / gd.fov + col]
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
 	//	
     int i = -1;
-    while (++i < 512)
+    while (++i < MAP_RES*8)
     {
 		fx += dir_x;
 		fy += dir_y;
@@ -117,7 +115,7 @@ int draw_frame(t_game_data *gd)
     g_mlx->addr = mlx_get_data_addr(g_mlx->img, &g_mlx->bits_per_pixel, &g_mlx->line_length,
 								&g_mlx->endian);
     i = -1;
-	while (++i < 640) // можно уменьшить разрешение
+	while (++i < gd->resolution.x) // можно уменьшить разрешение
 		draw_line(i, cast_ray(gd, i), gd);
 	return (0);
 }
