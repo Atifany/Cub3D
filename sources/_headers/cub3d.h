@@ -28,6 +28,12 @@
 # define MAP_RES 64
 # define TICKS_PER_UPDATE 10000
 # define MAP_ALLOWED_LIST "01NWSE \t\n\r\v\f"
+// mlx event codes
+# define ON_KEYDOWN 2
+# define ON_KEYUP 3
+// # define ON_MOUSEMOVE
+// # define ON_MOUSEPRESS
+# define ON_DESTROY 17
 
 // Global
 # ifndef GLOBAL
@@ -38,7 +44,8 @@ extern t_mlx_data	*g_mlx;
 # endif
 
 // Hooks
-int	key_hook(int keycode, t_game_data *g_d);
+int	key_down_hook(int keycode, t_game_data *g_d);
+int	key_up_hook(int keycode, t_game_data *g_d);
 int	die_hook(t_game_data *g_d);
 int	move_player(int keycode, t_game_data *g_d);
 int	rotate_player(int keycode, t_game_data *g_d);

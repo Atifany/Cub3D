@@ -22,6 +22,9 @@ void	init_g_d_defaults(t_game_data *g_d)
 	g_d->fov = 90;
 	g_d->player = NULL;
 	g_d->resolution = (t_point){1920, 1080};
+	g_d->keys_pressed = NULL;
+	g_d->player_rot_speed = 4.0f;
+	g_d->player_speed = 5.0f;
 }
 
 void	free_array(char **arr)

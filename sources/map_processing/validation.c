@@ -17,7 +17,6 @@ bool	is_valid_input(int argc)
 
 static bool	is_valid_tile(char **file_text, int i, int j)
 {
-
 	if (!ft_strchr(MAP_ALLOWED_LIST, file_text[i][j]))
 		return (false);
 	if (file_text[i][j] == '0' || is_spawner(file_text[i][j]))

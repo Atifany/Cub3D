@@ -23,11 +23,11 @@ typedef struct s_point
 	int	y;
 }	t_point;
 
-// typedef struct s_wall
-// {
-// 	t_point	*v1;
-// 	t_point	*v2;
-// }	t_wall;
+typedef struct s_fpoint
+{
+	float	x;
+	float	y;
+}	t_fpoint;
 
 typedef struct s_player_transform
 {
@@ -38,10 +38,13 @@ typedef struct s_player_transform
 // Stores gameplay info
 typedef struct s_game_data
 {
+	float		player_speed;
+	float		player_rot_speed;
 	char		**map;
 	t_transform	*player;
 	int			fov;
 	t_point		resolution;
+	t_list		*keys_pressed; // active keys
 }	t_game_data;
 
 #endif

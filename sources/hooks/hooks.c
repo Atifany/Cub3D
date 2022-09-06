@@ -5,23 +5,31 @@ int	move_player(int keycode, t_game_data *g_d)
 {
 	if (keycode == W)
 	{
-		g_d->player->position.x += (int)(5 * cos(deg_to_rad(g_d->player->view_angle + 45)));
-		g_d->player->position.y += (int)(5 * sin(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.x
+			+= (int)(g_d->player_speed * cos(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.y
+			+= (int)(g_d->player_speed * sin(deg_to_rad(g_d->player->view_angle + 45)));
 	}
 	else if (keycode == A)
 	{
-		g_d->player->position.x += (int)(5 * sin(deg_to_rad(g_d->player->view_angle + 45)));
-		g_d->player->position.y -= (int)(5 * cos(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.x
+			+= (int)(g_d->player_speed * sin(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.y
+			-= (int)(g_d->player_speed * cos(deg_to_rad(g_d->player->view_angle + 45)));
 	}
 	else if (keycode == S)
 	{
-		g_d->player->position.x -= (int)(5 * cos(deg_to_rad(g_d->player->view_angle + 45)));
-		g_d->player->position.y -= (int)(5 * sin(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.x
+			-= (int)(g_d->player_speed * cos(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.y
+			-= (int)(g_d->player_speed * sin(deg_to_rad(g_d->player->view_angle + 45)));
 	}
 	else if (keycode == D)
 	{
-		g_d->player->position.x -= (int)(5 * sin(deg_to_rad(g_d->player->view_angle + 45)));
-		g_d->player->position.y += (int)(5 * cos(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.x
+			-= (int)(g_d->player_speed * sin(deg_to_rad(g_d->player->view_angle + 45)));
+		g_d->player->position.y
+			+= (int)(g_d->player_speed * cos(deg_to_rad(g_d->player->view_angle + 45)));
 	}
 	else
 		return (1);
@@ -35,35 +43,108 @@ int	rotate_player(int keycode, t_game_data *g_d)
 		if (g_d->player->view_angle <= 0)
 			g_d->player->view_angle = 360;
 		else
-			g_d->player->view_angle -= 10;
+			g_d->player->view_angle -= g_d->player_rot_speed;
 	}
 	else if (keycode == R_ARROW)
 	{
 		if (g_d->player->view_angle >= 360)
 			g_d->player->view_angle = 0;
 		else
-			g_d->player->view_angle += 10;
+			g_d->player->view_angle += g_d->player_rot_speed;
 	}
 	else
 		return (1);
 	return (0);
 }
 
-int	key_hook(int keycode, t_game_data *g_d)
+// // // Tmp func -> delete later
+// static void	show_linked_list(void *content)
+// {
+// 	printf("%d\n", *(int *)content);
+// }
+
+int	key_down_hook(int keycode, t_game_data *g_d)
 {
+	// // Maybe add some delay so that this infinite check would not affect much
+	// // But do not miss any button press
+	// static bool	is_busy = false;
+	// t_list	*tmp;
+	// int		*buf;
+
+	// if (is_busy)
+	// 	return (0);
+	// is_busy = true;
+	// printf("Keydown start: \n");
+	// ft_lstiter(g_d->keys_pressed, show_linked_list);
+	// tmp = g_d->keys_pressed;
+	// while (tmp && tmp->next && *(int *)(tmp->next->content) != keycode)
+	// 	tmp = tmp->next;
+	// if (!tmp || !(tmp->next))
+	// {
+	// 	buf = (int *)ft_calloc(1, sizeof(int));
+	// 	*buf = keycode;
+	// 	ft_lstadd_back(&g_d->keys_pressed, ft_lstnew(buf));
+	// }
+	// printf("Keydown done: \n");
+	// ft_lstiter(g_d->keys_pressed, show_linked_list);
 	if (keycode == ESC)
 		error_die(g_d, "Cub3D: Esc key was presssed.\n", 0);
 	if (move_player(keycode, g_d) && rotate_player(keycode, g_d))
 		printf("Uncaught key was pressed: %d\n", keycode);
-	// printf("Transform:\nX=%d Y=%d\nViewAngle=%f\n",
-	// 	g_d->player->position.x,
-	// 	g_d->player->position.y,
-	// 	g_d->player->view_angle + 45);
+	// // printf("Transform:\nX=%d Y=%d\nViewAngle=%f\n",
+	// // 	g_d->player->position.x,
+	// // 	g_d->player->position.y,
+	// // 	g_d->player->view_angle + 45);
+	// is_busy = false;
 	return (0);
 }
 
+int	key_up_hook(int keycode, t_game_data *g_d)
+{
+	// t_list	*tmp;
+	// t_list	*buf;
+
+	(void)keycode;
+	(void)g_d;
+	// printf("Keyup start: \n");
+	// ft_lstiter(g_d->keys_pressed, show_linked_list);
+	// tmp = g_d->keys_pressed;
+	// while (tmp->next && *(int *)(tmp->next->content) != keycode)
+	// 	tmp = tmp->next;
+	// if ((tmp->next && *(int *)(tmp->next->content) == keycode))
+	// {
+	// 	buf = tmp->next->next;
+	// 	ft_lstdelone(tmp->next, free);
+	// 	tmp->next = buf;
+	// }
+	// else if (*(int *)(tmp->content) == keycode)
+	// {
+	// 	ft_lstdelone(tmp, free);
+	// 	g_d->keys_pressed = NULL;
+	// }
+	// printf("Keyup done: \n");
+	// ft_lstiter(g_d->keys_pressed, show_linked_list);
+	return (0);
+}
+
+// static void	do_activated_key(int keycode, t_game_data *g_d)
+// {
+// 	if (keycode == ESC)
+// 		error_die(g_d, "Cub3D: Esc key was presssed.\n", 0);
+// 	if (move_player(keycode, g_d) && rotate_player(keycode, g_d))
+// 		printf("Uncaught key was pressed: %d\n", keycode);
+// }
+
 void	update(t_game_data *g_d)
 {
+	// t_list	*tmp;
+
+	// tmp = g_d->keys_pressed;
+	// while (tmp)
+	// {
+	// 	do_activated_key(*(int *)tmp->content, g_d);
+	// 	tmp = tmp->next;
+	// }
 	// autorotate
 	// g_d->player->view_angle += 1;
 	// if (g_d->player->view_angle == 361)
@@ -103,3 +184,9 @@ int	die_hook(t_game_data *g_d)
 	error_die(g_d, "Cub3D: Exit button was pressed.\n", 0);
 	return (0);
 }
+
+// key listenings:
+// int[<All listened keys>][2] :
+// [ 'A'
+//  Hold
+//
