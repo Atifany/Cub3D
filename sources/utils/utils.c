@@ -47,7 +47,7 @@ void	error_die(t_game_data *g_d, char *error_text, int exit_status)
 		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
 		// destroy_textures();
 		free(g_mlx);
-		//destroy_g_d(g_d);
+		destroy_g_d(g_d);
 	}
 	printf("%s", error_text);
 	exit(exit_status);

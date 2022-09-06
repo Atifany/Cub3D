@@ -246,6 +246,30 @@ static void	to_binary(char **map)
 	}
 }
 
+static bool	is_valid_map(char **file_text)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (file_text[i])
+	{
+		j = 0;
+		while (file_text[i][j])
+		{
+			if (!ft_isspace(file_text[i][j]) && !is_spawner(file_text[i][j]) &&
+				file_text[i][j] != '0' && file_text[i][j] != '1')
+				return (false);
+			// For each tile, check all four its adjustment tiles.
+			// And only check if current tile is a space.
+			// it is going to be a biiiiig if clause
+			j++;
+		}
+		i++;
+	}
+	return (true);
+}
+
 bool	parse_file(t_game_data *g_d, char *file_path)
 {
 	char	**file_text;
@@ -261,7 +285,8 @@ bool	parse_file(t_game_data *g_d, char *file_path)
 
 	// for validation: no ISSPACE and '0' symbols are to stay next to each other.
 	// and do not forget to check forbidden symbols.
-	// is_valid_header(file_text);
+	if (!is_valid_map(file_text))
+		error_die(g_d, "Cub3D: Error: Invalid map.\n", 1);
 
 	cut_text = cut_trailings(file_text);
 	free_array(file_text);

@@ -37,16 +37,12 @@ int	body(t_game_data *g_d)
 int	main(int argc, char **argv)
 {
 	t_game_data	g_d;
-	char	*file_name;
-	char	*maps_path;
 
 	printf("Cub3D: Started.\n");
 	init_g_d_defaults(&g_d);
 	if (!is_valid_input(argc))
 		error_die(&g_d, "Cub3D: Error: Invalid input.\nUsage: ./cub3D [filename].cub", 1);
-	maps_path = ft_strdup("maps/");
-	file_name = gnl_join(&maps_path, ft_strdup(argv[1]), ft_strlen(argv[1]));
-	if (!parse_file(&g_d, file_name))
+	if (!parse_file(&g_d, argv[1]))
 		error_die(&g_d, "Cub3D: Error: Parsing file failed.\n", 1);
 	if (init_window(&g_d))
 		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
