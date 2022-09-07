@@ -2,8 +2,8 @@
 
 void	parse_player_transform(t_game_data *g_d, int x, int y, char dir)
 {
-	t_point	position;
-	int		view_angle;
+	t_fpoint	position;
+	int			view_angle;
 
 	view_angle = 135;
 	position.x = (x + 1) * MAP_RES - MAP_RES / 2;

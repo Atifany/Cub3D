@@ -8,7 +8,7 @@ double	dabs(double x)
 	return (x);
 }
 
-void	set_player_transform(t_game_data *g_d, t_point position, int view_angle)
+void	set_player_transform(t_game_data *g_d, t_fpoint position, int view_angle)
 {
 	if (!g_d->player)
 		g_d->player = (t_transform *)ft_calloc(1, sizeof(t_transform));
@@ -23,8 +23,8 @@ void	init_g_d_defaults(t_game_data *g_d)
 	g_d->player = NULL;
 	g_d->resolution = (t_point){1920, 1080};
 	g_d->keys_pressed = NULL;
-	g_d->player_rot_speed = 4.0f;
-	g_d->player_speed = 5.0f;
+	g_d->player_rot_speed = 1.0f;
+	g_d->player_speed = 1.0f;
 }
 
 void	free_array(char **arr)
@@ -39,8 +39,13 @@ void	free_array(char **arr)
 
 void	destroy_g_d(t_game_data *g_d)
 {
+	if (!g_d)
+		return ;
 	if (g_d->map)
 		free_array(g_d->map);
+	if (g_d->player)
+		free(g_d->player);
+	ft_lstclear(&(g_d->keys_pressed), free);
 }
 
 void	error_die(t_game_data *g_d, char *error_text, int exit_status)

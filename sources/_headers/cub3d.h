@@ -44,8 +44,8 @@ extern t_mlx_data	*g_mlx;
 # endif
 
 // Hooks
-int	key_down_hook(int keycode, t_game_data *g_d);
-int	key_up_hook(int keycode, t_game_data *g_d);
+int	key_down_hook(int keycode, t_list **keys_pressed);
+int	key_up_hook(int keycode, t_list **keys_pressed);
 int	die_hook(t_game_data *g_d);
 int	move_player(int keycode, t_game_data *g_d);
 int	rotate_player(int keycode, t_game_data *g_d);
@@ -57,7 +57,7 @@ void	init_g_d_defaults(t_game_data *g_d);
 void	free_array(char **arr);
 double	dabs(double x);
 double	deg_to_rad(float a);
-void	set_player_transform(t_game_data *g_d, t_point position, int view_angle);
+void	set_player_transform(t_game_data *g_d, t_fpoint position, int view_angle);
 // Map processing
 bool	parse_file(t_game_data *g_d, char *file_path);
 bool	is_valid_input(int argc);
@@ -66,7 +66,6 @@ bool	is_valid_map(char **file_text);
 char	**read_file(char *file_path);
 char	**cut_trailings(char **file_text);
 void	clean_spaces(t_game_data *g_d, char **cut_text);
-void	to_binary(char **map);
 int		find_right_border(char *line);
 int		find_left_border(char *line);
 bool	is_spawner(char c);
@@ -74,6 +73,10 @@ char	*multiply_line(char *line);
 char	**multiply_size(char **cut_text);
 int		count_items_charpp(char **charpp);
 void	parse_player_transform(t_game_data *g_d, int x, int y, char dir);
+
+// Movement
+int	move_player(int keycode, t_game_data *g_d);
+int	rotate_player(int keycode, t_game_data *g_d);
 
 // TMP <- delete them later
 void	display_charpp(char **arr);

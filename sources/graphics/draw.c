@@ -16,7 +16,7 @@ double	deg_to_rad(float a)
 	return (a * M_PI / 180); // уменьшить точность Пи для увеличения производительности
 }
 
-int distance(t_point p1, t_point p2)
+int distance(t_point p1, t_fpoint p2)
 {
     return (sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2))); // написать свою функцию нахождения квадратов от 1 до дальности прорисовки^2 (это дохуя)
 }
@@ -65,7 +65,7 @@ t_point cast_ray(t_game_data *gd, int col)
     {
 		fx += dir_x;
 		fy += dir_y;
-        if (gd->map[(int)fx][(int)fy])
+        if (gd->map[(int)fx][(int)fy] == '1')
         {
             ret.x = (int)fx;
             ret.y = (int)fy;

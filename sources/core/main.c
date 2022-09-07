@@ -27,14 +27,12 @@ int	init_window(t_game_data *g_d)
 
 int	body(t_game_data *g_d)
 {	
-	// wonder if this event mask would work on macos....?????
 	mlx_hook(g_mlx->win, ON_DESTROY, 1L<<0, die_hook, g_d);
 	//mlx_key_hook(g_mlx->win, key_down_hook, g_d);
-	mlx_hook(g_mlx->win, ON_KEYDOWN, 1L<<0, key_down_hook, g_d);
-	//mlx_hook(g_mlx->win, ON_KEYUP, 0L, key_up_hook, g_d);
+	mlx_hook(g_mlx->win, ON_KEYDOWN, 1L<<0, key_down_hook, &(g_d->keys_pressed));
+	mlx_hook(g_mlx->win, ON_KEYUP, 0L<<0, key_up_hook, &(g_d->keys_pressed));
 	mlx_loop_hook(g_mlx->mlx, loop_hook, g_d);
 	mlx_loop(g_mlx->mlx);
-
 	return (0);
 }
 
@@ -69,7 +67,7 @@ int	main(int argc, char **argv)
 	// printf("%d\n", g_d.map);
 	// printf("%d\n", g_d.map[0][0]);
 	
-	printf("Player start transform:\nPosition={%d:%d}\nViewAngle={%f}\n",
+	printf("Player start transform:\nPosition={%f:%f}\nViewAngle={%f}\n",
 		g_d.player->position.x,
 		g_d.player->position.y,
 		g_d.player->view_angle);
