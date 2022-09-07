@@ -17,7 +17,6 @@ bool	parse_file(t_game_data *g_d, char *file_path)
 	clean_spaces(g_d, cut_text);
 	g_d->map = multiply_size(cut_text);
 	free_array(cut_text);
-	to_binary(g_d->map);
 	printf("Parser finished\n");
 	return (true);
 }

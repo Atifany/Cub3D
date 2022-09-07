@@ -11,6 +11,7 @@ _SRC =	core/main.c							\
 		map_processing/parsing_functions.c	\
 		map_processing/parsing_utils.c		\
 		map_processing/parsing_utils_1.c	\
+		movement/movement.c					\
 		utils/get_next_line.c				\
 		utils/get_next_line_utils.c			\
 

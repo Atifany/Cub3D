@@ -100,21 +100,3 @@ char	**multiply_size(char **cut_text)
 	}
 	return (map);
 }
-
-void	to_binary(char **map)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (map[i])
-	{
-		j = 0;
-		while (map[i][j])
-		{
-			map[i][j] -= '0';
-			j++;
-		}
-		i++;
-	}
-}

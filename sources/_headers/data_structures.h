@@ -31,8 +31,8 @@ typedef struct s_fpoint
 
 typedef struct s_player_transform
 {
-	t_point	position;
-	float	view_angle;
+	t_fpoint	position;
+	float		view_angle;
 }	t_transform;
 
 // Stores gameplay info
