@@ -1,5 +1,7 @@
 #include "../_headers/cub3D.h"
 
+// ADD COLLISIONS!!
+// add a case if 'W' and 'D' are pressed together.
 int	move_player(int keycode, t_game_data *g_d)
 {
 	float	sin_dir;

@@ -22,8 +22,6 @@ int	key_down_hook(int keycode, t_list **keys_pressed)
 		buf = (int *)ft_calloc(1, sizeof(int));
 		*buf = keycode;
 		ft_lstadd_back(keys_pressed, ft_lstnew(buf));
-		//printf("Pressed key: %d\n", keycode);
-		//ft_lstiter(*keys_pressed, show_linked_list);
 	}
 	return (0);
 }
@@ -45,8 +43,6 @@ int	key_up_hook(int keycode, t_list **keys_pressed)
 		*keys_pressed = buf;
 		if (!(*keys_pressed))
 			*keys_pressed = NULL;
-		//printf("Releazed key: %d\n", keycode);
-		//ft_lstiter(*keys_pressed, show_linked_list);
 	}
 	tmp = *keys_pressed;
 	while (tmp && tmp->next)
@@ -56,8 +52,6 @@ int	key_up_hook(int keycode, t_list **keys_pressed)
 			buf = tmp->next->next;
 			ft_lstdelone(tmp->next, free);
 			tmp->next = buf;
-			//printf("Releazed key: %d\n", keycode);
-			//ft_lstiter(*keys_pressed, show_linked_list);
 			break ;
 		}
 		tmp = tmp->next;
@@ -83,10 +77,6 @@ void	update(t_game_data *g_d)
 		do_activated_key(*(int *)tmp->content, g_d);
 		tmp = tmp->next;
 	}
-	// autorotate
-	// g_d->player->view_angle += 1;
-	// if (g_d->player->view_angle == 361)
-	// 	g_d->player->view_angle = 0;
 	draw_frame(g_d);
 	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img, 0, 0);
 	mlx_destroy_image(g_mlx->mlx, g_mlx->img);
@@ -121,9 +111,3 @@ int	die_hook(t_game_data *g_d)
 	error_die(g_d, "Cub3D: Exit button was pressed.\n", 0);
 	return (0);
 }
-
-// key listenings:
-// int[<All listened keys>][2] :
-// [ 'A'
-//  Hold
-//
