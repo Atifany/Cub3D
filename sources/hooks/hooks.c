@@ -166,7 +166,6 @@ int loop_hook(t_game_data *g_d)
 	else
 	{
 		clock1 = 0;
-		
 		//if (g_d->player->view_angle++ >= 360)
 		//{
 		//	printf("%ld\n", clock() - s);

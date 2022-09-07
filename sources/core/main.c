@@ -26,10 +26,12 @@ int	init_window(t_game_data *g_d)
 
 
 int	body(t_game_data *g_d)
-{
-	mlx_hook(g_mlx->win, ON_DESTROY, 0L, die_hook, g_d);
-	mlx_hook(g_mlx->win, ON_KEYDOWN, 0L, key_down_hook, g_d);
-	mlx_hook(g_mlx->win, ON_KEYUP, 0L, key_up_hook, g_d);
+{	
+	// wonder if this event mask would work on macos....?????
+	mlx_hook(g_mlx->win, ON_DESTROY, 1L<<0, die_hook, g_d);
+	//mlx_key_hook(g_mlx->win, key_down_hook, g_d);
+	mlx_hook(g_mlx->win, ON_KEYDOWN, 1L<<0, key_down_hook, g_d);
+	//mlx_hook(g_mlx->win, ON_KEYUP, 0L, key_up_hook, g_d);
 	mlx_loop_hook(g_mlx->mlx, loop_hook, g_d);
 	mlx_loop(g_mlx->mlx);
 
