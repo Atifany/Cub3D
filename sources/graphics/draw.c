@@ -83,9 +83,24 @@ void draw_map(t_game_data *gd)
 {
 	int i = 0;
 	int j = 0;
+
+	my_pixel_put(gd->player->position.x/(MAP_RES/8), gd->player->position.y/(MAP_RES/8), 0x00ff0000);
 	while (gd->map[i])
+	{
+		j = 0;
 		while (gd->map[i][j])
-			my_pixel_put(i, j, 0xff0000);
+		{
+			//write(1, &(gd->map[i][j]), 1);
+			if (gd->map[i][j] == '1')
+				my_pixel_put(i/(MAP_RES/8), j/(MAP_RES/8), 0x00ff0000);
+			j+=MAP_RES/8;
+		}
+		i+=MAP_RES/8;
+		//write(1, "\n", 1);
+	}
+	//write(1, "\n", 1);
+	//write(1, "\n", 1);
+	//write(1, "\n", 1);
 }
 
 int draw_frame(t_game_data *gd)
@@ -102,8 +117,6 @@ int draw_frame(t_game_data *gd)
 	{
 		collision = cast_ray(gd, i);
 		draw_line(i, collision, gd);
-		if (collision.x - gd->player->position.x > 0 && collision.y - gd->player->position.y + 100)
-			my_pixel_put(collision.x - gd->player->position.x + 100, collision.y - gd->player->position.y + 100, 0xff0000);
 	}
 	return (0);
 }

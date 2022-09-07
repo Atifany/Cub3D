@@ -1,5 +1,16 @@
 #include "../_headers/cub3d.h"
 
+void display_charpp(char **arr)
+{
+	int i = 0;
+	while (arr[i])
+	{
+		printf("%s|\n", arr[i]);
+		i++;
+	}
+	
+}
+
 bool	parse_file(t_game_data *g_d, char *file_path)
 {
 	char	**file_text;
