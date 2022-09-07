@@ -30,9 +30,9 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 
     if ((d < 256))
     {
-        color -= (0x00010101*(d));
         int h = 0;
-        h = gd->resolution.y*10/d;    
+        color -= (0x00010101*(d));
+        h = gd->resolution.y*10/d;
         if (h > gd->resolution.y)
             h = gd->resolution.y; 
         i = (gd->resolution.y - h) / 2;
@@ -44,34 +44,6 @@ int draw_line(int col, t_point collision, t_game_data *gd)
         }
     }
 	return (0);
-}
-
-float create_sin_table(float *arr, t_game_data *gd)
-{
-	float c = gd->resolution.x/gd->fov;
-	arr = malloc(360*c*sizeof(float));
-	int i = 0;
-	
-	while(i < 360*c)
-	{
-		arr[i] = sin(deg_to_rad((float)i/c));
-		i++;
-	}
-	return (0.0f);
-}
-
-float create_cos_table(float *arr, t_game_data *gd)
-{
-	float c = gd->resolution.x/gd->fov;
-	arr = malloc(360*c*sizeof(float));
-	int i = 0;
-	
-	while(i < 360*c)
-	{
-		arr[i] = cos(deg_to_rad((float)i/c));
-		i++;
-	}
-	return (0.0f);
 }
 		 
 t_point cast_ray(t_game_data *gd, int col)
@@ -97,7 +69,7 @@ t_point cast_ray(t_game_data *gd, int col)
         {
             ret.x = (int)fx;
             ret.y = (int)fy;
-            //if (ret.x<= 0 || ret.y <= 0 || ret.x > 5*64|| ret.y > 6*64)
+        	//if (ret.x<= 0 || ret.y <= 0 || ret.x > 5*64|| ret.y > 6*64)
 		//		return ret;
 		//printf("ray_collision at %d %d\n", ret.x, ret.y);
 		//mlx_pixel_put(g_mlx->mlx, g_mlx->win, ret.x+10, ret.y+10, 0x00ffffff);
@@ -107,15 +79,44 @@ t_point cast_ray(t_game_data *gd, int col)
 	return (ret);
 }
 
+void draw_map(t_game_data *gd)
+{
+	int i = 0;
+	int j = 0;
+
+	my_pixel_put(gd->player->position.x/(MAP_RES/8), gd->player->position.y/(MAP_RES/8), 0x00ff0000);
+	while (gd->map[i])
+	{
+		j = 0;
+		while (gd->map[i][j])
+		{
+			//write(1, &(gd->map[i][j]), 1);
+			if (gd->map[i][j] == '1')
+				my_pixel_put(i/(MAP_RES/8), j/(MAP_RES/8), 0x00ff0000);
+			j+=MAP_RES/8;
+		}
+		i+=MAP_RES/8;
+		//write(1, "\n", 1);
+	}
+	//write(1, "\n", 1);
+	//write(1, "\n", 1);
+	//write(1, "\n", 1);
+}
+
 int draw_frame(t_game_data *gd)
 {
     int	i;
-    
+    t_point collision;
+
     g_mlx->img = mlx_new_image(g_mlx->mlx, 1920, 1080);
     g_mlx->addr = mlx_get_data_addr(g_mlx->img, &g_mlx->bits_per_pixel, &g_mlx->line_length,
 								&g_mlx->endian);
+	draw_map(gd);
     i = -1;
 	while (++i < gd->resolution.x) // можно уменьшить разрешение
-		draw_line(i, cast_ray(gd, i), gd);
+	{
+		collision = cast_ray(gd, i);
+		draw_line(i, collision, gd);
+	}
 	return (0);
 }

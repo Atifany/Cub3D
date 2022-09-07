@@ -81,6 +81,7 @@ int	rotate_player(int keycode, t_game_data *g_d);
 // TMP <- delete them later
 void	display_charpp(char **arr);
 
+void draw_map(t_game_data *gd);
 int draw_frame(t_game_data *gd);
 int loop_hook(t_game_data *g_d);
 
