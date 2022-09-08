@@ -16,7 +16,7 @@ double	deg_to_rad(float a)
 	return (a * M_PI / 180); // уменьшить точность Пи для увеличения производительности
 }
 
-int distance(t_point p1, t_fpoint p2)
+float distance(t_point p1, t_fpoint p2)
 {
     return (sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2))); // написать свою функцию нахождения квадратов от 1 до дальности прорисовки^2 (это дохуя)
 }
@@ -25,14 +25,14 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 {
     //printf("drawing_line\n");
     int i;
-    int d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
+    float d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
     int color = 0x00ffffff;
 
     if ((d < 256))
     {
         int h = 0;
-        color -= (0x00010101*(d));
-        h = gd->resolution.y*10/d;
+        color -= (0x00010101*((int)d));
+        h = (float)(gd->resolution.y*10)/d;
         if (h > gd->resolution.y)
             h = gd->resolution.y; 
         i = (gd->resolution.y - h) / 2;
