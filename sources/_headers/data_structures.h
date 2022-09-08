@@ -31,6 +31,7 @@ typedef struct s_fpoint
 
 typedef struct s_player_transform
 {
+	t_fpoint	size;
 	t_fpoint	position;
 	float		view_angle;
 }	t_transform;
