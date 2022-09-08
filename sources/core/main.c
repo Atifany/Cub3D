@@ -9,7 +9,8 @@ int	init_window(t_game_data *g_d)
 	g_mlx->mlx = mlx_init();
 	if (!g_mlx->mlx)
 		return (1);
-	g_mlx->line_length = g_d->resolution.x;
+	g_mlx->img = ft_calloc(1, sizeof(t_img));
+	g_mlx->img->line_length = g_d->resolution.x;
 	g_mlx->win = mlx_new_window(g_mlx->mlx, g_d->resolution.x, g_d->resolution.y, "Cub3D");
 	if (!g_mlx->win)
 		return (1);
@@ -23,7 +24,15 @@ int	init_window(t_game_data *g_d)
 	return (0);
 }
 
+void init_textures()
+{
+		int a, b;
 
+	g_mlx->texture = malloc(sizeof(t_img));
+	g_mlx->texture->img = mlx_xpm_file_to_image(g_mlx->mlx, "textures/greystone.xpm",&a, &b);
+	g_mlx->texture->addr = mlx_get_data_addr(g_mlx->texture->img, &g_mlx->texture->bits_per_pixel, &g_mlx->texture->line_length,
+								&g_mlx->texture->endian);
+}
 
 int	body(t_game_data *g_d)
 {	
@@ -48,6 +57,7 @@ int	main(int argc, char **argv)
 		error_die(&g_d, "Cub3D: Error: Parsing file failed.\n", 1);
 	if (init_window(&g_d))
 		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
+	init_textures();
 	// g_d.player = malloc(sizeof(t_transform));
 	// g_d.player->position.x = 70;
 	// g_d.player->position.y = 70;
