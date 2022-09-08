@@ -78,8 +78,8 @@ void	update(t_game_data *g_d)
 		tmp = tmp->next;
 	}
 	draw_frame(g_d);
-	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img, 0, 0);
-	mlx_destroy_image(g_mlx->mlx, g_mlx->img);
+	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
+	mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
 }
 
 //unsigned long s = 0;

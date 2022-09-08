@@ -5,16 +5,21 @@
 // Exterior libraries
 # include <stdbool.h>
 
-// Stores graphics info
-typedef struct s_mlx_data
-{
-	void	*mlx;
-	void	*win;
+typedef struct	s_img {
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+}				t_img;
+
+// Stores graphics info
+typedef struct s_mlx_data
+{
+	void	*mlx;
+	void	*win;
+	t_img	*img;
+	t_img	*texture;
 }	t_mlx_data;
 
 typedef struct s_point
