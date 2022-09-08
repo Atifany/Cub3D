@@ -77,6 +77,50 @@ void	clean_spaces(t_game_data *g_d, char **cut_text)
 	}
 }
 
+// void write_line_to_map(char *cut_text, char **map)
+// {
+// 	int i;
+// 	int j;
+// 	int linelen;
+
+// 	linelen = ft_strlen(cut_text);
+// 	*map = malloc(MAP_RES*linelen*8); 
+// 	i = 0;
+// 	while (cut_text[i])
+// 	{
+// 		j = 0;
+// 		while (j < MAP_RES)
+// 		{
+// 			(*map)[i*MAP_RES + j] = cut_text[i];
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// }
+
+// char	**multiply_size2(char **cut_text)
+// {
+// 	int		i;
+// 	int		j;
+// 	char	**map;
+
+// 	map = (char **)ft_calloc(
+// 			count_items_charpp(cut_text) * MAP_RES + 1, sizeof(char *));
+// 	i = 0;
+// 	while (cut_text[i])
+// 	{
+// 		j = 0;
+// 		while (j < MAP_RES)
+// 		{
+// 			write_line_to_map(cut_text[i], &(map[i*MAP_RES+j]));
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// 	return (map);
+// }
+
+
 char	**multiply_size(char **cut_text)
 {
 	int		j;

@@ -25,7 +25,7 @@
 // General macros
 # define READ 0		// never touch 'em
 # define WRITE 1	// never touch 'em
-# define MAP_RES 64
+# define MAP_RES 1024
 # define TICKS_PER_UPDATE 10000
 # define MAP_ALLOWED_LIST "01NWSE \t\n\r\v\f"
 // mlx event codes
@@ -34,6 +34,11 @@
 // # define ON_MOUSEMOVE
 // # define ON_MOUSEPRESS
 # define ON_DESTROY 17
+// Direction
+# define NORTH 0
+# define EAST 1
+# define SOUTH 2
+# define WEST 3
 
 // Global
 # ifndef GLOBAL
