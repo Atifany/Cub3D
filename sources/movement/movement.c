@@ -1,4 +1,4 @@
-#include "../_headers/cub3D.h"
+#include "../_headers/cub3d.h"
 
 // static t_point	is_collsion(t_game_data *g_d, t_fpoint new_pos)
 // {
@@ -105,7 +105,6 @@ static int	check_south(t_game_data *g_d, t_fpoint new_pos)
 	int count_side = 0;
 	int count_north = 0;
 
-	// check left for wich is more
 	//printf("\nTile: [%f:%f]\n", new_pos.x, new_pos.y);
 	jend = (int)(fto_pos(new_pos.y + (g_d->player->size.y / 2)));
 	jstart = (int)(fto_pos(new_pos.y - (g_d->player->size.y / 2)));
@@ -184,8 +183,8 @@ int	move_player(int keycode, t_game_data *g_d)
 	float	cos_dir;
 	int		*ret;
 
-	cos_dir = g_d->player_speed * cos(deg_to_rad(g_d->player->view_angle + 45));
-	sin_dir = g_d->player_speed * sin(deg_to_rad(g_d->player->view_angle + 45));
+	cos_dir = g_d->player_speed * cos(deg_to_rad(g_d->player->view_angle));
+	sin_dir = g_d->player_speed * sin(deg_to_rad(g_d->player->view_angle));
 	if (keycode == W)
 	{
 		ret = is_collision(g_d, (t_fpoint){

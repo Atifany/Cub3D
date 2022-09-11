@@ -57,7 +57,8 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 		int c = 0;
         while (c < h && i < gd->resolution.y)
         {
-            my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));            
+			if (i >= 0)
+				my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));            
 			i++;
 			c++;
         }
@@ -68,8 +69,8 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 t_point cast_ray(t_game_data *gd, int col)
 {
     t_point ret;
-	float dir_x = cos(deg_to_rad(gd->player->view_angle + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); //zamenit' float na int perem
-	float dir_y = sin(deg_to_rad(gd->player->view_angle + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); // ispolzovat int kak peremennuu s statichnoy tochkoy
+	float dir_x = cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); //zamenit' float na int perem
+	float dir_y = sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); // ispolzovat int kak peremennuu s statichnoy tochkoy
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
     int i = -1;

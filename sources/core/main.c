@@ -26,7 +26,7 @@ int	init_window(t_game_data *g_d)
 
 void init_textures()
 {
-		int a, b;
+	int a, b;
 
 	g_mlx->texture = malloc(sizeof(t_img));
 	g_mlx->texture->img = mlx_xpm_file_to_image(g_mlx->mlx, "textures/greystone.xpm",&a, &b);
@@ -39,7 +39,7 @@ int	body(t_game_data *g_d)
 	mlx_hook(g_mlx->win, ON_DESTROY, 1L<<0, die_hook, g_d);
 	//mlx_key_hook(g_mlx->win, key_down_hook, g_d);
 	mlx_hook(g_mlx->win, ON_KEYDOWN, 1L<<0, key_down_hook, &(g_d->keys_pressed));
-	mlx_hook(g_mlx->win, ON_KEYUP, 0L<<0, key_up_hook, &(g_d->keys_pressed));
+	mlx_hook(g_mlx->win, ON_KEYUP, 1L<<1, key_up_hook, &(g_d->keys_pressed));
 	mlx_loop_hook(g_mlx->mlx, loop_hook, g_d);
 	mlx_loop(g_mlx->mlx);
 	return (0);

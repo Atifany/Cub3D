@@ -82,7 +82,7 @@ void	clean_spaces(t_game_data *g_d, char **cut_text)
 // 	int i;
 // 	int j;
 // 	int linelen;
-
+//
 // 	linelen = ft_strlen(cut_text);
 // 	*map = malloc(MAP_RES*linelen*8); 
 // 	i = 0;
@@ -103,7 +103,7 @@ void	clean_spaces(t_game_data *g_d, char **cut_text)
 // 	int		i;
 // 	int		j;
 // 	char	**map;
-
+//
 // 	map = (char **)ft_calloc(
 // 			count_items_charpp(cut_text) * MAP_RES + 1, sizeof(char *));
 // 	i = 0;
@@ -119,7 +119,6 @@ void	clean_spaces(t_game_data *g_d, char **cut_text)
 // 	}
 // 	return (map);
 // }
-
 
 char	**multiply_size(char **cut_text)
 {

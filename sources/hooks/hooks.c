@@ -14,6 +14,7 @@ int	key_down_hook(int keycode, t_list **keys_pressed)
 	t_list	*tmp;
 	int		*buf;
 
+	//printf("Key down active\n");
 	tmp = *keys_pressed;
 	while (tmp && tmp->next && *(int *)(tmp->next->content) != keycode)
 		tmp = tmp->next;
@@ -33,7 +34,7 @@ int	key_up_hook(int keycode, t_list **keys_pressed)
 	t_list	*tmp;
 	t_list	*buf;
 
-	
+	//printf("Key release active\n");
 	if (!*keys_pressed)
 		return (0);
 	if (*(int *)((*keys_pressed)->content) == keycode)
