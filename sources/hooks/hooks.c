@@ -64,7 +64,19 @@ static void	do_activated_key(int keycode, t_game_data *g_d)
 {
 	if (keycode == ESC)
 		error_die(g_d, "Cub3D: Esc key was presssed.\n", 0);
-	if (move_player(keycode, g_d) && rotate_player(keycode, g_d))
+	else if (keycode == W)
+		move_player((t_fpoint){g_d->player_speed, 0.0f}, g_d);
+	else if (keycode == A)
+		move_player((t_fpoint){0.0f, -1 * g_d->player_speed}, g_d);
+	else if (keycode == S)
+		move_player((t_fpoint){-1 * g_d->player_speed, 0.0f}, g_d);
+	else if (keycode == D)
+		move_player((t_fpoint){0.0f, g_d->player_speed}, g_d);
+	else if (keycode == L_ARROW)
+		rotate_player(g_d->player_rot_speed, g_d);
+	else if (keycode == R_ARROW)
+		rotate_player(-1 * g_d->player_rot_speed, g_d);
+	else
 		printf("Uncaught key was pressed: %d\n", keycode);
 }
 

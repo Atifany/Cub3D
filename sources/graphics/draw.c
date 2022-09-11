@@ -58,7 +58,7 @@ int draw_line(int col, t_point collision, t_game_data *gd)
         while (c < h && i < gd->resolution.y)
         {
 			if (i >= 0)
-				my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));            
+				my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));
 			i++;
 			c++;
         }
@@ -68,23 +68,23 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 		 
 t_point cast_ray(t_game_data *gd, int col)
 {
-    t_point ret;
+	t_point ret;
 	float dir_x = cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); //zamenit' float na int perem
 	float dir_y = sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); // ispolzovat int kak peremennuu s statichnoy tochkoy
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
-    int i = -1;
-    while (++i < MAP_RES*8)
-    {
+	int i = -1;
+	while (++i < MAP_RES*8)
+	{
 		fx += dir_x;
 		fy += dir_y;
-        if (gd->map[(int)fx][(int)fy] == '1')
-        {
-            ret.x = (int)fx;
-            ret.y = (int)fy;
-		return ret;
-       }
-    }
+		if (gd->map[(int)fx][(int)fy] == '1')
+		{
+			ret.x = (int)fx;
+			ret.y = (int)fy;
+			return (ret);
+		}
+	}
 	return (ret);
 }
 
@@ -118,7 +118,7 @@ int draw_frame(t_game_data *gd)
 	i = -1;
 	while (++i < gd->resolution.x) // можно уменьшить разрешение
 	{
-		collision = cast_ray(gd, i);
+		collision = cast_ray(gd, gd->resolution.x - i);
 		draw_line(i, collision, gd);
 	}
 	draw_map(gd);

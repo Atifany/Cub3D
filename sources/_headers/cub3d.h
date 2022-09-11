@@ -53,8 +53,6 @@ extern t_mlx_data	*g_mlx;
 int	key_down_hook(int keycode, t_list **keys_pressed);
 int	key_up_hook(int keycode, t_list **keys_pressed);
 int	die_hook(t_game_data *g_d);
-int	move_player(int keycode, t_game_data *g_d);
-int	rotate_player(int keycode, t_game_data *g_d);
 void	update(t_game_data *g_d);
 int loop_hook(t_game_data *g_d);
 // Utils
@@ -82,8 +80,8 @@ int		count_items_charpp(char **charpp);
 void	parse_player_transform(t_game_data *g_d, int x, int y, char dir);
 
 // Movement
-int	move_player(int keycode, t_game_data *g_d);
-int	rotate_player(int keycode, t_game_data *g_d);
+int	move_player(t_fpoint shift, t_game_data *g_d);
+int	rotate_player(float shift, t_game_data *g_d);
 
 // TMP <- delete them later
 void	display_charpp(char **arr);

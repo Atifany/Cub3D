@@ -176,93 +176,34 @@ static int	*is_collision(t_game_data *g_d, t_fpoint new_pos)
 }
 
 // ADD COLLISIONS!!
-// add a case if 'W' and 'D' are pressed together.
-int	move_player(int keycode, t_game_data *g_d)
+// add a case if e.g. 'W' and 'D' are pressed together.
+int	move_player(t_fpoint shift, t_game_data *g_d)
 {
-	float	sin_dir;
-	float	cos_dir;
-	int		*ret;
+	float		cos_dir;
+	float		sin_dir;
+	t_fpoint	new_pos;
+	int			*ret;
 
-	cos_dir = g_d->player_speed * cos(deg_to_rad(g_d->player->view_angle));
-	sin_dir = g_d->player_speed * sin(deg_to_rad(g_d->player->view_angle));
-	if (keycode == W)
-	{
-		ret = is_collision(g_d, (t_fpoint){
-			g_d->player->position.x + cos_dir,
-			g_d->player->position.y + sin_dir});
-		//printf("[%d:%d:%d:%d]\n", ret[NORTH], ret[SOUTH], ret[EAST], ret[WEST]);
-		if ((!ret[NORTH]
-			&& g_d->player->position.x >= g_d->player->position.x + cos_dir)
-			|| (!ret[SOUTH]
-			&& g_d->player->position.x < g_d->player->position.x + cos_dir))
-		{
-			g_d->player->position.x += cos_dir;
-			// g_d->player->position.y += sin_dir;
-		}
-		if ((!ret[WEST]
-			&& g_d->player->position.y >= g_d->player->position.y + sin_dir)
-			|| (!ret[EAST]
-			&& g_d->player->position.y < g_d->player->position.y + sin_dir))
-		{
-			//g_d->player->position.x += cos_dir;
-			g_d->player->position.y += sin_dir;
-		}
-	}
-	else if (keycode == A)
-	{
-		// ret = is_collision(g_d, (t_fpoint){
-		// 	g_d->player->position.x + sin_dir,
-		// 	g_d->player->position.y - cos_dir});
-		// if (ret.x < 0)
-		// {
-			g_d->player->position.x += sin_dir;
-			g_d->player->position.y -= cos_dir;
-		// }
-	}
-	else if (keycode == S)
-	{
-		// ret = is_collision(g_d, (t_fpoint){
-		// 	g_d->player->position.x - cos_dir,
-		// 	g_d->player->position.y - sin_dir});
-		// if (ret.x < 0)
-		// {
-			g_d->player->position.x -= cos_dir;
-			g_d->player->position.y -= sin_dir;
-		// }
-	}
-	else if (keycode == D)
-	{
-		// ret = is_collision(g_d, (t_fpoint){
-		// 	g_d->player->position.x - sin_dir,
-		// 	g_d->player->position.y + cos_dir});
-		// if (ret.x < 0)
-		// {
-			g_d->player->position.x -= sin_dir;
-			g_d->player->position.y += cos_dir;
-		// }
-	}
-	else
-		return (1);
+	cos_dir = cos(deg_to_rad(g_d->player->view_angle));
+	sin_dir = sin(deg_to_rad(g_d->player->view_angle));
+	new_pos.x = g_d->player->position.x + shift.x * cos_dir + shift.y * sin_dir;
+	new_pos.y = g_d->player->position.y + shift.x * sin_dir - shift.y * cos_dir;
+
+	ret = is_collision(g_d, new_pos);
+	//printf("[%d:%d:%d:%d]\n", ret[NORTH], ret[SOUTH], ret[EAST], ret[WEST]);
+	if ((!ret[NORTH] && cos_dir < 0) || (!ret[SOUTH] && cos_dir >= 0))
+		g_d->player->position.x = new_pos.x;
+	if ((!ret[WEST] && sin_dir < 0) || (!ret[EAST] && sin_dir >= 0))
+		g_d->player->position.y = new_pos.y;
 	return (0);
 }
 
-int	rotate_player(int keycode, t_game_data *g_d)
+int	rotate_player(float shift, t_game_data *g_d)
 {
-	if (keycode == L_ARROW)
-	{
-		if (g_d->player->view_angle <= 0)
-			g_d->player->view_angle = 360;
-		else
-			g_d->player->view_angle -= g_d->player_rot_speed;
-	}
-	else if (keycode == R_ARROW)
-	{
-		if (g_d->player->view_angle >= 360)
-			g_d->player->view_angle = 0;
-		else
-			g_d->player->view_angle += g_d->player_rot_speed;
-	}
-	else
-		return (1);
+	g_d->player->view_angle += shift;
+	if (g_d->player->view_angle <= 0)
+		g_d->player->view_angle = 360 + g_d->player->view_angle;
+	else if (g_d->player->view_angle > 360)
+		g_d->player->view_angle = g_d->player->view_angle - 360;
 	return (0);
 }
