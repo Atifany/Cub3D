@@ -28,7 +28,7 @@
 # define MAP_RES 1024
 # define TICKS_PER_UPDATE 10000
 # define MAP_ALLOWED_LIST "01NWSE \t\n\r\v\f"
-# define PLAYER_SIZE MAP_RES / 8
+# define PLAYER_SIZE MAP_RES / 20
 // mlx event codes
 # define ON_KEYDOWN 2
 # define ON_KEYUP 3
@@ -91,5 +91,24 @@ int draw_frame(t_game_data *gd);
 int loop_hook(t_game_data *g_d);
 
 #include <time.h>
+
+//colors
+# define BLK "\e[0;30m"
+# define BBLK "\e[1;30m"
+# define RED "\e[0;31m"
+# define BRED "\e[1;31m"
+# define GRN "\e[0;32m"
+# define BGRN "\e[1;32m"
+# define YEL "\e[0;33m"
+# define BYEL "\e[1;33m"
+# define BLU "\e[0;34m"
+# define BBLU "\e[1;34m"
+# define MAG "\e[0;35m"
+# define BMAG "\e[1;35m"
+# define CYN "\e[0;36m"
+# define BCYN "\e[1;36m"
+# define WHT "\e[0;37m"
+# define BWHT "\e[1;37m"
+# define NC "\e[0m"
 
 #endif

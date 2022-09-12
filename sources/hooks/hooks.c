@@ -60,36 +60,51 @@ int	key_up_hook(int keycode, t_list **keys_pressed)
 	return (0);
 }
 
-static void	do_activated_key(int keycode, t_game_data *g_d)
+static bool	is_in_list(t_list *lst, int target)
 {
-	if (keycode == ESC)
+	t_list	*tmp;
+
+	tmp = lst;
+	while (tmp)
+	{
+		if ((*(int *)(tmp->content)) == target)
+			return (true);
+		tmp = tmp->next;
+	}
+	return (false);
+}
+
+static void	list_active_keys(t_game_data *g_d)
+{
+	if (is_in_list(g_d->keys_pressed, ESC))
 		error_die(g_d, "Cub3D: Esc key was presssed.\n", 0);
-	else if (keycode == W)
+	if (is_in_list(g_d->keys_pressed, W) && !is_in_list(g_d->keys_pressed, A) && !is_in_list(g_d->keys_pressed, D))
 		move_player((t_fpoint){g_d->player_speed, 0.0f}, g_d);
-	else if (keycode == A)
+	if (is_in_list(g_d->keys_pressed, A) && !is_in_list(g_d->keys_pressed, W) && !is_in_list(g_d->keys_pressed, S))
 		move_player((t_fpoint){0.0f, -1 * g_d->player_speed}, g_d);
-	else if (keycode == S)
+	if (is_in_list(g_d->keys_pressed, S) && !is_in_list(g_d->keys_pressed, A) && !is_in_list(g_d->keys_pressed, D))
 		move_player((t_fpoint){-1 * g_d->player_speed, 0.0f}, g_d);
-	else if (keycode == D)
+	if (is_in_list(g_d->keys_pressed, D) && !is_in_list(g_d->keys_pressed, S) && !is_in_list(g_d->keys_pressed, W))
 		move_player((t_fpoint){0.0f, g_d->player_speed}, g_d);
-	else if (keycode == L_ARROW)
+	
+	if (is_in_list(g_d->keys_pressed, W) && is_in_list(g_d->keys_pressed, A))
+		move_player((t_fpoint){g_d->player_speed / 2, g_d->player_speed / -2}, g_d);
+	if (is_in_list(g_d->keys_pressed, W) && is_in_list(g_d->keys_pressed, D))
+		move_player((t_fpoint){g_d->player_speed / 2, g_d->player_speed / 2}, g_d);
+	if (is_in_list(g_d->keys_pressed, S) && is_in_list(g_d->keys_pressed, A))
+		move_player((t_fpoint){g_d->player_speed / -2, g_d->player_speed / -2}, g_d);
+	if (is_in_list(g_d->keys_pressed, S) && is_in_list(g_d->keys_pressed, D))
+		move_player((t_fpoint){g_d->player_speed / -2, g_d->player_speed / 2}, g_d);
+	
+	if (is_in_list(g_d->keys_pressed, L_ARROW))
 		rotate_player(g_d->player_rot_speed, g_d);
-	else if (keycode == R_ARROW)
+	if (is_in_list(g_d->keys_pressed, R_ARROW))
 		rotate_player(-1 * g_d->player_rot_speed, g_d);
-	else
-		printf("Uncaught key was pressed: %d\n", keycode);
 }
 
 void	update(t_game_data *g_d)
 {
-	t_list	*tmp;
-
-	tmp = g_d->keys_pressed;
-	while (tmp)
-	{
-		do_activated_key(*(int *)tmp->content, g_d);
-		tmp = tmp->next;
-	}
+	list_active_keys(g_d);
 	draw_frame(g_d);
 	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
 	mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
