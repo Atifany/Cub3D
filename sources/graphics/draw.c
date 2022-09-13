@@ -74,19 +74,14 @@ t_point cast_ray(t_game_data *gd, int col)
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
 	int i = -1;
-	while (++i < MAP_RES / 4)
+	while (++i < MAP_RES*4)
 	{
-		fx += dir_x*16;// map_res / 64
-		fy += dir_y*16;
+		fx += dir_x;
+		fy += dir_y;
 		if (gd->map[(int)fx][(int)fy] == '1')
 		{
-			while (gd->map[(int)fx][(int)fy] == '1')
-			{
-				fx -= dir_x;
-				fy -= dir_y;
-			}
-			ret.x = (int)(fx + dir_x);
-			ret.y = (int)(fy + dir_y);
+			ret.x = (int)fx;
+			ret.y = (int)fy;
 			return (ret);
 		}
 	}
