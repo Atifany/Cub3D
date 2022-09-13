@@ -36,8 +36,10 @@ void init_textures()
 
 int	body(t_game_data *g_d)
 {	
+	mlx_mouse_move(g_mlx->mlx, g_mlx->win, g_d->resolution.x / 2, g_d->resolution.y / 2);
+	mlx_mouse_hide(g_mlx->mlx, g_mlx->win);
 	mlx_hook(g_mlx->win, ON_DESTROY, 1L<<0, die_hook, g_d);
-	//mlx_key_hook(g_mlx->win, key_down_hook, g_d);
+	//mlx_hook(g_mlx->win, ON_MOUSEMOVE, 1L<<6, mouse_move_hook, g_d);
 	mlx_hook(g_mlx->win, ON_KEYDOWN, 1L<<0, key_down_hook, &(g_d->keys_pressed));
 	mlx_hook(g_mlx->win, ON_KEYUP, 1L<<1, key_up_hook, &(g_d->keys_pressed));
 	mlx_loop_hook(g_mlx->mlx, loop_hook, g_d);

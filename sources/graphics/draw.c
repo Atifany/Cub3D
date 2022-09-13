@@ -68,13 +68,13 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 		 
 t_point cast_ray(t_game_data *gd, int col)
 {
-	t_point ret;
+	t_point ret = {-1, -1};
 	float dir_x = cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); //zamenit' float na int perem
 	float dir_y = sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); // ispolzovat int kak peremennuu s statichnoy tochkoy
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
 	int i = -1;
-	while (++i < MAP_RES*8)
+	while (++i < MAP_RES*4)
 	{
 		fx += dir_x;
 		fy += dir_y;
@@ -119,7 +119,8 @@ int draw_frame(t_game_data *gd)
 	while (++i < gd->resolution.x) // можно уменьшить разрешение
 	{
 		collision = cast_ray(gd, gd->resolution.x - i);
-		draw_line(i, collision, gd);
+		if (collision.x >= 0)
+			draw_line(i, collision, gd);
 	}
 	draw_map(gd);
 	return (0);

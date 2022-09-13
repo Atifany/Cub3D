@@ -65,7 +65,6 @@ static int	*is_collision(t_game_data *g_d, t_fpoint new_pos)
 	return (collisions);
 }
 
-// add a case if e.g. 'W' and 'D' are pressed together.
 int	move_player(t_fpoint shift, t_game_data *g_d)
 {
 	float		cos_dir;

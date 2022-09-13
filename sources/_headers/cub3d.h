@@ -32,7 +32,7 @@
 // mlx event codes
 # define ON_KEYDOWN 2
 # define ON_KEYUP 3
-// # define ON_MOUSEMOVE
+# define ON_MOUSEMOVE 6
 // # define ON_MOUSEPRESS
 # define ON_DESTROY 17
 // Direction
@@ -50,11 +50,12 @@ extern t_mlx_data	*g_mlx;
 # endif
 
 // Hooks
-int	key_down_hook(int keycode, t_list **keys_pressed);
-int	key_up_hook(int keycode, t_list **keys_pressed);
-int	die_hook(t_game_data *g_d);
+int		key_down_hook(int keycode, t_list **keys_pressed);
+int		key_up_hook(int keycode, t_list **keys_pressed);
+int		mouse_move(int x, int y, t_game_data *g_d);
+int		die_hook(t_game_data *g_d);
 void	update(t_game_data *g_d);
-int loop_hook(t_game_data *g_d);
+int		loop_hook(t_game_data *g_d);
 // Utils
 void	error_die(t_game_data *g_d, char *error_text, int exit_status);
 void	init_g_d_defaults(t_game_data *g_d);
