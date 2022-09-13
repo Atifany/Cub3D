@@ -91,7 +91,7 @@ void draw_map(t_game_data *gd);
 int draw_frame(t_game_data *gd);
 int loop_hook(t_game_data *g_d);
 
-#include <time.h>
+#include <sys/time.h>
 
 //colors
 # define BLK "\e[0;30m"

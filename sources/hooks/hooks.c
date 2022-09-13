@@ -125,26 +125,40 @@ void	update(t_game_data *g_d)
 	mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
 }
 
-unsigned long s = 0;
+static long long cur_time(long long timestart)
+{
+	struct timeval	te;
+	long long		milliseconds;
+
+	gettimeofday(&te, NULL);
+	milliseconds = te.tv_sec * 1000LL + te.tv_usec / 1000;
+	if (!timestart)
+		return (milliseconds);
+	return (milliseconds - timestart);
+}
+
 //18494660 / 3023759
 int loop_hook(t_game_data *g_d)
 {
-	static int clock1 = 0;
-	if (s == 0)
-		s = clock();
-	if (clock1++ < 0/*TICKS_PER_UPDATE*/)
-		return 0;
-	else
+	static int	oldfps = 0;
+	static int	fps = 0;
+	static long long	secs = 0;
+	static long long	timestart = 0;
+	if (!timestart)
+		timestart = cur_time(0);
+	
+	update(g_d);
+	fps++;
+	if (cur_time(timestart) / 1000 > secs / 1000)
 	{
-		clock1 = 0;
-		if (g_d->player->view_angle++ >= 360)
-		{
-			printf("%ld\n", clock() - s);
-			g_d->player->view_angle = 0;
-			s = 0;
-		}
-		update(g_d);
+		//printf("fps: %d\n", fps);
+		oldfps = fps;
+		fps = 0;
 	}
+	mlx_string_put(g_mlx->mlx, g_mlx->win,
+			g_d->resolution.x - 100, 50,
+			0x00FF0000, ft_itoa(oldfps));
+	secs = cur_time(timestart);
 	return (0);
 }
 
