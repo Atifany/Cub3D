@@ -30,7 +30,7 @@ LIBS =	$(LIBFT:%=$(LIBFT_DIR)%) \
 		$(MLX:%=$(MLX_DIR)%)
 
 # flags
-C_FLAGS = -O2 -Wall -Wextra -Werror
+#C_FLAGS = -O2 -Wall -Wextra -Werror
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)

@@ -117,14 +117,6 @@ static void	list_active_keys(t_game_data *g_d)
 		rotate_player(-1 * g_d->player_rot_speed, g_d);
 }
 
-void	update(t_game_data *g_d)
-{
-	list_active_keys(g_d);
-	draw_frame(g_d);
-	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
-	mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
-}
-
 static long long cur_time(long long timestart)
 {
 	struct timeval	te;
@@ -137,21 +129,17 @@ static long long cur_time(long long timestart)
 	return (milliseconds - timestart);
 }
 
-//18494660 / 3023759
-int loop_hook(t_game_data *g_d)
-{
+static void display_fps(t_game_data *g_d)
+{	
 	static int	oldfps = 0;
 	static int	fps = 0;
 	static long long	secs = 0;
 	static long long	timestart = 0;
 	if (!timestart)
 		timestart = cur_time(0);
-	
-	update(g_d);
 	fps++;
 	if (cur_time(timestart) / 1000 > secs / 1000)
 	{
-		//printf("fps: %d\n", fps);
 		oldfps = fps;
 		fps = 0;
 	}
@@ -159,6 +147,20 @@ int loop_hook(t_game_data *g_d)
 			g_d->resolution.x - 100, 50,
 			0x00FF0000, ft_itoa(oldfps));
 	secs = cur_time(timestart);
+}
+
+void	update(t_game_data *g_d)
+{
+	list_active_keys(g_d);
+	display_fps(g_d);
+	draw_frame(g_d);
+	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
+	mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
+}
+
+int loop_hook(t_game_data *g_d)
+{
+	update(g_d);
 	return (0);
 }
 
