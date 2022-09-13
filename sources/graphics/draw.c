@@ -59,7 +59,7 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 		else
 		{
 			i = 0;
-			c = (gd->resolution.y - h) / 2;
+			c = (h - gd->resolution.y) / 2;
 		}
 		
         while (c < h && i < gd->resolution.y)
