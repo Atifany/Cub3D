@@ -46,23 +46,27 @@ unsigned int darker(int c, int d)
 
 int draw_line(int col, t_point collision, t_game_data *gd)
 {
-    int i;
+    int i; // index пикселя по вертикали
     float d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
 
     if ((d < 256))
     {
-        float h = 0;
+		int c = 0;   // номер пикселя стены который сейчас отрисовывается
+        float h = 0; // кол пикселей требуемое, что бы вся стена поместилась на экран;
         h = (float)(gd->resolution.y*10)/(float)d;
         if (d >= 10)
-		i = (gd->resolution.y - h) / 2;
-	else
-		i = 0;
-	int c = 0;
+			i = (gd->resolution.y - h) / 2;
+		else
+		{
+			i = 0;
+			c = (gd->resolution.y - h) / 2;
+		}
+		
         while (c < h && i < gd->resolution.y)
         {
-		my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));
-		i++;
-		c++;
+			my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));
+			i++;
+			c++;
         }
     }
 	return (0);
