@@ -69,19 +69,24 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 t_point cast_ray(t_game_data *gd, int col)
 {
 	t_point ret = {-1, -1};
-	unsigned int dir_x = unsigned int(cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))) * 1024); //zamenit' float na int perem
-	unsigned int dir_y = unsigned int(sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))) * 1024); // ispolzovat int kak peremennuu s statichnoy tochkoy
-	unsigned int fx = unsigned int(gd->player->position.x * 1024);
-	unsigned int fy = unsigned int(gd->player->position.y * 1024);
+	float dir_x = unsigned int(cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); //zamenit' float na int perem
+	float dir_y = unsigned int(sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); // ispolzovat int kak peremennuu s statichnoy tochkoy
+	float fx = gd->player->position.x;
+	float fy = gd->player->position.y;
 	int i = -1;
-	while (++i < MAP_RES*4)
+	while (++i < MAP_RES >> 2)
 	{
-		fx += dir_x;
-		fy += dir_y;
-		if (gd->map[fx >> 10][fy >> 10] == '1')
+		fx += dir_x*((2 << (i >> 10)+1));// map_res / 64
+		fy += dir_y*((2 << (i >> 10)+1));
+		if (gd->map[(int)fx][(int)fy] == '1')
 		{
-			ret.x = fx >> 10;
-			ret.y = fy >> 10;
+			while (gd->map[(int)fx][(int)fy] == '1')
+			{
+				fx -= dir_x;
+				fy -= dir_y;
+			}
+			ret.x = (int)(fx + dir_x);
+			ret.y = (int)(fy + dir_y);
 			return (ret);
 		}
 	}
