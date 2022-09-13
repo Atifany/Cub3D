@@ -53,14 +53,16 @@ int draw_line(int col, t_point collision, t_game_data *gd)
     {
         float h = 0;
         h = (float)(gd->resolution.y*10)/(float)d;
-        i = (gd->resolution.y - h) / 2;
-		int c = 0;
+        if (d >= 10)
+		i = (gd->resolution.y - h) / 2;
+	else
+		i = 0;
+	int c = 0;
         while (c < h && i < gd->resolution.y)
         {
-			if (i >= 0)
-				my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));
-			i++;
-			c++;
+		my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));
+		i++;
+		c++;
         }
     }
 	return (0);
