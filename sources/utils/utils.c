@@ -60,6 +60,24 @@ void	destroy_g_d(t_game_data *g_d)
 	ft_lstclear(&(g_d->keys_pressed), free);
 }
 
+int	ft_strcmp(char *str1, char *str2)
+{
+	int	i;
+
+	if (!str1)
+		str1 = STR_EMPTY;
+	if (!str2)
+		str2 = STR_EMPTY;
+	i = 0;
+	while (str1[i] && str2[i])
+	{
+		if (str1[i] != str2[i])
+			return (str1[i] - str2[i]);
+		i++;
+	}
+	return (str1[i] - str2[i]);
+}
+
 void	error_die(t_game_data *g_d, char *error_text, int exit_status)
 {
 	if (g_d && g_mlx)

@@ -19,7 +19,10 @@ typedef struct s_mlx_data
 	void	*mlx;
 	void	*win;
 	t_img	*img;
-	t_img	*texture;
+	t_img	*texture_north;
+	t_img	*texture_west;
+	t_img	*texture_east;
+	t_img	*texture_south;
 }	t_mlx_data;
 
 typedef struct s_point
@@ -51,6 +54,8 @@ typedef struct s_game_data
 	int			fov;
 	t_point		resolution;
 	t_list		*keys_pressed; // active keys
+	int			floor;
+	int			ceiling;
 }	t_game_data;
 
 #endif

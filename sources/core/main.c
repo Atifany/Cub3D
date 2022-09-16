@@ -24,14 +24,18 @@ int	init_window(t_game_data *g_d)
 	return (0);
 }
 
-void init_textures()
+t_img	*init_textures(char *path, t_game_data *g_d)
 {
-	int a, b;
+	t_img	*image;
+	int		a, b;
 
-	g_mlx->texture = malloc(sizeof(t_img));
-	g_mlx->texture->img = mlx_xpm_file_to_image(g_mlx->mlx, "textures/greystone.xpm",&a, &b);
-	g_mlx->texture->addr = mlx_get_data_addr(g_mlx->texture->img, &g_mlx->texture->bits_per_pixel, &g_mlx->texture->line_length,
-								&g_mlx->texture->endian);
+	image = malloc(sizeof(t_img));
+	image->img = mlx_xpm_file_to_image(g_mlx->mlx, path, &a, &b);
+	if (!image->img)
+		error_die(g_d, "Cub3D: Error: Texture not found\n", 0);
+	image->addr = mlx_get_data_addr(image->img, &image->bits_per_pixel, &image->line_length,
+								&image->endian);
+	return (image);
 }
 
 int	body(t_game_data *g_d)
@@ -53,36 +57,15 @@ int	main(int argc, char **argv)
 
 	printf("Cub3D: Started.\n");
 	init_g_d_defaults(&g_d);
+	if (init_window(&g_d))
+		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
 	if (!is_valid_input(argc))
 		error_die(&g_d, "Cub3D: Error: Invalid input.\nUsage: ./cub3D [filename].cub", 1);
 	if (!parse_file(&g_d, argv[1]))
 		error_die(&g_d, "Cub3D: Error: Parsing file failed.\n", 1);
-	if (init_window(&g_d))
-		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
-	init_textures();
-	// g_d.player = malloc(sizeof(t_transform));
-	// g_d.player->position.x = 70;
-	// g_d.player->position.y = 70;
-	// g_d.player->view_angle = 0;
-	
-	// g_d.map = calloc(65*5, sizeof(int *));
-	// for (int i = 0; i < 64 * 5; i++)
-	// 	g_d.map[i] = calloc(65*5,sizeof(char));
-	
-	// for (int i = 0; i < 64 * 5; i++)
-	// {
-	// 	g_d.map[0][i] = 1;
-	// 	g_d.map[64*4][i] = 1;
-	// 	g_d.map[i][0] = 1;
-	// 	g_d.map[i][64*4] = 1;
-	// }
-	// printf("%d\n", g_d.map);
-	// printf("%d\n", g_d.map[0][0]);
-	
 	printf("Player start transform:\nPosition={%f:%f}\nViewAngle={%f}\n",
 		g_d.player->position.x,
 		g_d.player->position.y,
 		g_d.player->view_angle);
-	//draw_frame(&g_d);
 	return (body(&g_d));
 }

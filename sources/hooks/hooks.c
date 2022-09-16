@@ -125,27 +125,9 @@ void	update(t_game_data *g_d)
 	mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
 }
 
-//unsigned long s = 0;
-//18494660 / 3023759
 int loop_hook(t_game_data *g_d)
 {
-	static int clock1 = 0;
-	//if (s == 0)
-	//	s = clock();
-	if (clock1++ < 0/*TICKS_PER_UPDATE*/)
-		return 0;
-	else
-	{
-		clock1 = 0;
-		//if (g_d->player->view_angle++ >= 360)
-		//{
-		//	printf("%ld\n", clock() - s);
-		//	g_d->player->view_angle = 0;
-		//	s = 0;
-		//}
-
-		update(g_d);
-	}
+	update(g_d);
 	return (0);
 }
 
