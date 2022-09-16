@@ -151,11 +151,16 @@ static void display_fps(t_game_data *g_d)
 
 void	update(t_game_data *g_d)
 {
-	list_active_keys(g_d);
-	display_fps(g_d);
-	draw_frame(g_d);
-	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
-	mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
+	static long long lastframe = 0;
+	if (cur_time(lastframe) > 30)
+	{
+		lastframe = cur_time(0);
+		list_active_keys(g_d);
+		display_fps(g_d);
+		draw_frame(g_d);
+		mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
+		mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
+	}
 }
 
 int loop_hook(t_game_data *g_d)
