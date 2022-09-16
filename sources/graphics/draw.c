@@ -3,9 +3,7 @@
 
 void	my_pixel_put(int x, int y, int color)
 {
-	char	*dst;
-	dst = g_mlx->img->addr + (y * g_mlx->img->line_length + x * (g_mlx->img->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	*((unsigned int*)(g_mlx->img->addr + (y * g_mlx->img->line_length + x * (g_mlx->img->bits_per_pixel >> 3)))) = color;
 }
 
 unsigned int	my_pixel_get(t_img *img, int x, int y)
@@ -52,21 +50,26 @@ int draw_line(int col, t_point collision, t_game_data *gd)
     if ((d < 256))
     {
 		int c = 0;   // номер пикселя стены который сейчас отрисовывается
-        float h = 0; // кол пикселей требуемое, что бы вся стена поместилась на экран;
+        int h = 0; // кол пикселей kotoroe стена zanimaet на экранe;
         h = (float)(gd->resolution.y*10)/(float)d;
         if (d >= 10)
-			i = (gd->resolution.y - h) / 2;
+			i = (gd->resolution.y - h)>>1;
 		else
 		{
 			i = 0;
-			c = (h - gd->resolution.y) / 2;
+			c = (h - gd->resolution.y) >>1;
 		}
-		
+		int t_x = (collision.x+collision.y)/2 % 64;
         while (c < h && i < gd->resolution.y)
         {
-			my_pixel_put(col, i, darker(my_pixel_get(g_mlx->texture, (collision.x+collision.y)/2 % 64, (int)(2*c/(h/64))%64), d));
-			i++;
-			c++;
+			int j = h / 128;
+			unsigned int t_pixel = darker(my_pixel_get(g_mlx->texture[0], t_x, (2*64*c/h)%64), d);
+			while (j-- >= 0 && c < h && i < gd->resolution.y)
+			{
+				my_pixel_put(col, i, t_pixel);
+				i++;
+				c++;
+			}		
         }
     }
 	return (0);
