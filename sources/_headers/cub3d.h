@@ -28,7 +28,7 @@
 # define MAP_RES 1024
 # define TICKS_PER_UPDATE 10000
 # define MAP_ALLOWED_LIST "01NWSE \t\n\r\v\f"
-# define PLAYER_SIZE MAP_RES / 20
+# define PLAYER_SIZE MAP_RES / 8
 // mlx event codes
 # define ON_KEYDOWN 2
 # define ON_KEYUP 3

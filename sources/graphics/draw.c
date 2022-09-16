@@ -51,20 +51,20 @@ int draw_line(int col, t_point collision, t_game_data *gd)
     {
 		int c = 0;   // номер пикселя стены который сейчас отрисовывается
         int h = 0; // кол пикселей kotoroe стена zanimaet на экранe;
-        h = (float)(gd->resolution.y*10)/(float)d;
-        if (d >= 10)
-			i = (gd->resolution.y - h)>>1;
+        h = (gd->resolution.y*16)/(d);
+        if (d >= 16)
+			i = (gd->resolution.y - h) >> 1;
 		else
 		{
 			i = 0;
-			c = (h - gd->resolution.y) >>1;
+			c = (h - gd->resolution.y) >> 1;
 		}
 		int t_x = (collision.x+collision.y)/2 % 64;
         while (c < h && i < gd->resolution.y)
         {
 			int j = h / 128;
-			unsigned int t_pixel = darker(my_pixel_get(g_mlx->texture, t_x, (2*64*c/h)%64), d);
-			while (j-- >= 0 && c < h && i < gd->resolution.y)
+			unsigned int t_pixel = darker(my_pixel_get(g_mlx->texture, t_x, ((c << 7)/h)%64), d);
+			while (j-- >= 0 && i < gd->resolution.y)
 			{
 				my_pixel_put(col, i, t_pixel);
 				i++;
