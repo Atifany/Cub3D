@@ -29,6 +29,7 @@
 # define TICKS_PER_UPDATE 10000
 # define MAP_ALLOWED_LIST "01NWSE \t\n\r\v\f"
 # define PLAYER_SIZE MAP_RES / 8
+# define STR_EMPTY ""
 // mlx event codes
 # define ON_KEYDOWN 2
 # define ON_KEYUP 3
@@ -57,6 +58,8 @@ int		die_hook(t_game_data *g_d);
 void	update(t_game_data *g_d);
 int		loop_hook(t_game_data *g_d);
 // Utils
+t_img	*init_textures(char *path, t_game_data *g_d);
+int		ft_strcmp(char *str1, char *str2);
 void	error_die(t_game_data *g_d, char *error_text, int exit_status);
 void	init_g_d_defaults(t_game_data *g_d);
 void	free_array(char **arr);
@@ -66,9 +69,11 @@ void	set_player_transform(t_game_data *g_d, t_fpoint position, int view_angle);
 float	fto_pos(float x);
 // Map processing
 bool	parse_file(t_game_data *g_d, char *file_path);
+bool	is_valid_color(char *r, char *g, char *b);
 bool	is_valid_input(int argc);
 bool	is_valid_file(char *file_path);
 bool	is_valid_map(char **file_text);
+int		parse_head(char **file_text, t_game_data *g_d);
 char	**read_file(char *file_path);
 char	**cut_trailings(char **file_text);
 void	clean_spaces(t_game_data *g_d, char **cut_text);

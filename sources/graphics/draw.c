@@ -63,7 +63,7 @@ int draw_line(int col, t_point collision, t_game_data *gd)
         while (c < h && i < gd->resolution.y)
         {
 			int j = h / 128;
-			unsigned int t_pixel = darker(my_pixel_get(g_mlx->texture, t_x, ((c << 7)/h)%64), d);
+			unsigned int t_pixel = darker(my_pixel_get(g_mlx->texture_north, t_x, ((c << 7)/h)%64), d);
 			while (j-- >= 0 && i < gd->resolution.y)
 			{
 				my_pixel_put(col, i, t_pixel);
@@ -128,7 +128,7 @@ int draw_frame(t_game_data *gd)
     int	i;
     t_point collision;
 
-    g_mlx->img->img = mlx_new_image(g_mlx->mlx, 1920, 1080);
+    g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->resolution.x, gd->resolution.y);
     g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bits_per_pixel, &g_mlx->img->line_length,
 								&g_mlx->img->endian);
 	i = -1;
@@ -139,5 +139,6 @@ int draw_frame(t_game_data *gd)
 			draw_line(i, collision, gd);
 	}
 	draw_map(gd);
+	my_pixel_put(gd->resolution.x / 2, gd->resolution.y / 2, gd->ceiling);
 	return (0);
 }
