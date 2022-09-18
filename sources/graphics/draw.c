@@ -65,23 +65,30 @@ int draw_line(int col, t_point collision, t_game_data *gd)
     }
 	return (0);
 }
-		 
+
 t_point cast_ray(t_game_data *gd, int col)
 {
+	// (void)gd;
+	// (void)col;
 	t_point ret = {-1, -1};
-	float dir_x = cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); //zamenit' float na int perem
-	float dir_y = sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col))); // ispolzovat int kak peremennuu s statichnoy tochkoy
+	float dir_x = (cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); //zamenit' float na int perem
+	float dir_y = (sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); // ispolzovat int kak peremennuu s statichnoy tochkoy
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
 	int i = -1;
-	while (++i < MAP_RES*4)
+	while (++i < MAP_RES)
 	{
-		fx += dir_x;
-		fy += dir_y;
+		fx += dir_x*((1 << (i >> 8)));// map_res / 64
+		fy += dir_y*((1 << (i >> 8)));
 		if (gd->map[(int)fx][(int)fy] == '1')
 		{
-			ret.x = (int)fx;
-			ret.y = (int)fy;
+			while (gd->map[(int)fx][(int)fy] == '1')
+			{
+				fx -= dir_x;
+				fy -= dir_y;
+			}
+			ret.x = (int)(fx + dir_x);
+			ret.y = (int)(fy + dir_y);
 			return (ret);
 		}
 	}
