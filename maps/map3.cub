@@ -9,7 +9,9 @@ EA ./textures/greystone.xpm
 
 
 F 255,255,255
-C 0,0,255
+
+
+C 0,255,255
 
 
 

@@ -5,10 +5,7 @@ WE ./textures/greystone.xpm
 EA ./textures/greystone.xpm
 
 F 255,255,255
-C 0,0,255
-
-
-
+C 0,255,0
 
 11111111111 	 	
 1E000000001

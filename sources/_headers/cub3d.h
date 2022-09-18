@@ -69,6 +69,7 @@ void	set_player_transform(t_game_data *g_d, t_fpoint position, int view_angle);
 float	fto_pos(float x);
 // Map processing
 bool	parse_file(t_game_data *g_d, char *file_path);
+bool	is_valid_color(char *r, char *g, char *b);
 bool	is_valid_input(int argc);
 bool	is_valid_file(char *file_path);
 bool	is_valid_map(char **file_text);

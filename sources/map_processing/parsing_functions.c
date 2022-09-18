@@ -23,12 +23,18 @@ int	parse_head(char **file_text, t_game_data *g_d)
 		else if (!ft_strcmp(split_line[0], "F") && ++count)
 		{
 			color = ft_split(split_line[1], ',');
+			if (!color[0] || !color[1] || !color[2]
+				|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
+				error_die(g_d, "Cub3D: Error: Wrong floor color.\n", 0);
 			g_d->floor = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8) + ft_atoi(color[2]);
 			free_array(color);
 		}
 		else if (!ft_strcmp(split_line[0], "C") && ++count)
 		{
 			color = ft_split(split_line[1], ',');
+			if (!color[0] || !color[1] || !color[2]
+				|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
+				error_die(g_d, "Cub3D: Error: Wrong ceiling color.\n", 0);
 			g_d->ceiling = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8) + ft_atoi(color[2]);
 			free_array(color);
 		}
@@ -85,12 +91,15 @@ char	**cut_trailings(char **file_text)
 	i = 0;
 	while (file_text[i])
 	{
-		if (find_left_border(file_text[i]) < leftest_border)
-			leftest_border = find_left_border(file_text[i]);
 		if (*(file_text[i]) != '\n')
+		{
+			if (find_left_border(file_text[i]) < leftest_border)
+				leftest_border = find_left_border(file_text[i]);
 			j++;
+		}
 		i++;
 	}
+	
 	cut_text = (char **)ft_calloc(j + 1, sizeof(char *));
 	i = 0;
 	j = 0;
