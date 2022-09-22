@@ -42,7 +42,7 @@ unsigned int darker(int c, int d)
 	return (r << 16 ) + (g << 8) + b;
 }
 
-int draw_line(int col, t_point collision, t_game_data *gd)
+int draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
 {
     int i; // index пикселя по вертикали
     float d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
@@ -62,8 +62,8 @@ int draw_line(int col, t_point collision, t_game_data *gd)
 		int t_x = (collision.x+collision.y)/2 % 64;
         while (c < h && i < gd->resolution.y)
         {
-			int j = h / 128;
-			unsigned int t_pixel = darker(my_pixel_get(g_mlx->texture_north, t_x, ((c << 7)/h)%64), d);
+			int j = h >> 8;
+			unsigned int t_pixel = darker(my_pixel_get(texture, t_x, ((c << 7)/h)%64), d);
 			while (j-- >= 0 && i < gd->resolution.y)
 			{
 				my_pixel_put(col, i, t_pixel);
@@ -127,7 +127,7 @@ int draw_frame(t_game_data *gd)
 {
     int	i;
     t_point collision;
-
+	t_img	*texture;
     g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->resolution.x, gd->resolution.y);
     g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bits_per_pixel, &g_mlx->img->line_length,
 								&g_mlx->img->endian);
@@ -136,7 +136,17 @@ int draw_frame(t_game_data *gd)
 	{
 		collision = cast_ray(gd, gd->resolution.x - i);
 		if (collision.x >= 0)
-			draw_line(i, collision, gd);
+		{
+			if (gd->map[collision.x][collision.y + 1] == '0')
+				texture = g_mlx->texture_north;
+			else if (gd->map[collision.x + 1][collision.y] == '0')
+				texture = g_mlx->texture_west;
+			else if (gd->map[collision.x][collision.y - 1] == '0')
+				texture = g_mlx->texture_east;
+			else
+				texture = g_mlx->texture_south;
+			draw_line(i, collision, gd, texture);
+		}
 	}
 	draw_map(gd);
 	my_pixel_put(gd->resolution.x / 2, gd->resolution.y / 2, gd->ceiling);
