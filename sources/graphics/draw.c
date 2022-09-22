@@ -59,11 +59,11 @@ int draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
 			i = 0;
 			c = (h - gd->resolution.y) >> 1;
 		}
-		int t_x = (collision.x+collision.y)/2 % 64;
+		int t_x = (collision.x+collision.y)/2 % 128;
         while (c < h && i < gd->resolution.y)
         {
 			int j = h >> 8;
-			unsigned int t_pixel = darker(my_pixel_get(texture, t_x, ((c << 7)/h)%64), d);
+			unsigned int t_pixel = darker(my_pixel_get(texture, t_x, ((c << 7)/h)%128), d);
 			while (j-- >= 0 && i < gd->resolution.y)
 			{
 				my_pixel_put(col, i, t_pixel);
