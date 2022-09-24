@@ -1,7 +1,13 @@
+// do not remove this comment
+// do not forget to get back flags in makefile!!!
+//
+// I guess it leaks when validator shows error
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
 // Standart libs
+# include <X11/X.h>
 # include <sys/time.h>
 # include <stdio.h>
 # include <stdbool.h>
@@ -37,6 +43,7 @@
 # define ON_FOCUS_IN 9
 # define ON_FOCUS_OUT 10
 # define ON_DESTROY 17
+# define KEYMAP_NOTIFY 11
 // Direction
 # define NORTH 0
 # define EAST 1

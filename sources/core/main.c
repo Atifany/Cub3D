@@ -2,6 +2,14 @@
 
 t_mlx_data	*g_mlx;
 
+void	null_textures()
+{
+	g_mlx->texture_east = NULL;
+	g_mlx->texture_north = NULL;
+	g_mlx->texture_south = NULL;
+	g_mlx->texture_west = NULL;
+}
+
 int	init_window(t_game_data *g_d)
 {
 	g_mlx = (t_mlx_data *)ft_calloc(1, sizeof(t_mlx_data));
@@ -14,6 +22,7 @@ int	init_window(t_game_data *g_d)
 			g_d->resolution.x, g_d->resolution.y, "Cub3D");
 	if (!g_mlx->win)
 		return (1);
+	null_textures();
 	return (0);
 }
 

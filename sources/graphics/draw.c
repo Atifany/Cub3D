@@ -109,14 +109,14 @@ void draw_map(t_game_data *gd)
 	int i = 0;
 	int j = 0;
 
-	my_pixel_put(gd->player->position.x/(MAP_RES/8), gd->player->position.y/(MAP_RES/8), 0x00800000);
+	my_pixel_put(gd->player->position.y/(MAP_RES/8), gd->player->position.x/(MAP_RES/8), 0x0000FF00);
 	while (gd->map[i])
 	{
 		j = 0;
 		while (gd->map[i][j])
 		{
 			if (gd->map[i][j] == '1')
-				my_pixel_put(i/(MAP_RES/8), j/(MAP_RES/8), 0x00ff0000);
+				my_pixel_put(j/(MAP_RES/8), i/(MAP_RES/8), 0x00550000);
 			j+=MAP_RES/8;
 		}
 		i+=MAP_RES/8;
