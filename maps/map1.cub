@@ -8,10 +8,10 @@ F 255,255,255
 C 0,1,123
 
 
-NO ./textures/greystone.xpm
-SO ./textures/greystone.xpm
-WE ./textures/greystone.xpm
-EA ./textures/greystone.xpm
+NO ./textures/wall1.xpm
+SO ./textures/wall2.xpm
+WE ./textures/wall3.xpm
+EA ./textures/wall4.xpm
 
 
 
