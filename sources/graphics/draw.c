@@ -1,5 +1,4 @@
 #include "../_headers/cub3d.h"
-#include "../_headers/data_structures.h"
 
 void	my_pixel_put(int x, int y, int color)
 {
