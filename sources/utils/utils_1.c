@@ -37,6 +37,7 @@ void	init_g_d_defaults(t_game_data *g_d)
 	g_d->keys_pressed = NULL;
 	g_d->player_rot_speed = 0.1f;
 	g_d->player_speed = 20.0f;
+	g_d->is_focused = false;
 }
 
 void	free_array(char **arr)

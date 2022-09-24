@@ -34,7 +34,8 @@
 # define ON_KEYDOWN 2
 # define ON_KEYUP 3
 # define ON_MOUSEMOVE 6
-// # define ON_MOUSEPRESS
+# define ON_FOCUS_IN 9
+# define ON_FOCUS_OUT 10
 # define ON_DESTROY 17
 // Direction
 # define NORTH 0
@@ -57,6 +58,8 @@ int		mouse_move(int x, int y, t_game_data *g_d);
 int		die_hook(t_game_data *g_d);
 void	update(t_game_data *g_d);
 int		loop_hook(t_game_data *g_d);
+int		focus_in(t_game_data *g_d);
+int		focus_out(t_game_data *g_d);
 // Utils
 t_img	*init_textures(char *path, t_game_data *g_d);
 int		ft_strcmp(char *str1, char *str2);

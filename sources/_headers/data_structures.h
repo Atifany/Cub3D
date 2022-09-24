@@ -56,6 +56,7 @@ typedef struct s_game_data
 	t_list		*keys_pressed;
 	int			floor;
 	int			ceiling;
+	bool		is_focused;
 }	t_game_data;
 
 #endif
