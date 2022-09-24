@@ -6,6 +6,7 @@ _SRC =	core/main.c							\
 		graphics/draw.c						\
 		hooks/hooks.c						\
 		utils/utils.c						\
+		utils/utils_1.c						\
 		map_processing/validation.c			\
 		map_processing/parsing_core.c		\
 		map_processing/parsing_functions.c	\

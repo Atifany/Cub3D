@@ -1,52 +1,27 @@
-
 #include "../_headers/cub3d.h"
 
-double	dabs(double x)
+void	*ft_realloc(void *ptr, size_t size, size_t oldsize)
 {
-	if (x < 0)
-		x *= -1;
-	return (x);
-}
+	int				i;
+	unsigned char	*ret;
+	unsigned char	*ptr_cpy;
 
-float	fto_pos(float x)
-{
-	if (x <= 0.0f)
-		x = 0;
-	return (x);
-}
-
-void	set_player_transform(t_game_data *g_d, t_fpoint position, int view_angle)
-{
-	if (!g_d->player)
-		g_d->player = (t_transform *)ft_calloc(1, sizeof(t_transform));
-	g_d->player->position = position;
-	g_d->player->view_angle = view_angle;
-}
-
-void	init_g_d_defaults(t_game_data *g_d)
-{
-	g_d->map = NULL;
-	g_d->fov = 90;
-
-	g_d->player = (t_transform *)ft_calloc(1, sizeof(t_transform));
-	g_d->player->position = (t_fpoint){0.0f, 0.f};
-	g_d->player->view_angle = 0.0f;
-	g_d->player->size = (t_fpoint){(float)(PLAYER_SIZE), (float)(PLAYER_SIZE)};
-	g_d->resolution = (t_point){1920, 1080};
-
-	g_d->keys_pressed = NULL;
-	g_d->player_rot_speed = 0.1f;
-	g_d->player_speed = 20.0f;
-}
-
-void	free_array(char **arr)
-{
-	int	i;
-
+	ptr_cpy = ptr;
+	if (size == 0)
+		return (NULL);
+	ret = malloc(size);
+	if (!ret)
+		return (ptr);
+	if (!ptr || oldsize == 0)
+		return (ret);
 	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
+	while (i < oldsize && i < size)
+	{
+		ret[i] = ptr_cpy[i];
+		i++;
+	}
+	free(ptr_cpy);
+	return (ret);
 }
 
 void	destroy_g_d(t_game_data *g_d)
@@ -83,7 +58,6 @@ void	error_die(t_game_data *g_d, char *error_text, int exit_status)
 	if (g_d && g_mlx)
 	{
 		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
-		// destroy_textures();
 		free(g_mlx);
 		destroy_g_d(g_d);
 	}

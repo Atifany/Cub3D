@@ -17,28 +17,39 @@ bool	is_valid_input(int argc)
 
 static bool	is_valid_tile(char **file_text, int i, int j)
 {
+	int	k;
+	int	m;
+
 	if (!ft_strchr(MAP_ALLOWED_LIST, file_text[i][j]))
 		return (false);
 	if (file_text[i][j] == '0' || is_spawner(file_text[i][j]))
 	{
-		if (i == 0 || j == 0
-			|| file_text[i + 1] == 0 || file_text[i][j + 1] == 0)
-			return (false);
-		if (ft_isspace(file_text[i - 1][j])
-			|| ft_isspace(file_text[i + 1][j])
-			|| ft_isspace(file_text[i][j - 1])
-			|| ft_isspace(file_text[i][j + 1]))
-			return (false);
+		k = i - 1;
+		while (k <= i + 1)
+		{
+			if ((k < 0 || !file_text[k] || ft_strlen(file_text[k]) <= j + 1) || j == 0)
+				return (false);
+			m = j - 1;
+			while (m <= j + 1)
+			{
+				if (ft_isspace(file_text[k][m]))
+					return (false);
+				m++;
+			}
+			k++;
+		}
 	}
 	return (true);
 }
 
 bool	is_valid_map(char **file_text)
 {
+	int		first_line_index;
 	int		i;
 	int		j;
 	bool	has_spawner;
 
+	first_line_index = 0;
 	has_spawner = false;
 	i = 0;
 	while (file_text[i])
