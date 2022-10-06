@@ -1,15 +1,46 @@
 
 #include "../_headers/cub3d.h"
 
+void	focus_change_button(t_game_data *g_d)
+{
+	if (g_d->is_focused == true)
+		focus_out(g_d);
+	else
+		focus_in(g_d);
+}
+
+void	set_new_mouse_pos(int x, int y)
+{
+	#ifdef __APPLE__
+	mlx_mouse_move(g_mlx->win, x, y);
+	#endif
+	#ifdef __linux__
+	mlx_mouse_move(g_mlx->mlx, g_mlx->win, x, y);
+	#endif
+}
+
+void	get_mouse_pos(int *mousex, int *mousey)
+{
+	#ifdef __APPLE__
+	mlx_mouse_get_pos(g_mlx->win, mousex, mousey);
+	#endif
+	#ifdef __linux__
+	mlx_mouse_get_pos(g_mlx->mlx, g_mlx->win, &mousex, &mousey);
+	#endif
+	
+}
+
 int	focus_in(t_game_data *g_d)
 {
+	mlx_mouse_hide();
 	g_d->is_focused = true;
-	mlx_mouse_move(g_mlx->mlx, g_mlx->win, g_d->resolution.x / 2, g_d->resolution.y / 2);
+	set_new_mouse_pos(g_d->resolution.x / 2, g_d->resolution.y / 2);
 	return (0);
 }
 
 int	focus_out(t_game_data *g_d)
 {
+	mlx_mouse_show();
 	g_d->is_focused = false;
 	return (0);
 }
@@ -28,27 +59,29 @@ int	mouse_move(int x, int y, t_game_data *g_d)
 	if (x != g_d->resolution.x / 2)
 	{
 		rotate_player((float)(- x + g_d->resolution.x / 2) * g_d->player_rot_speed, g_d);
-		mlx_mouse_move(g_mlx->mlx, g_mlx->win, g_d->resolution.x / 2, g_d->resolution.y / 2);
+		set_new_mouse_pos(g_d->resolution.x / 2, g_d->resolution.y / 2);
 	}
 	return (0);
 }
 
 // printf("Pressed key: %d\n", keycode);
 // ft_lstiter(g_d->keys_pressed, show_linked_list);
-int	key_down_hook(int keycode, t_list **keys_pressed)
+int	key_down_hook(int keycode, t_game_data *g_d)
 {
 	t_list	*tmp;
 	int		*buf;
 
 	//printf("Key down active\n");
-	tmp = *keys_pressed;
+	if (keycode == Q)
+		focus_change_button(g_d);
+	tmp = g_d->keys_pressed;
 	while (tmp && tmp->next && *(int *)(tmp->next->content) != keycode)
 		tmp = tmp->next;
 	if (!tmp || (!(tmp->next) && *(int *)(tmp->content) != keycode))
 	{
 		buf = (int *)ft_calloc(1, sizeof(int));
 		*buf = keycode;
-		ft_lstadd_back(keys_pressed, ft_lstnew(buf));
+		ft_lstadd_back(&(g_d->keys_pressed), ft_lstnew(buf));
 	}
 	return (0);
 }
@@ -123,13 +156,13 @@ static void	list_active_keys(t_game_data *g_d)
 		move_player((t_fpoint){g_d->player_speed / -2, g_d->player_speed / -2}, g_d);
 	if (is_in_list(g_d->keys_pressed, S) && is_in_list(g_d->keys_pressed, D))
 		move_player((t_fpoint){g_d->player_speed / -2, g_d->player_speed / 2}, g_d);
-	
-	mlx_mouse_get_pos(g_mlx->mlx, g_mlx->win, &mousex, &mousey);
+
+	get_mouse_pos(&mousex, &mousey);
 	mouse_move(mousex, mousey, g_d);
 	if (is_in_list(g_d->keys_pressed, L_ARROW))
-		rotate_player(g_d->player_rot_speed, g_d);
+		rotate_player(g_d->player_rot_speed * 10, g_d);
 	if (is_in_list(g_d->keys_pressed, R_ARROW))
-		rotate_player(-1 * g_d->player_rot_speed, g_d);
+		rotate_player(-1 * g_d->player_rot_speed * 10, g_d);
 }
 
 static long long cur_time(long long timestart)

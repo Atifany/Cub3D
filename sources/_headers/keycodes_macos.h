@@ -2,6 +2,7 @@
 # define KEYCODES_MACOS_H
 
 # define ESC 53
+# define Q 12
 # define W 13
 # define A 0
 # define S 1

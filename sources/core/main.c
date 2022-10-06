@@ -43,17 +43,17 @@ t_img	*init_textures(char *path, t_game_data *g_d)
 }
 
 int	body(t_game_data *g_d)
-{	
-	mlx_mouse_move(g_mlx->mlx, g_mlx->win,
-		g_d->resolution.x / 2, g_d->resolution.y / 2);
+{
+	mlx_do_key_autorepeatoff(g_mlx->mlx);
+	set_new_mouse_pos(g_d->resolution.x / 2, g_d->resolution.y / 2);
 	mlx_mouse_hide(g_mlx->mlx, g_mlx->win);
-	mlx_hook(g_mlx->win, ON_DESTROY, 1L << 0, die_hook, g_d);
-	mlx_hook(g_mlx->win, ON_KEYDOWN, 1L << 0, key_down_hook,
+	mlx_hook(g_mlx->win, DestroyNotify, NoEventMask, die_hook, g_d);
+	mlx_hook(g_mlx->win, KeyPress, KeyPressMask, key_down_hook,
+		g_d);
+	mlx_hook(g_mlx->win, KeyRelease, KeyReleaseMask, key_up_hook,
 		&(g_d->keys_pressed));
-	mlx_hook(g_mlx->win, ON_KEYUP, 1L << 1, key_up_hook,
-		&(g_d->keys_pressed));
-	mlx_hook(g_mlx->win, ON_FOCUS_IN, 1L << 21, focus_in, g_d);
-	mlx_hook(g_mlx->win, ON_FOCUS_OUT, 1L << 21, focus_out, g_d);
+	mlx_hook(g_mlx->win, FocusIn, FocusChangeMask, focus_in, g_d);
+	mlx_hook(g_mlx->win, FocusOut, FocusChangeMask, focus_out, g_d);
 	mlx_loop_hook(g_mlx->mlx, loop_hook, g_d);
 	mlx_loop(g_mlx->mlx);
 	return (0);

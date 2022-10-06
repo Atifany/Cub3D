@@ -8,6 +8,7 @@
 
 // Standart libs
 # include <X11/X.h>
+// # include <X11/keysym.h>  <-- does not work somewhy
 # include <sys/time.h>
 # include <stdio.h>
 # include <stdbool.h>
@@ -59,9 +60,10 @@ extern t_mlx_data	*g_mlx;
 # endif
 
 // Hooks
-int		key_down_hook(int keycode, t_list **keys_pressed);
+int		key_down_hook(int keycode, t_game_data *g_d);
 int		key_up_hook(int keycode, t_list **keys_pressed);
 int		mouse_move(int x, int y, t_game_data *g_d);
+void	set_new_mouse_pos(int x, int y);
 int		die_hook(t_game_data *g_d);
 void	update(t_game_data *g_d);
 int		loop_hook(t_game_data *g_d);
