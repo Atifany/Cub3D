@@ -2,6 +2,7 @@
 
 void	*ft_realloc(void *ptr, size_t size, size_t oldsize)
 {
+	// add a proper free function as a parametre.
 	int				i;
 	unsigned char	*ret;
 	unsigned char	*ptr_cpy;
@@ -20,7 +21,7 @@ void	*ft_realloc(void *ptr, size_t size, size_t oldsize)
 		ret[i] = ptr_cpy[i];
 		i++;
 	}
-	free(ptr_cpy);
+	free(ptr);
 	return (ret);
 }
 

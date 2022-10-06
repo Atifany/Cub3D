@@ -72,7 +72,10 @@ bool	read_color(int *count, char **split_line, t_game_data *g_d)
 		color = ft_split(split_line[1], ',');
 		if (!color[0] || !color[1] || !color[2] || color[3]
 			|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
+		{
+			free_array(color);
 			error_die(g_d, "Cub3D: Error: Wrong floor color.\n", 0);
+		}
 		g_d->floor = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8)
 			+ ft_atoi(color[2]);
 		free_array(color);
@@ -82,7 +85,10 @@ bool	read_color(int *count, char **split_line, t_game_data *g_d)
 		color = ft_split(split_line[1], ',');
 		if (!color[0] || !color[1] || !color[2] || color[3]
 			|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
-			error_die(g_d, "Cub3D: Error: Wrong ceiling color.\n", 0);
+		{
+			free_array(color);
+			error_die(g_d, "Cub3D: Error: Wrong floor color.\n", 0);
+		}
 		g_d->ceiling = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8)
 			+ ft_atoi(color[2]);
 		free_array(color);

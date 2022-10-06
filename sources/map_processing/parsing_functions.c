@@ -15,7 +15,7 @@ int	parse_head(char **file_text, t_game_data *g_d)
 			free_array(split_line);
 		else if (read_color(&count, split_line, g_d)
 			|| !ft_strcmp(split_line[0], "\n"))
-			(void)g_d;
+			free_array(split_line);
 		else
 		{
 			free_array(split_line);
