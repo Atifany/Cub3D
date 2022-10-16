@@ -179,10 +179,12 @@ static long long cur_time(long long timestart)
 
 static void display_fps(t_game_data *g_d)
 {	
-	static int	oldfps = 0;
-	static int	fps = 0;
+	static int			oldfps = 0;
+	static int			fps = 0;
 	static long long	secs = 0;
 	static long long	timestart = 0;
+	char				*string_to_display;
+
 	if (!timestart)
 		timestart = cur_time(0);
 	fps++;
@@ -191,9 +193,11 @@ static void display_fps(t_game_data *g_d)
 		oldfps = fps;
 		fps = 0;
 	}
+	string_to_display = ft_itoa(oldfps);
 	mlx_string_put(g_mlx->mlx, g_mlx->win,
 			g_d->resolution.x - 100, 50,
-			0x00FF0000, ft_itoa(oldfps));
+			0x00FF0000, string_to_display);
+	free(string_to_display);
 	secs = cur_time(timestart);
 }
 

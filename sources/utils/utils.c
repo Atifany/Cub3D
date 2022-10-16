@@ -10,6 +10,7 @@ void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize)
 	if (size == 0)
 		return (NULL);
 	ret = malloc(size);
+	//printf("{%-20s%p}\n", "ft_realloc:", ret);
 	if (!ret)
 		return (ptr);
 	if (!ptr || oldsize == 0)
@@ -33,6 +34,7 @@ void	destroy_g_d(t_game_data *g_d)
 	if (g_d->player)
 		free(g_d->player);
 	ft_lstclear(&(g_d->keys_pressed), free);
+	free(g_d);
 }
 
 int	ft_strcmp(char *str1, char *str2)
