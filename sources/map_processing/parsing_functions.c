@@ -38,20 +38,19 @@ char	**read_file(char *file_path)
 	fd = open(file_path, O_RDONLY, 0777);
 	if (fd == -1)
 		return (NULL);
-	i = 0;
+	i = 1;
 	str = get_next_line(fd);
+	file_text = ft_calloc(1, sizeof(char *));
 	while (str)
 	{
-		i++;
-		file_text = ft_realloc(file_text, i * sizeof(char *),
-				(i - 1) * sizeof(char *));
+		file_text = ft_realloc_charpp(file_text, (i + 1) * sizeof(char *),
+				i * sizeof(char *));
 		file_text[i - 1] = ft_strdup(str);
+		file_text[i] = NULL;
 		free(str);
 		str = get_next_line(fd);
+		i++;
 	}
-	file_text = ft_realloc(file_text, (i + 1) * sizeof(char *),
-			i * sizeof(char *));
-	file_text[i] = NULL;
 	return (file_text);
 }
 
@@ -62,9 +61,9 @@ char	**cut_trailings(char **file_text)
 	int		j;
 	char	**cut_text;
 
-	cut_text = NULL;
+	cut_text = ft_calloc(1, sizeof(char *));
 	leftest_border = INT_MAX;
-	j = 0;
+	j = 1;
 	i = -1;
 	while ((++i != -1) && file_text[i])
 	{
@@ -72,15 +71,13 @@ char	**cut_trailings(char **file_text)
 			continue ;
 		if (find_left_border(file_text[i]) < leftest_border)
 			leftest_border = find_left_border(file_text[i]);
-		cut_text = ft_realloc(cut_text, (j + 1) * sizeof(char *),
+		cut_text = ft_realloc_charpp(cut_text, (j + 1) * sizeof(char *),
 				j * sizeof(char *));
-		cut_text[j] = ft_substr(file_text[i], leftest_border,
+		cut_text[j - 1] = ft_substr(file_text[i], leftest_border,
 				find_right_border(file_text[i]) - leftest_border + 1);
+		cut_text[j] = NULL;
 		j++;
 	}
-	cut_text = ft_realloc(cut_text, (j + 1) * sizeof(char *),
-			j * sizeof(char *));
-	cut_text[j] = NULL;
 	return (cut_text);
 }
 

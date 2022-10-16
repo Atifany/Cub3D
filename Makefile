@@ -22,6 +22,16 @@ SRC = $(_SRC:%=$(SRC_DIR)/%)
 OBJ = $(SRC:%.c=%.o)
 DPS = $(SRC:%.c=%.d)
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    MLX_FLAGS += -lXext -lX11
+    LIBS += -lm
+    MLX_DIR = libs/mlx_linux_1/
+else
+    MLX_FLAGS += -framework OpenGL -framework AppKit
+    MLX_DIR = libs/mlx/
+endif
+
 # libraries
 LIBFT_DIR = libs/libft/
 LIBFT = libft.a
@@ -32,16 +42,6 @@ LIBS =	$(LIBFT:%=$(LIBFT_DIR)%) \
 
 # flags
 #C_FLAGS = -O2 -Wall -Wextra -Werror
-
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-    MLX_FLAGS += -lXext -lX11
-    LIBS += -lm
-    MLX_DIR = libs/mlx_linux_1/
-else
-    MLX_FLAGS += -framework OpenGL -framework AppKit
-    MLX_DIR = libs/mlx/
-endif
 
 # Make commands
 CC = gcc

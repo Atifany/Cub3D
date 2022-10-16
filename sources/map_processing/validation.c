@@ -8,13 +8,6 @@ bool	is_valid_file(char *file_path)
 	return (true);
 }
 
-bool	is_valid_input(int argc)
-{
-	if (argc != 2)
-		return (false);
-	return (true);
-}
-
 static bool	is_valid_tile(char **file_text, int i, int j)
 {
 	int	k;

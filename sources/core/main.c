@@ -67,7 +67,7 @@ int	main(int argc, char **argv)
 	init_g_d_defaults(&g_d);
 	if (init_window(&g_d))
 		error_die(&g_d, "Cub3D: Error: Initialization failed.\n", 1);
-	if (!is_valid_input(argc))
+	if (argc != 2)
 		error_die(&g_d, "Cub3D: Error: Invalid input.\n"
 			"Usage: ./cub3D [filename].cub\n", 1);
 	if (!parse_file(&g_d, argv[1]))

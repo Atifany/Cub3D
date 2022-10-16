@@ -1,8 +1,7 @@
 #include "../_headers/cub3d.h"
 
-void	*ft_realloc(void *ptr, size_t size, size_t oldsize)
+void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize)
 {
-	// add a proper free function as a parametre.
 	int				i;
 	unsigned char	*ret;
 	unsigned char	*ptr_cpy;
@@ -59,6 +58,8 @@ void	error_die(t_game_data *g_d, char *error_text, int exit_status)
 	if (g_d && g_mlx)
 	{
 		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
+		free(g_mlx->img);
+		free(g_mlx->mlx);
 		free(g_mlx);
 		destroy_g_d(g_d);
 	}

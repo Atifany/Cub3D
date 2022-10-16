@@ -80,10 +80,9 @@ double	deg_to_rad(float a);
 void	set_player_transform(t_game_data *g_d,
 			t_fpoint position, int view_angle);
 float	fto_pos(float x);
-void	*ft_realloc(void *ptr, size_t size, size_t oldsize);
+void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize);
 // Map processing
 bool	parse_file(t_game_data *g_d, char *file_path);
-bool	is_valid_input(int argc);
 bool	is_valid_file(char *file_path);
 bool	is_valid_map(char **file_text);
 int		parse_head(char **file_text, t_game_data *g_d);
