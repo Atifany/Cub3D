@@ -55,8 +55,7 @@ bool	read_textures(int *count, char **split_line, t_game_data *g_d)
 	else if (!ft_strcmp(split_line[0], "EA") && !(g_mlx->texture_east) && ++*count)
 		g_mlx->texture_east = init_textures(split_line[1], g_d);
 	else if (!ft_strcmp(split_line[0], "WE") && !(g_mlx->texture_west) && ++*count)
-		g_mlx->texture_west
-			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+		g_mlx->texture_west = init_textures(split_line[1], g_d);
 	else
 		return (false);
 	return (true);

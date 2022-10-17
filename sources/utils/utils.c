@@ -60,9 +60,6 @@ void	error_die(t_game_data *g_d, char *error_text, int exit_status)
 	if (g_d && g_mlx)
 	{
 		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
-		free(g_mlx->img);
-		free(g_mlx->mlx);
-		free(g_mlx);
 		destroy_g_d(g_d);
 	}
 	printf("%s", error_text);
