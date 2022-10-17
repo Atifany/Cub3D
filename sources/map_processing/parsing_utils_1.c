@@ -46,15 +46,14 @@ bool	is_valid_color(char *r, char *g, char *b)
 
 bool	read_textures(int *count, char **split_line, t_game_data *g_d)
 {
+	if (!*split_line)
+		return (false);
 	if (!ft_strcmp(split_line[0], "NO") && !(g_mlx->texture_north) && ++*count)
-		g_mlx->texture_north
-			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+		g_mlx->texture_north = init_textures(split_line[1], g_d);
 	else if (!ft_strcmp(split_line[0], "SO") && !(g_mlx->texture_south) && ++*count)
-		g_mlx->texture_south
-			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+		g_mlx->texture_south = init_textures(split_line[1], g_d);
 	else if (!ft_strcmp(split_line[0], "EA") && !(g_mlx->texture_east) && ++*count)
-		g_mlx->texture_east
-			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+		g_mlx->texture_east = init_textures(split_line[1], g_d);
 	else if (!ft_strcmp(split_line[0], "WE") && !(g_mlx->texture_west) && ++*count)
 		g_mlx->texture_west
 			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
@@ -67,11 +66,13 @@ bool	read_color(int *count, char **split_line, t_game_data *g_d)
 {
 	char	**color;
 
+	if (!*split_line)
+		return (false);
 	if (!ft_strcmp(split_line[0], "F") && ++*count)
 	{
 		color = ft_split(split_line[1], ',');
 		if (!color[0] || !color[1] || !color[2] || color[3]
-			|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
+			|| !is_valid_color(color[0], color[1], color[2]))
 		{
 			free_array(color);
 			error_die(g_d, "Cub3D: Error: Wrong floor color.\n", 0);
@@ -84,7 +85,7 @@ bool	read_color(int *count, char **split_line, t_game_data *g_d)
 	{
 		color = ft_split(split_line[1], ',');
 		if (!color[0] || !color[1] || !color[2] || color[3]
-			|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
+			|| !is_valid_color(color[0], color[1], color[2]))
 		{
 			free_array(color);
 			error_die(g_d, "Cub3D: Error: Wrong floor color.\n", 0);

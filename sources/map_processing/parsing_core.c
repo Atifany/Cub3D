@@ -18,7 +18,6 @@ bool	parse_file(t_game_data *g_d, char *file_path)
 	free_array(file_text);
 	clean_spaces(g_d, cut_text);
 	g_d->map = multiply_size(cut_text);
-	printf("lol\n");
 	free_array(cut_text);
 	printf("Parser finished\n");
 	return (true);

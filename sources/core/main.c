@@ -42,7 +42,6 @@ t_img	*init_textures(char *path, t_game_data *g_d)
 		error_die(g_d, "Cub3D: Error: Texture not found\n", 0);
 	image->addr = mlx_get_data_addr(image->img, &image->bits_per_pixel,
 			&image->line_length, &image->endian);
-	free(path);
 	return (image);
 }
 

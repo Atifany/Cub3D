@@ -1,8 +1,8 @@
 # executable
-NAME = cub3D
+NAME := cub3D
 
 # sources
-_SRC =	core/main.c							\
+_SRC :=	core/main.c							\
 		graphics/draw.c						\
 		hooks/hooks.c						\
 		utils/utils.c						\
@@ -16,36 +16,36 @@ _SRC =	core/main.c							\
 		utils/get_next_line.c				\
 		utils/get_next_line_utils.c			\
 
-SRC_DIR = sources
-SRC = $(_SRC:%=$(SRC_DIR)/%)
+SRC_DIR := sources
+SRC := $(_SRC:%=$(SRC_DIR)/%)
 # tmp files
-OBJ = $(SRC:%.c=%.o)
-DPS = $(SRC:%.c=%.d)
+OBJ := $(SRC:%.c=%.o)
+DPS := $(SRC:%.c=%.d)
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     MLX_FLAGS += -lXext -lX11
-    LIBS += -lm
-    MLX_DIR = libs/mlx_linux_1/
+    LIBS := -lm
+    MLX_DIR := libs/mlx_linux_1/
 else
     MLX_FLAGS += -framework OpenGL -framework AppKit
-    MLX_DIR = libs/mlx/
+    MLX_DIR := libs/mlx/
 endif
 
 # libraries
-LIBFT_DIR = libs/libft/
-LIBFT = libft.a
+LIBFT_DIR := libs/libft/
+LIBFT := libft.a
 
-MLX = libmlx.a
-LIBS =	$(LIBFT:%=$(LIBFT_DIR)%) \
+MLX := libmlx.a
+LIBS +=	$(LIBFT:%=$(LIBFT_DIR)%) \
 		$(MLX:%=$(MLX_DIR)%)
 
 # flags
 #C_FLAGS = -O2 -Wall -Wextra -Werror
 
 # Make commands
-CC = gcc
-RM = rm -f
+CC := gcc
+RM := rm -f
 
 # rules
 all: compile_libs log_compile_start $(NAME)

@@ -13,8 +13,7 @@ int	parse_head(char **file_text, t_game_data *g_d)
 		split_line = ft_split(file_text[i], ' ');
 		if (++i && read_textures(&count, split_line, g_d))
 			free_array(split_line);
-		else if (read_color(&count, split_line, g_d)
-			|| !ft_strcmp(split_line[0], "\n"))
+		else if (read_color(&count, split_line, g_d) || *split_line == 0)
 			free_array(split_line);
 		else
 		{
@@ -45,7 +44,7 @@ char	**read_file(char *file_path)
 	{
 		file_text = ft_realloc_charpp(file_text, (i + 1) * sizeof(char *),
 				i * sizeof(char *));
-		file_text[i - 1] = ft_strdup(str);
+		file_text[i - 1] = ft_strtrim(str, "\n");
 		file_text[i] = NULL;
 		free(str);
 		str = get_next_line(fd);
@@ -67,7 +66,7 @@ char	**cut_trailings(char **file_text)
 	i = -1;
 	while ((++i != -1) && file_text[i])
 	{
-		if (*(file_text[i]) == '\n')
+		if (*(file_text[i]) == 0)
 			continue ;
 		if (find_left_border(file_text[i]) < leftest_border)
 			leftest_border = find_left_border(file_text[i]);

@@ -25,14 +25,20 @@ void	get_mouse_pos(int *mousex, int *mousey)
 	mlx_mouse_get_pos(g_mlx->win, mousex, mousey);
 	#endif
 	#ifdef __linux__
-	mlx_mouse_get_pos(g_mlx->mlx, g_mlx->win, &mousex, &mousey);
+	mlx_mouse_get_pos(g_mlx->mlx, g_mlx->win, mousex, mousey);
 	#endif
 	
 }
 
 int	focus_in(t_game_data *g_d)
 {
+	#ifdef __APPLE__
 	mlx_mouse_hide();
+	#endif
+	#ifdef __linux__
+	mlx_mouse_hide(g_mlx->mlx, g_mlx->win);
+	#endif
+	
 	g_d->is_focused = true;
 	set_new_mouse_pos(g_d->resolution.x / 2, g_d->resolution.y / 2);
 	return (0);
@@ -40,7 +46,12 @@ int	focus_in(t_game_data *g_d)
 
 int	focus_out(t_game_data *g_d)
 {
+	#ifdef __APPLE__
 	mlx_mouse_show();
+	#endif
+	#ifdef __linux__
+	mlx_mouse_show(g_mlx->mlx, g_mlx->win);
+	#endif
 	g_d->is_focused = false;
 	return (0);
 }
@@ -71,7 +82,6 @@ int	key_down_hook(int keycode, t_game_data *g_d)
 	t_list	*tmp;
 	int		*buf;
 
-	//printf("Key down active\n");
 	if (keycode == Q)
 		focus_change_button(g_d);
 	tmp = g_d->keys_pressed;

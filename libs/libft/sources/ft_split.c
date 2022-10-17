@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: atifany <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/08 16:12:02 by atifany           #+#    #+#             */
-/*   Updated: 2021/10/08 16:12:03 by atifany          ###   ########.fr       */
+/*   Updated: 2022/10/17 16:32:16 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	**ft_split(char const *s, char c)
 	{
 		arr = (char **)ft_calloc(1, sizeof(char *));
 		if (arr)
-			arr[0] = NULL;
+			*arr = 0;
 		return (arr);
 	}
 	words_count = count_words(s, c);
