@@ -92,6 +92,9 @@ int	rotate_player(float shift, t_game_data *g_d);
 // TMP <- delete them later
 void	display_charpp(char **arr);
 
+float distance(t_point p1, t_fpoint p2);
+void	my_pixel_put(t_img *img, int x, int y, int color);
+unsigned int darker(int c, int d);
 void draw_map(t_game_data *gd);
 int draw_frame(t_game_data *gd);
 int loop_hook(t_game_data *g_d);
