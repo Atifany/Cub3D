@@ -4,7 +4,8 @@
 // Exterior libraries
 # include <stdbool.h>
 
-typedef struct	s_img {
+typedef struct s_img
+{
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -53,9 +54,10 @@ typedef struct s_game_data
 	t_transform	*player;
 	int			fov;
 	t_point		resolution;
-	t_list		*keys_pressed; // active keys
+	t_list		*keys_pressed;
 	int			floor;
 	int			ceiling;
+	bool		is_focused;
 }	t_game_data;
 
 #endif

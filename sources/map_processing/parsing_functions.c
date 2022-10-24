@@ -2,7 +2,6 @@
 
 int	parse_head(char **file_text, t_game_data *g_d)
 {
-	char	**color;
 	char	**split_line;
 	int		count;
 	int		i;
@@ -12,41 +11,16 @@ int	parse_head(char **file_text, t_game_data *g_d)
 	while (file_text[i] && count < 6)
 	{
 		split_line = ft_split(file_text[i], ' ');
-		if (!ft_strcmp(split_line[0], "NO") && ++count)
-			g_mlx->texture_north = init_textures(ft_strtrim(split_line[1], "\n"), g_d);
-		else if (!ft_strcmp(split_line[0], "SO") && ++count)
-			g_mlx->texture_south = init_textures(ft_strtrim(split_line[1], "\n"), g_d);
-		else if (!ft_strcmp(split_line[0], "EA") && ++count)
-			g_mlx->texture_east = init_textures(ft_strtrim(split_line[1], "\n"), g_d);
-		else if (!ft_strcmp(split_line[0], "WE") && ++count)
-			g_mlx->texture_west = init_textures(ft_strtrim(split_line[1], "\n"), g_d);
-		else if (!ft_strcmp(split_line[0], "F") && ++count)
-		{
-			color = ft_split(split_line[1], ',');
-			if (!color[0] || !color[1] || !color[2]
-				|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
-				error_die(g_d, "Cub3D: Error: Wrong floor color.\n", 0);
-			g_d->floor = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8) + ft_atoi(color[2]);
-			free_array(color);
-		}
-		else if (!ft_strcmp(split_line[0], "C") && ++count)
-		{
-			color = ft_split(split_line[1], ',');
-			if (!color[0] || !color[1] || !color[2]
-				|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
-				error_die(g_d, "Cub3D: Error: Wrong ceiling color.\n", 0);
-			g_d->ceiling = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8) + ft_atoi(color[2]);
-			free_array(color);
-		}
-		else if (!ft_strcmp(split_line[0], "\n"))
+		if (++i && read_textures(&count, split_line, g_d))
+			free_array(split_line);
+		else if (read_color(&count, split_line, g_d)
+			|| !ft_strcmp(split_line[0], "\n"))
 			(void)g_d;
 		else
 		{
 			free_array(split_line);
 			error_die(g_d, "Cub3D: Error: File's head is corrupted.\n", 0);
 		}
-		free_array(split_line);
-		i++;
 	}
 	if (count != 6)
 		error_die(g_d, "Cub3D: Error: File's head is corrupted.\n", 0);
@@ -69,12 +43,14 @@ char	**read_file(char *file_path)
 	while (str)
 	{
 		i++;
-		file_text = realloc(file_text, i * sizeof(char *));
+		file_text = ft_realloc(file_text, i * sizeof(char *),
+				(i - 1) * sizeof(char *));
 		file_text[i - 1] = ft_strdup(str);
 		free(str);
 		str = get_next_line(fd);
 	}
-	file_text = realloc(file_text, (i + 1) * sizeof(char *));
+	file_text = ft_realloc(file_text, (i + 1) * sizeof(char *),
+			i * sizeof(char *));
 	file_text[i] = NULL;
 	return (file_text);
 }
@@ -86,34 +62,24 @@ char	**cut_trailings(char **file_text)
 	int		j;
 	char	**cut_text;
 
+	cut_text = NULL;
 	leftest_border = INT_MAX;
 	j = 0;
-	i = 0;
-	while (file_text[i])
+	i = -1;
+	while ((++i != -1) && file_text[i])
 	{
-		if (*(file_text[i]) != '\n')
-		{
-			if (find_left_border(file_text[i]) < leftest_border)
-				leftest_border = find_left_border(file_text[i]);
-			j++;
-		}
-		i++;
-	}
-	
-	cut_text = (char **)ft_calloc(j + 1, sizeof(char *));
-	i = 0;
-	j = 0;
-	while (file_text[i])
-	{
-		if (*(file_text[i]) != '\n')
-		{
-			cut_text[j] = ft_substr(file_text[i],
-				leftest_border,
+		if (*(file_text[i]) == '\n')
+			continue ;
+		if (find_left_border(file_text[i]) < leftest_border)
+			leftest_border = find_left_border(file_text[i]);
+		cut_text = ft_realloc(cut_text, (j + 1) * sizeof(char *),
+				j * sizeof(char *));
+		cut_text[j] = ft_substr(file_text[i], leftest_border,
 				find_right_border(file_text[i]) - leftest_border + 1);
-			j++;
-		}
-		i++;
+		j++;
 	}
+	cut_text = ft_realloc(cut_text, (j + 1) * sizeof(char *),
+			j * sizeof(char *));
 	cut_text[j] = NULL;
 	return (cut_text);
 }
@@ -142,27 +108,6 @@ void	clean_spaces(t_game_data *g_d, char **cut_text)
 	}
 }
 
-void	write_line_to_map(char *cut_text, char **map)
-{
-	int	i;
-	int	j;
-	int	linelen;
-
-	linelen = ft_strlen(cut_text);
-	*map = malloc(MAP_RES*linelen*8); 
-	i = 0;
-	while (cut_text[i])
-	{
-		j = 0;
-		while (j < MAP_RES)
-		{
-			(*map)[i*MAP_RES + j] = cut_text[i];
-			j++;
-		}
-		i++;
-	}
-}
-
 char	**multiply_size(char **cut_text)
 {
 	int		i;
@@ -177,7 +122,7 @@ char	**multiply_size(char **cut_text)
 		j = 0;
 		while (j < MAP_RES)
 		{
-			write_line_to_map(cut_text[i], &(map[i*MAP_RES+j]));
+			write_line_to_map(cut_text[i], &(map[i * MAP_RES + j]));
 			j++;
 		}
 		i++;
@@ -199,7 +144,7 @@ char	**multiply_size(char **cut_text)
 // 	{
 // 		line_cpy = multiply_line(cut_text[i]);
 // 		j = i * MAP_RES;
-// 		// | |		This cycle is daaamn slooooow... find a way to speed things up
+// 		// | | This cycle is daaamn slooooow... find a way to speed things up
 // 		// V V
 // 		while (j < (i + 1) * MAP_RES)
 // 			map[j++] = ft_strdup(line_cpy);

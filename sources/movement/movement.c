@@ -1,45 +1,49 @@
 #include "../_headers/cub3d.h"
 
+static int	check_main_diagonal(t_game_data *g_d,
+	t_fpoint new_pos, int i, int j)
+{
+	int	istart;
+	int	jstart;
+	int	jend;
+
+	istart = new_pos.x - (g_d->player->size.x / 2);
+	jstart = new_pos.y - (g_d->player->size.y / 2);
+	jend = new_pos.y + (g_d->player->size.y / 2);
+	if (i <= new_pos.x && j - jstart <= i - istart)
+		return (0);
+	else if (j <= new_pos.y && j - jstart >= i - istart)
+		return (1);
+	else if (j >= new_pos.y && j + i - istart <= jend - 1)
+		return (2);
+	else if (i <= new_pos.x && j + i - istart >= jend - 1)
+		return (3);
+	else if (i >= new_pos.x && j + i - istart <= jend - 1)
+		return (4);
+	else if (j <= new_pos.y && j + i - istart >= jend - 1)
+		return (5);
+	else if (j >= new_pos.y && j - jstart <= i - istart)
+		return (6);
+	else if (i >= new_pos.x && j - jstart >= i - istart)
+		return (7);
+	return (7);
+}
+
 static int	*count_collisions(t_game_data *g_d, t_fpoint new_pos)
 {
 	int	i;
 	int	j;
-	int	iend;
-	int	jend;
-	int	istart;
-	int	jstart;
 	int	*ret;
 
 	ret = (int *)ft_calloc(8, sizeof(int));
-	iend = new_pos.x + (g_d->player->size.x / 2);
-	istart = new_pos.x - (g_d->player->size.x / 2);
-	jend = new_pos.y + (g_d->player->size.y / 2);
-	jstart = new_pos.y - (g_d->player->size.y / 2);
-	i = istart;
-	while (i < iend)
+	i = new_pos.x - (g_d->player->size.x / 2);
+	while (i < new_pos.x + (g_d->player->size.x / 2))
 	{
-		j = jstart;
-		while (j < jend)
+		j = new_pos.y - (g_d->player->size.y / 2);
+		while (j < new_pos.y + (g_d->player->size.y / 2))
 		{
 			if (g_d->map[i][j] == '1')
-			{
-				if (i <= new_pos.x && j - jstart <= i - istart)
-					ret[0]++;
-				else if (j <= new_pos.y && j - jstart >= i - istart)
-					ret[1]++;
-				else if (j >= new_pos.y && j + i - istart <= jend - 1)
-					ret[2]++;
-				else if (i <= new_pos.x && j + i - istart >= jend - 1)
-					ret[3]++;
-				else if (i >= new_pos.x && j + i - istart <= jend - 1)
-					ret[4]++;
-				else if (j <= new_pos.y && j + i - istart >= jend - 1)
-					ret[5]++;
-				else if (j >= new_pos.y && j - jstart <= i - istart)
-					ret[6]++;
-				else if (i >= new_pos.x && j - jstart >= i - istart)
-					ret[7]++;
-			}
+				ret[check_main_diagonal(g_d, new_pos, i, j)]++;
 			j++;
 		}
 		i++;
@@ -49,18 +53,19 @@ static int	*count_collisions(t_game_data *g_d, t_fpoint new_pos)
 
 static int	*is_collision(t_game_data *g_d, t_fpoint new_pos)
 {
-	int *collisions;
+	int	*collisions;
 	int	*count;
 
 	count = count_collisions(g_d, new_pos);
-	//printf("[%d:%d:%d:%d:%d:%d:%d:%d]\n",
-	//	count[0], count[1], count[2], count[3],
-	//	count[4], count[5], count[6], count[7]);
 	collisions = (int *)ft_calloc(4, sizeof(int));
-	collisions[NORTH] = ((count[1] >= count[0] && count[1]) || (count[2] >= count[3] && count[2]));
-	collisions[EAST] = ((count[3] >= count[2] && count[3]) || (count[7] >= count[6] && count[7]));
-	collisions[SOUTH] = ((count[5] >= count[4] && count[5]) || (count[6] >= count[7] && count[6]));
-	collisions[WEST] = ((count[0] >= count[1] && count[0]) || (count[4] >= count[5] && count[4]));
+	collisions[NORTH] = ((count[1] >= count[0] && count[1])
+			|| (count[2] >= count[3] && count[2]));
+	collisions[EAST] = ((count[3] >= count[2] && count[3])
+			|| (count[7] >= count[6] && count[7]));
+	collisions[SOUTH] = ((count[5] >= count[4] && count[5])
+			|| (count[6] >= count[7] && count[6]));
+	collisions[WEST] = ((count[0] >= count[1] && count[0])
+			|| (count[4] >= count[5] && count[4]));
 	free(count);
 	return (collisions);
 }
@@ -76,9 +81,7 @@ int	move_player(t_fpoint shift, t_game_data *g_d)
 	sin_dir = sin(deg_to_rad(g_d->player->view_angle));
 	new_pos.x = g_d->player->position.x + shift.x * cos_dir + shift.y * sin_dir;
 	new_pos.y = g_d->player->position.y + shift.x * sin_dir - shift.y * cos_dir;
-
 	ret = is_collision(g_d, new_pos);
-	//printf("{%d:%d:%d:%d}\n", ret[NORTH], ret[SOUTH], ret[EAST], ret[WEST]);
 	if ((!ret[NORTH] && new_pos.x < g_d->player->position.x)
 		|| (!ret[SOUTH] && new_pos.x >= g_d->player->position.x))
 		g_d->player->position.x = new_pos.x;

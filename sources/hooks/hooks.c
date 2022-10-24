@@ -1,6 +1,19 @@
 
 #include "../_headers/cub3d.h"
 
+int	focus_in(t_game_data *g_d)
+{
+	g_d->is_focused = true;
+	mlx_mouse_move(g_mlx->mlx, g_mlx->win, g_d->resolution.x / 2, g_d->resolution.y / 2);
+	return (0);
+}
+
+int	focus_out(t_game_data *g_d)
+{
+	g_d->is_focused = false;
+	return (0);
+}
+
 // // Tmp func -> delete later
 // static void	show_linked_list(void *content)
 // {
@@ -10,6 +23,8 @@
 int	mouse_move(int x, int y, t_game_data *g_d)
 {
 	(void)y;
+	if (!g_d->is_focused)
+		return (0);
 	if (x != g_d->resolution.x / 2)
 	{
 		rotate_player((float)(- x + g_d->resolution.x / 2) * g_d->player_rot_speed, g_d);
