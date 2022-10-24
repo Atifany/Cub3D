@@ -1,29 +1,98 @@
 #include "../_headers/cub3d.h"
 
-int	parse_head(char **file_text, t_game_data *g_d)
+bool	is_valid_id(char *id)
 {
-	char	**split_line;
-	int		count;
+	char	*allowed_ids[6] = {"F", "C", "NO", "WE", "EA", "SO"};
 	int		i;
 
-	count = 0;
 	i = 0;
-	while (file_text[i] && count < 6)
+	while (i < 6)
+	{
+		if (ft_strcmp(id, allowed_ids[i]) == 0)
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+int	parse_colors(int **keywords_map, char **split_line, t_game_data *g_d)
+{
+	if (ft_strcmp(split_line[0], "F") == 0)
+	{
+		(*keywords_map)[0]++;
+		if (read_color(&(g_d->floor), split_line[1]) == false)
+			return (5);
+	}
+	if (ft_strcmp(split_line[0], "C") == 0)
+	{
+		(*keywords_map)[1]++;
+		if (read_color(&(g_d->ceiling), split_line[1]) == false)
+			return (6);
+	}
+	if ((*keywords_map)[0] > 1 || (*keywords_map)[1] > 1)
+		return (7);
+	return (-1);
+}
+
+int	parse_textures(int **keywords_map, char **split_line, t_game_data *g_d)
+{
+	if (ft_strcmp(split_line[0], "NO") == 0)
+	{
+		(*keywords_map)[2]++;
+		if (read_texture(&(g_mlx->texture_north), split_line[1], g_d) == false)
+			return (10);
+	}
+	if (ft_strcmp(split_line[0], "SO") == 0)
+	{
+		(*keywords_map)[3]++;
+		if (read_texture(&(g_mlx->texture_south), split_line[1], g_d) == false)
+			return (10);
+	}
+	if (ft_strcmp(split_line[0], "WE") == 0)
+	{
+		(*keywords_map)[4]++;
+		if (read_texture(&(g_mlx->texture_west), split_line[1], g_d) == false)
+			return (10);
+	}
+	if (ft_strcmp(split_line[0], "EA") == 0)
+	{
+		(*keywords_map)[5]++;
+		if (read_texture(&(g_mlx->texture_east), split_line[1], g_d) == false)
+			return (10);
+	}
+	if ((*keywords_map)[2] > 1 || (*keywords_map)[3] > 1
+		|| (*keywords_map)[4] > 1 || (*keywords_map)[5] > 1)
+		return (7);
+	return (-1);
+}
+
+int	parse_head(char **file_text, t_game_data *g_d)
+{
+	int		*keywords_map;
+	int		ret;
+	char	**split_line;
+	int		i;
+
+	keywords_map = ft_calloc(6, sizeof(int));
+	i = 0;
+	while (file_text[i] && i < 6)
 	{
 		split_line = ft_split(file_text[i], ' ');
-		if (++i && read_textures(&count, split_line, g_d))
-			free_array(split_line);
-		else if (read_color(&count, split_line, g_d) || *split_line == 0)
-			free_array(split_line);
-		else
-		{
-			free_array(split_line);
-			error_die(g_d, "Cub3D: Error: File's head is corrupted.\n", 0);
-		}
+		if (split_line == NULL || !is_valid_id(split_line[0]))
+			return (7);
+		ret = parse_colors(&keywords_map, split_line, g_d);
+		if (ret != -1)
+			return (ret);
+		ret = parse_textures(&keywords_map, split_line, g_d);
+		if (ret != -1)
+			return (ret);
+		free_array(split_line);
+		i++;
 	}
-	if (count != 6)
-		error_die(g_d, "Cub3D: Error: File's head is corrupted.\n", 0);
-	return (i);
+	free(keywords_map);
+	if (i != 6)
+		return (7);
+	return (-1);
 }
 
 char	**read_file(char *file_path)
@@ -33,7 +102,6 @@ char	**read_file(char *file_path)
 	char	*str;
 	char	**file_text;
 
-	file_text = NULL;
 	fd = open(file_path, O_RDONLY, 0777);
 	if (fd == -1)
 		return (NULL);
@@ -42,14 +110,18 @@ char	**read_file(char *file_path)
 	file_text = ft_calloc(1, sizeof(char *));
 	while (str)
 	{
-		file_text = ft_realloc_charpp(file_text, (i + 1) * sizeof(char *),
+		if (ft_strcmp(str, "\n") != 0)
+		{
+			file_text = ft_realloc_charpp(file_text, (i + 1) * sizeof(char *),
 				i * sizeof(char *));
-		file_text[i - 1] = ft_strtrim(str, "\n");
-		file_text[i] = NULL;
+			file_text[i - 1] = ft_strtrim(str, "\n");
+			file_text[i] = NULL;
+			i++;
+		}
 		free(str);
 		str = get_next_line(fd);
-		i++;
 	}
+	close(fd);
 	return (file_text);
 }
 

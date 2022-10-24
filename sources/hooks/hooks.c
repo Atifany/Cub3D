@@ -148,7 +148,7 @@ static void	list_active_keys(t_game_data *g_d)
 	int	mousex;
 	int	mousey;
 	if (is_in_list(g_d->keys_pressed, ESC))
-		error_die(g_d, "Cub3D: Esc key was presssed.\n", 0);
+		error_die(g_d, 8, 0);
 	if (is_in_list(g_d->keys_pressed, W) && !is_in_list(g_d->keys_pressed, A) && !is_in_list(g_d->keys_pressed, D))
 		move_player((t_fpoint){g_d->player_speed, 0.0f}, g_d);
 	if (is_in_list(g_d->keys_pressed, A) && !is_in_list(g_d->keys_pressed, W) && !is_in_list(g_d->keys_pressed, S))
@@ -233,6 +233,6 @@ int loop_hook(t_game_data *g_d)
 
 int	die_hook(t_game_data *g_d)
 {
-	error_die(g_d, "Cub3D: Exit button was pressed.\n", 0);
+	error_die(g_d, 9, 0);
 	return (0);
 }

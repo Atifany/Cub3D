@@ -59,6 +59,8 @@ extern t_mlx_data	*g_mlx;
 
 # endif
 
+// Inits
+int		init_window(t_game_data *g_d);
 // Hooks
 int		key_down_hook(int keycode, t_game_data *g_d);
 int		key_up_hook(int keycode, t_list **keys_pressed);
@@ -70,9 +72,9 @@ int		loop_hook(t_game_data *g_d);
 int		focus_in(t_game_data *g_d);
 int		focus_out(t_game_data *g_d);
 // Utils
-t_img	*init_textures(char *path, t_game_data *g_d);
+t_img	*init_textures(char *path);
 int		ft_strcmp(char *str1, char *str2);
-void	error_die(t_game_data *g_d, char *error_text, int exit_status);
+void	error_die(t_game_data *g_d, int err_code, int exit_status);
 void	init_g_d_defaults(t_game_data *g_d);
 void	free_array(char **arr);
 double	dabs(double x);
@@ -81,8 +83,9 @@ void	set_player_transform(t_game_data *g_d,
 			t_fpoint position, int view_angle);
 float	fto_pos(float x);
 void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize);
+void	destroy_g_d(t_game_data *g_d);
 // Map processing
-bool	parse_file(t_game_data *g_d, char *file_path);
+int		parse_file(t_game_data *g_d, char *file_path);
 bool	is_valid_file(char *file_path);
 bool	is_valid_map(char **file_text);
 int		parse_head(char **file_text, t_game_data *g_d);
@@ -98,8 +101,8 @@ int		count_items_charpp(char **charpp);
 // Map process utils
 bool	is_valid_color(char *r, char *g, char *b);
 void	parse_player_transform(t_game_data *g_d, int x, int y, char dir);
-bool	read_textures(int *count, char **split_line, t_game_data *g_d);
-bool	read_color(int *count, char **split_line, t_game_data *g_d);
+bool	read_texture(t_img **texture, char *split_line, t_game_data *g_d);
+bool	read_color(int *color_hex, char *color_line);
 void	write_line_to_map(char *cut_text, char **map);
 
 // Movement

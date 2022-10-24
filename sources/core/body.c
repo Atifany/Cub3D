@@ -30,7 +30,7 @@ int	init_window(t_game_data *g_d)
 	return (0);
 }
 
-t_img	*init_textures(char *path, t_game_data *g_d)
+t_img	*init_textures(char *path)
 {
 	t_img	*image;
 	int		a;
@@ -39,7 +39,7 @@ t_img	*init_textures(char *path, t_game_data *g_d)
 	image = malloc(sizeof(t_img));
 	image->img = mlx_xpm_file_to_image(g_mlx->mlx, path, &a, &b);
 	if (!image->img)
-		error_die(g_d, "Cub3D: Error: Texture not found\n", 0);
+		return (NULL);
 	image->addr = mlx_get_data_addr(image->img, &image->bits_per_pixel,
 			&image->line_length, &image->endian);
 	return (image);
@@ -65,18 +65,19 @@ int	body(t_game_data *g_d)
 int input_start(int argc, char **argv)
 {
 	t_game_data	*g_d;
+	int parse_ret;
 
 	printf("Cub3D: Started.\n");
 	g_d = ft_calloc(1, sizeof(t_game_data));
 	//printf("{%-20s%p}\n", "g_d:", g_d);
 	init_g_d_defaults(g_d);
 	if (init_window(g_d))
-		error_die(g_d, "Cub3D: Error: Initialization failed.\n", 1);
+		error_die(g_d, 0, 1);
 	if (argc != 2)
-		error_die(g_d, "Cub3D: Error: Invalid input.\n"
-			"Usage: ./cub3D [filename].cub\n", 1);
-	if (!parse_file(g_d, argv[1]))
-		error_die(g_d, "Cub3D: Error: Parsing file failed.\n", 1);
+		error_die(g_d, 1, 1);
+	parse_ret = parse_file(g_d, argv[1]);
+	if (parse_ret >= 0)
+		error_die(g_d, parse_ret, 1);
 	printf("Player start transform:\nPosition={%f:%f}\nViewAngle={%f}\n",
 		g_d->player->position.x,
 		g_d->player->position.y,
