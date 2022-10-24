@@ -59,9 +59,9 @@ t_img *create_background(t_game_data *g_d)
 		while (x < g_d->resolution.x)
 		{
 			if (y < g_d->resolution.y >> 1)
-				my_pixel_put(image, x, y, darker(g_d->ceiling, (sqrt(y*120))));
+				my_pixel_put(image, x, y, darker(g_d->ceiling, (sqrt(y)) * 11));
 			else
-				my_pixel_put(image, x, y, darker(g_d->floor, (sqrt((g_d->resolution.y - y)*120))));
+				my_pixel_put(image, x, y, darker(g_d->floor, (sqrt(g_d->resolution.y - y)) * 11));
 			x++;
 		}
 		y++;
