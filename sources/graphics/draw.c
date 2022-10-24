@@ -1,9 +1,8 @@
 #include "../_headers/cub3d.h"
-#include "../_headers/data_structures.h"
 
-void	my_pixel_put(int x, int y, int color)
+void	my_pixel_put(t_img *img, int x, int y, int color)
 {
-	*((unsigned int*)(g_mlx->img->addr + (y * g_mlx->img->line_length + x * (g_mlx->img->bits_per_pixel >> 3)))) = color;
+	*((unsigned int*)(img->addr + (y * img->line_length + x * (img->bits_per_pixel >> 3)))) = color;
 }
 
 unsigned int	my_pixel_get(t_img *img, int x, int y)
@@ -42,6 +41,8 @@ unsigned int darker(int c, int d)
 	return (r << 16 ) + (g << 8) + b;
 }
 
+
+
 int draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
 {
     int i; // index пикселя по вертикали
@@ -66,10 +67,10 @@ int draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
 			unsigned int t_pixel = darker(my_pixel_get(texture, t_x, ((c << 7)/h)%128), d);
 			while (j-- >= 0 && i < gd->resolution.y)
 			{
-				my_pixel_put(col, i, t_pixel);
+				my_pixel_put(g_mlx->img, col, i, t_pixel);
 				i++;
 				c++;
-			}		
+			}
         }
     }
 	return (0);
@@ -77,8 +78,6 @@ int draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
 
 t_point cast_ray(t_game_data *gd, int col)
 {
-	// (void)gd;
-	// (void)col;
 	t_point ret = {-1, -1};
 	float dir_x = (cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); //zamenit' float na int perem
 	float dir_y = (sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); // ispolzovat int kak peremennuu s statichnoy tochkoy
@@ -87,7 +86,7 @@ t_point cast_ray(t_game_data *gd, int col)
 	int i = -1;
 	while (++i < MAP_RES)
 	{
-		fx += dir_x*((1 << (i >> 8)));// map_res / 64
+		fx += dir_x*((1 << (i >> 8)));
 		fy += dir_y*((1 << (i >> 8)));
 		if (gd->map[(int)fx][(int)fy] == '1')
 		{
@@ -109,14 +108,14 @@ void draw_map(t_game_data *gd)
 	int i = 0;
 	int j = 0;
 
-	my_pixel_put(gd->player->position.x/(MAP_RES/8), gd->player->position.y/(MAP_RES/8), 0x00800000);
+	my_pixel_put(g_mlx->img, gd->player->position.x/(MAP_RES/8), gd->player->position.y/(MAP_RES/8), 0x00800000);
 	while (gd->map[i])
 	{
 		j = 0;
 		while (gd->map[i][j])
 		{
 			if (gd->map[i][j] == '1')
-				my_pixel_put(i/(MAP_RES/8), j/(MAP_RES/8), 0x00ff0000);
+				my_pixel_put(g_mlx->img, i/(MAP_RES/8), j/(MAP_RES/8), 0x00ff0000);
 			j+=MAP_RES/8;
 		}
 		i+=MAP_RES/8;
@@ -131,6 +130,8 @@ int draw_frame(t_game_data *gd)
     g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->resolution.x, gd->resolution.y);
     g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bits_per_pixel, &g_mlx->img->line_length,
 								&g_mlx->img->endian);
+	ft_memcpy(g_mlx->img->addr, g_mlx->bg->addr, gd->resolution.x*gd->resolution.y*(g_mlx->img->bits_per_pixel / 8));
+
 	i = -1;
 	while (++i < gd->resolution.x) // можно уменьшить разрешение
 	{
@@ -148,7 +149,7 @@ int draw_frame(t_game_data *gd)
 			draw_line(i, collision, gd, texture);
 		}
 	}
+	
 	draw_map(gd);
-	my_pixel_put(gd->resolution.x / 2, gd->resolution.y / 2, gd->ceiling);
 	return (0);
 }

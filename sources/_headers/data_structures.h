@@ -1,11 +1,11 @@
-
 #ifndef DATA_STRUCTURES_H
 # define DATA_STRUCTURES_H
 
 // Exterior libraries
 # include <stdbool.h>
 
-typedef struct	s_img {
+typedef struct s_img
+{
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -19,6 +19,7 @@ typedef struct s_mlx_data
 	void	*mlx;
 	void	*win;
 	t_img	*img;
+	t_img	*bg;
 	t_img	*texture_north;
 	t_img	*texture_west;
 	t_img	*texture_east;
@@ -53,9 +54,10 @@ typedef struct s_game_data
 	t_transform	*player;
 	int			fov;
 	t_point		resolution;
-	t_list		*keys_pressed; // active keys
+	t_list		*keys_pressed;
 	int			floor;
 	int			ceiling;
+	bool		is_focused;
 }	t_game_data;
 
 #endif

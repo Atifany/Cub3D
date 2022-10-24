@@ -21,7 +21,7 @@ bool	is_valid_color(char *r, char *g, char *b)
 {
 	int	i;
 
-	if ((!r && !*r) || (!g && !*g) || (!b && !*b))
+	if (!r || !*r || !g || !*g || !b || !*b)
 		return (false);
 	if (ft_strlen(r) > 3 || ft_strlen(g) > 3 || ft_strlen(b) > 3)
 		return (false);
@@ -42,4 +42,73 @@ bool	is_valid_color(char *r, char *g, char *b)
 		|| ft_atoi(b) > 255 || ft_atoi(b) < 0)
 		return (false);
 	return (true);
+}
+
+bool	read_textures(int *count, char **split_line, t_game_data *g_d)
+{
+	if (!ft_strcmp(split_line[0], "NO") && !(g_mlx->texture_north) && ++*count)
+		g_mlx->texture_north
+			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+	else if (!ft_strcmp(split_line[0], "SO") && !(g_mlx->texture_south) && ++*count)
+		g_mlx->texture_south
+			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+	else if (!ft_strcmp(split_line[0], "EA") && !(g_mlx->texture_east) && ++*count)
+		g_mlx->texture_east
+			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+	else if (!ft_strcmp(split_line[0], "WE") && !(g_mlx->texture_west) && ++*count)
+		g_mlx->texture_west
+			= init_textures(ft_strtrim(split_line[1], "\n"), g_d);
+	else
+		return (false);
+	return (true);
+}
+
+bool	read_color(int *count, char **split_line, t_game_data *g_d)
+{
+	char	**color;
+
+	if (!ft_strcmp(split_line[0], "F") && ++*count)
+	{
+		color = ft_split(split_line[1], ',');
+		if (!color[0] || !color[1] || !color[2] || color[3]
+			|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
+			error_die(g_d, "Cub3D: Error: Wrong floor color.\n", 0);
+		g_d->floor = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8)
+			+ ft_atoi(color[2]);
+		free_array(color);
+	}
+	else if (!ft_strcmp(split_line[0], "C") && ++*count)
+	{
+		color = ft_split(split_line[1], ',');
+		if (!color[0] || !color[1] || !color[2] || color[3]
+			|| !is_valid_color(color[0], color[1], ft_strtrim(color[2], "\n")))
+			error_die(g_d, "Cub3D: Error: Wrong ceiling color.\n", 0);
+		g_d->ceiling = (ft_atoi(color[0]) << 16) + (ft_atoi(color[1]) << 8)
+			+ ft_atoi(color[2]);
+		free_array(color);
+	}
+	else
+		return (false);
+	return (true);
+}
+
+void	write_line_to_map(char *cut_text, char **map)
+{
+	int	i;
+	int	j;
+	int	linelen;
+
+	linelen = ft_strlen(cut_text);
+	*map = malloc(MAP_RES * linelen * 8);
+	i = 0;
+	while (cut_text[i])
+	{
+		j = 0;
+		while (j < MAP_RES)
+		{
+			(*map)[i * MAP_RES + j] = cut_text[i];
+			j++;
+		}
+		i++;
+	}
 }
