@@ -83,7 +83,7 @@ void	write_line_to_map(char *cut_text, char **map)
 	int	linelen;
 
 	linelen = ft_strlen(cut_text);
-	*map = malloc(MAP_RES * linelen * 8);
+	*map = ft_calloc(MAP_RES * linelen * 8 + 1, sizeof(char));
 	i = 0;
 	while (cut_text[i])
 	{

@@ -48,15 +48,15 @@ bool test_map(char** expected, char** recieved)
 		while (expected[i][j] && recieved[i][j])
 		{
 			if (expected[i][j] != recieved[i][j])
-				return (false);
+				{ printf("0[%d:%d]\n", i / MAP_RES, j / MAP_RES); return (false); }
 			j++;
 		}
 		if (expected[i][j] != recieved[i][j])
-			return (false);
+			{ printf("1[%d:%d][%d:%d]\n", i / MAP_RES, j / MAP_RES, expected[i][j], recieved[i][j]); return (false); }
 		i++;
 	}
 	if (expected[i] != recieved[i])
-			return (false);
+		{ printf("2[%d:%d]\n", i / MAP_RES, j / MAP_RES); return (false); }
 	return (true);
 }
 
