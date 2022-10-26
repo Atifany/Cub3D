@@ -21,6 +21,7 @@ int	parse_file(t_game_data *g_d, char *file_path)
 	cut_text = cut_trailings(file_text + shift_to_map);
 	free_array(file_text);
 	clean_spaces(g_d, cut_text);
+	display_charpp(cut_text);
 	g_d->map = multiply_size(cut_text);
 	free_array(cut_text);
 	//printf("Parser finished\n");
