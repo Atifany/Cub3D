@@ -105,8 +105,8 @@ t_point cast_ray(t_game_data *gd, int col)
 
 void draw_map(t_game_data *gd)
 {
-	int i = 0;
-	int j = 0;
+	int	i;
+	int	j;
 
 	my_pixel_put(g_mlx->img, gd->player->position.x/(MAP_RES/8), gd->player->position.y/(MAP_RES/8), 0x00800000);
 	while (gd->map[i])
@@ -118,7 +118,7 @@ void draw_map(t_game_data *gd)
 				my_pixel_put(g_mlx->img, i/(MAP_RES/8), j/(MAP_RES/8), 0x00ff0000);
 			j+=MAP_RES/8;
 		}
-		i+=MAP_RES/8;
+		i += MAP_RES/8;
 	}
 }
 

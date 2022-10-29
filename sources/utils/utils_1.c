@@ -28,6 +28,7 @@ void	init_g_d_defaults(t_game_data *g_d)
 	g_d->map = NULL;
 	g_d->fov = 90;
 	g_d->player = (t_transform *)ft_calloc(1, sizeof(t_transform));
+	//printf("{%-20s%p}\n", "g_d->player:", g_d->player);
 	g_d->player->position = (t_fpoint){0.0f, 0.f};
 	g_d->player->view_angle = 0.0f;
 	g_d->player->size = (t_fpoint){

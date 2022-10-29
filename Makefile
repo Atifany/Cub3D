@@ -1,8 +1,9 @@
 # executable
-NAME = cub3D
+NAME := cub3D
 
 # sources
-_SRC =	core/main.c							\
+_SRC :=	core/main.c							\
+		core/body.c							\
 		graphics/draw.c						\
 		hooks/hooks.c						\
 		utils/utils.c						\
@@ -16,39 +17,45 @@ _SRC =	core/main.c							\
 		utils/get_next_line.c				\
 		utils/get_next_line_utils.c			\
 
-SRC_DIR = sources
-SRC = $(_SRC:%=$(SRC_DIR)/%)
+# tester source lsit
+_SRCT := $(filter-out core/main.c, $(_SRC))
+_SRCT += "_tests/tests.c"
+# sources preparation
+SRC_DIR := sources
+SRC := $(_SRC:%=$(SRC_DIR)/%)
 # tmp files
-OBJ = $(SRC:%.c=%.o)
-DPS = $(SRC:%.c=%.d)
+OBJ := $(SRC:%.c=%.o)
+DPS := $(SRC:%.c=%.d)
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    MLX_FLAGS += -lXext -lX11
+    LIBS := -lm
+    MLX_DIR := libs/mlx_linux_1/
+else
+    MLX_FLAGS += -framework OpenGL -framework AppKit
+    MLX_DIR := libs/mlx/
+endif
 
 # libraries
-LIBFT_DIR = libs/libft/
-LIBFT = libft.a
+LIBFT_DIR := libs/libft/
+LIBFT := libft.a
 
-MLX = libmlx.a
-LIBS =	$(LIBFT:%=$(LIBFT_DIR)%) \
+MLX := libmlx.a
+LIBS +=	$(LIBFT:%=$(LIBFT_DIR)%) \
 		$(MLX:%=$(MLX_DIR)%)
 
 # flags
 #C_FLAGS = -O2 -Wall -Wextra -Werror
 
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-    MLX_FLAGS += -lXext -lX11
-    LIBS += -lm
-    MLX_DIR = libs/mlx_linux_1/
-else
-    MLX_FLAGS += -framework OpenGL -framework AppKit
-    MLX_DIR = libs/mlx/
-endif
-
 # Make commands
-CC = gcc
-RM = rm -f
+CC := gcc
+RM := rm -f
 
 # rules
-all: compile_libs log_compile_start $(NAME)
+all: compile_libs start
+
+start: log_compile_start $(NAME)
 
 compile_libs:
 	@printf "\n>> compile libft\n"
@@ -63,6 +70,9 @@ $(NAME): $(OBJ)
 	$(CC) $(C_FLAGS) -MMD -MP -c $< -o $@
 
 -include $(DPS)
+
+test: compile_libs
+	@$(MAKE) start NAME="test.out" _SRC="$(_SRCT)"
 
 clean:
 	@printf "\n>> clean tmp files\n"

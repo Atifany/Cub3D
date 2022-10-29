@@ -57,4 +57,4 @@ dkms.conf
 # Custom
 *.DS_Store
 cub3D
-output
+output*

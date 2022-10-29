@@ -2,15 +2,16 @@
 
 bool	is_valid_file(char *file_path)
 {
-	if (ft_strnstr(file_path, ".cub", INT_MAX)
-		!= (int)ft_strlen(file_path) - (int)ft_strlen(".cub"))
+	if (file_path == NULL || ft_strcmp(
+		&(file_path[ft_strlen(file_path) - ft_strlen(".cub")]), ".cub")
+		|| ft_strlen(file_path) == ft_strlen(".cub"))
 		return (false);
 	return (true);
 }
 
-bool	is_valid_input(int argc)
+static bool	is_enough_tiles_in_line(char **file_text, int k, int j)
 {
-	if (argc != 2)
+	if ((k < 0 || !file_text[k] || ft_strlen(file_text[k]) <= j + 1) || j == 0)
 		return (false);
 	return (true);
 }
@@ -27,7 +28,7 @@ static bool	is_valid_tile(char **file_text, int i, int j)
 		k = i - 1;
 		while (k <= i + 1)
 		{
-			if ((k < 0 || !file_text[k] || ft_strlen(file_text[k]) <= j + 1) || j == 0)
+			if (is_enough_tiles_in_line(file_text, k, j) == false)
 				return (false);
 			m = j - 1;
 			while (m <= j + 1)
@@ -52,7 +53,7 @@ bool	is_valid_map(char **file_text)
 	first_line_index = 0;
 	has_spawner = false;
 	i = 0;
-	while (file_text[i])
+	while (file_text != NULL && file_text[i])
 	{
 		j = 0;
 		while (file_text[i][j])

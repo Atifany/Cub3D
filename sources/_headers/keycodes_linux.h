@@ -2,7 +2,7 @@
 # define KEYCODES_LINUX_H
 
 # define ESC 65307
-// # define Q ???
+# define Q 113
 # define W 119
 # define A 97
 # define S 115
