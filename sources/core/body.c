@@ -62,7 +62,10 @@ t_img	*init_textures(char *path)
 	image = malloc(sizeof(t_img));
 	image->img = mlx_xpm_file_to_image(g_mlx->mlx, path, &a, &b);
 	if (!image->img)
+	{
+		free(image);
 		return (NULL);
+	}
 	image->addr = mlx_get_data_addr(image->img, &image->bpp,
 			&image->line_length, &image->endian);
 	return (image);

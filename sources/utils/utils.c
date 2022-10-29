@@ -67,7 +67,7 @@ void	error_die(t_game_data *g_d, int err_code, int exit_status)
 		/*6*/ "Cub3D: Error: Wrong ceiling color.\n",
 		/*7*/ "Cub3D: Error: File's head is corrupted.\n",
 		/*8*/ "Cub3D: Esc key was presssed.\n",
-		/*9*/ "Cub3D: Exit button was pressed.\n"
+		/*9*/ "Cub3D: Exit button was pressed.\n",
 		/*10*/ "Cub3D: Error: Texture not found\n"
 	};
 	if (g_d)
