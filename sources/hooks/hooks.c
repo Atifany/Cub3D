@@ -40,7 +40,7 @@ int	focus_in(t_game_data *g_d)
 	#endif
 	
 	g_d->is_focused = true;
-	set_new_mouse_pos(g_d->resolution.x / 2, g_d->resolution.y / 2);
+	set_new_mouse_pos(g_d->res.x / 2, g_d->res.y / 2);
 	return (0);
 }
 
@@ -67,10 +67,10 @@ int	mouse_move(int x, int y, t_game_data *g_d)
 	(void)y;
 	if (!g_d->is_focused)
 		return (0);
-	if (x != g_d->resolution.x / 2)
+	if (x != g_d->res.x / 2)
 	{
-		rotate_player((float)(- x + g_d->resolution.x / 2) * g_d->player_rot_speed, g_d);
-		set_new_mouse_pos(g_d->resolution.x / 2, g_d->resolution.y / 2);
+		rotate_player((float)(- x + g_d->res.x / 2) * g_d->player_rot_speed, g_d);
+		set_new_mouse_pos(g_d->res.x / 2, g_d->res.y / 2);
 	}
 	return (0);
 }
@@ -205,7 +205,7 @@ static void display_fps(t_game_data *g_d)
 	}
 	string_to_display = ft_itoa(oldfps);
 	mlx_string_put(g_mlx->mlx, g_mlx->win,
-			g_d->resolution.x - 100, 50,
+			g_d->res.x - 100, 50,
 			0x00FF0000, string_to_display);
 	free(string_to_display);
 	secs = cur_time(timestart);

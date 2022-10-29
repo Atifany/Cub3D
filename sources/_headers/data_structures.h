@@ -8,7 +8,7 @@ typedef struct s_img
 {
 	void	*img;
 	char	*addr;
-	int		bits_per_pixel;
+	int		bpp;
 	int		line_length;
 	int		endian;
 }				t_img;
@@ -53,7 +53,7 @@ typedef struct s_game_data
 	char		**map;
 	t_transform	*player;
 	int			fov;
-	t_point		resolution;
+	t_point		res;
 	t_list		*keys_pressed;
 	int			floor;
 	int			ceiling;

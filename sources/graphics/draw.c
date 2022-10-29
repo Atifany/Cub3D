@@ -2,12 +2,12 @@
 
 void	my_pixel_put(t_img *img, int x, int y, int color)
 {
-	*((unsigned int*)(img->addr + (y * img->line_length + x * (img->bits_per_pixel >> 3)))) = color;
+	*((unsigned int*)(img->addr + (y * img->line_length + x * (img->bpp >> 3)))) = color;
 }
 
 unsigned int	my_pixel_get(t_img *img, int x, int y)
 {
-	return *(unsigned int*)(img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8)));
+	return *(unsigned int*)(img->addr + (y * img->line_length + x * (img->bpp / 8)));
 }
 
 double	deg_to_rad(float a)
@@ -52,20 +52,20 @@ int draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
     {
 		int c = 0;   // номер пикселя стены который сейчас отрисовывается
         int h = 0; // кол пикселей kotoroe стена zanimaet на экранe;
-        h = (gd->resolution.y*16)/(d);
+        h = (gd->res.y*16)/(d);
         if (d >= 16)
-			i = (gd->resolution.y - h) >> 1;
+			i = (gd->res.y - h) >> 1;
 		else
 		{
 			i = 0;
-			c = (h - gd->resolution.y) >> 1;
+			c = (h - gd->res.y) >> 1;
 		}
 		int t_x = (collision.x+collision.y)/2 % 128;
-        while (c < h && i < gd->resolution.y)
+        while (c < h && i < gd->res.y)
         {
 			int j = h >> 8;
 			unsigned int t_pixel = darker(my_pixel_get(texture, t_x, ((c << 7)/h)%128), d);
-			while (j-- >= 0 && i < gd->resolution.y)
+			while (j-- >= 0 && i < gd->res.y)
 			{
 				my_pixel_put(g_mlx->img, col, i, t_pixel);
 				i++;
@@ -79,8 +79,8 @@ int draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
 t_point cast_ray(t_game_data *gd, int col)
 {
 	t_point ret = {-1, -1};
-	float dir_x = (cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); //zamenit' float na int perem
-	float dir_y = (sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->resolution.x) * ((float)col)))); // ispolzovat int kak peremennuu s statichnoy tochkoy
+	float dir_x = (cos(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->res.x) * ((float)col)))); //zamenit' float na int perem
+	float dir_y = (sin(deg_to_rad(gd->player->view_angle - 45 + ((float)gd->fov) / ((float)gd->res.x) * ((float)col)))); // ispolzovat int kak peremennuu s statichnoy tochkoy
 	float fx = gd->player->position.x;
 	float fy = gd->player->position.y;
 	int i = -1;
@@ -127,15 +127,15 @@ int draw_frame(t_game_data *gd)
     int	i;
     t_point collision;
 	t_img	*texture;
-    g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->resolution.x, gd->resolution.y);
-    g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bits_per_pixel, &g_mlx->img->line_length,
+    g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->res.x, gd->res.y);
+    g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bpp, &g_mlx->img->line_length,
 								&g_mlx->img->endian);
-	ft_memcpy(g_mlx->img->addr, g_mlx->bg->addr, gd->resolution.x*gd->resolution.y*(g_mlx->img->bits_per_pixel / 8));
+	ft_memcpy(g_mlx->img->addr, g_mlx->bg->addr, gd->res.x*gd->res.y*(g_mlx->img->bpp / 8));
 
 	i = -1;
-	while (++i < gd->resolution.x) // можно уменьшить разрешение
+	while (++i < gd->res.x) // можно уменьшить разрешение
 	{
-		collision = cast_ray(gd, gd->resolution.x - i);
+		collision = cast_ray(gd, gd->res.x - i);
 		if (collision.x >= 0)
 		{
 			if (gd->map[collision.x][collision.y + 1] == '0')

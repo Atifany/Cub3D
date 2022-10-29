@@ -9,19 +9,19 @@ t_img *create_background(t_game_data *g_d)
 	int y;
 
 	image = malloc(sizeof(t_img));
-	image->img = mlx_new_image(g_mlx->mlx, g_d->resolution.x, g_d->resolution.y);
-	image->addr = mlx_get_data_addr(image->img, &image->bits_per_pixel, &image->line_length,
+	image->img = mlx_new_image(g_mlx->mlx, g_d->res.x, g_d->res.y);
+	image->addr = mlx_get_data_addr(image->img, &image->bpp, &image->line_length,
 								&image->endian);
 	y = 0;
-	while (y < g_d->resolution.y)
+	while (y < g_d->res.y)
 	{
 		x = 0;
-		while (x < g_d->resolution.x)
+		while (x < g_d->res.x)
 		{
-			if (y < g_d->resolution.y >> 1)
+			if (y < g_d->res.y >> 1)
 				my_pixel_put(image, x, y, darker(g_d->ceiling, (sqrt(y)) * 11));
 			else
-				my_pixel_put(image, x, y, darker(g_d->floor, (sqrt(g_d->resolution.y - y)) * 11));
+				my_pixel_put(image, x, y, darker(g_d->floor, (sqrt(g_d->res.y - y)) * 11));
 			x++;
 		}
 		y++;
@@ -44,9 +44,9 @@ int	init_window(t_game_data *g_d)
 	if (!g_mlx->mlx)
 		return (1);
 	g_mlx->img = ft_calloc(1, sizeof(t_img));
-	g_mlx->img->line_length = g_d->resolution.x;
+	g_mlx->img->line_length = g_d->res.x;
 	g_mlx->win = mlx_new_window(g_mlx->mlx,
-			g_d->resolution.x, g_d->resolution.y, "Cub3D");
+			g_d->res.x, g_d->res.y, "Cub3D");
 	if (!g_mlx->win)
 		return (1);
 	null_textures();
@@ -63,7 +63,7 @@ t_img	*init_textures(char *path)
 	image->img = mlx_xpm_file_to_image(g_mlx->mlx, path, &a, &b);
 	if (!image->img)
 		return (NULL);
-	image->addr = mlx_get_data_addr(image->img, &image->bits_per_pixel,
+	image->addr = mlx_get_data_addr(image->img, &image->bpp,
 			&image->line_length, &image->endian);
 	return (image);
 }
@@ -71,7 +71,7 @@ t_img	*init_textures(char *path)
 int	body(t_game_data *g_d)
 {
 	mlx_do_key_autorepeatoff(g_mlx->mlx);
-	set_new_mouse_pos(g_d->resolution.x / 2, g_d->resolution.y / 2);
+	set_new_mouse_pos(g_d->res.x / 2, g_d->res.y / 2);
 	mlx_mouse_hide(g_mlx->mlx, g_mlx->win);
 	mlx_hook(g_mlx->win, DestroyNotify, NoEventMask, die_hook, g_d);
 	mlx_hook(g_mlx->win, KeyPress, KeyPressMask, key_down_hook,
