@@ -5,6 +5,8 @@ NAME := cub3D
 _SRC :=	core/main.c							\
 		core/body.c							\
 		graphics/draw.c						\
+		graphics/pixel_operations.c			\
+		graphics/calculations.c				\
 		hooks/hooks.c						\
 		utils/utils.c						\
 		utils/utils_1.c						\
