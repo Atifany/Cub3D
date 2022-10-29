@@ -1,19 +1,11 @@
 
-
-
-
-
-
-F 255,255,255
-C 0,1,123
-
-
 NO ./textures/wall1.xpm
 SO ./textures/wall2.xpm
 WE ./textures/wall3.xpm
 EA ./textures/wall4.xpm
 
-
+F 255,255,255
+C 0,1,123
 
 11111
 1

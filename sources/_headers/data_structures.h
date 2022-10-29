@@ -19,6 +19,7 @@ typedef struct s_mlx_data
 	void	*mlx;
 	void	*win;
 	t_img	*img;
+	t_img	*bg;
 	t_img	*texture_north;
 	t_img	*texture_west;
 	t_img	*texture_east;

@@ -1,15 +1,19 @@
 
-
-
 NO ./textures/wall1.xpm
 SO ./textures/wall2.xpm
 WE ./textures/wall3.xpm
 EA ./textures/wall4.xpm
 
+<<<<<<< HEAD
+
+
+F 255,200,200
+=======
 F 255,255,255
+>>>>>>> d089e2ece8eac551bf520ef230600bb3180b21d0
 
 
-C 0,255,255
+C 255,255,200
 
 
 

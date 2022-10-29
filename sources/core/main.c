@@ -42,6 +42,33 @@ t_img	*init_textures(char *path, t_game_data *g_d)
 	return (image);
 }
 
+t_img *create_background(t_game_data *g_d)
+{
+	t_img	*image;
+	int x;
+	int y;
+
+	image = malloc(sizeof(t_img));
+	image->img = mlx_new_image(g_mlx->mlx, g_d->resolution.x, g_d->resolution.y);
+	image->addr = mlx_get_data_addr(image->img, &image->bits_per_pixel, &image->line_length,
+								&image->endian);
+	y = 0;
+	while (y < g_d->resolution.y)
+	{
+		x = 0;
+		while (x < g_d->resolution.x)
+		{
+			if (y < g_d->resolution.y >> 1)
+				my_pixel_put(image, x, y, darker(g_d->ceiling, (sqrt(y)) * 11));
+			else
+				my_pixel_put(image, x, y, darker(g_d->floor, (sqrt(g_d->resolution.y - y)) * 11));
+			x++;
+		}
+		y++;
+	}
+	return (image);
+}
+
 int	body(t_game_data *g_d)
 {
 	mlx_do_key_autorepeatoff(g_mlx->mlx);
@@ -76,5 +103,6 @@ int	main(int argc, char **argv)
 		g_d.player->position.x,
 		g_d.player->position.y,
 		g_d.player->view_angle);
+	g_mlx->bg = create_background(&g_d);
 	return (body(&g_d));
 }
