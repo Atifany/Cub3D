@@ -79,13 +79,25 @@ int	parse_head(char **file_text, t_game_data *g_d)
 	{
 		split_line = ft_split(file_text[i], ' ');
 		if (split_line == NULL || !is_valid_id(split_line[0]))
+		{
+			free(keywords_map);
+			free_array(split_line);
 			return (7);
+		}
 		ret = parse_colors(&keywords_map, split_line, g_d);
 		if (ret != -1)
+		{
+			free(keywords_map);
+			free_array(split_line);
 			return (ret);
+		}
 		ret = parse_textures(&keywords_map, split_line, g_d);
 		if (ret != -1)
+		{
+			free(keywords_map);
+			free_array(split_line);
 			return (ret);
+		}
 		free_array(split_line);
 		i++;
 	}
