@@ -513,6 +513,38 @@ void t_parse_file()
 		destroy_g_d(g_d);
 	}
 
+	test_number = 9;
+	{
+		g_d = ft_calloc(1, sizeof(t_game_data));
+		init_g_d_defaults(g_d);
+		init_window(g_d);
+		file_path = "maps/map_empty.cub";
+		if (test_int(7, parse_file(g_d, file_path)) == false)
+			return ((void)printf("%sX%s parse_file() failed test:%d (return value)\n",
+				BRED, NC, test_number));
+		if (test_map(NULL, g_d->map) == false)
+			return ((void)printf("%sX%s parse_file() failed test:%d (invalid map)\n",
+				BRED, NC, test_number));
+		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
+		destroy_g_d(g_d);
+	}
+
+	test_number = 10;
+	{
+		g_d = ft_calloc(1, sizeof(t_game_data));
+		init_g_d_defaults(g_d);
+		init_window(g_d);
+		file_path = "maps/map_empty_map.cub";
+		if (test_int(4, parse_file(g_d, file_path)) == false)
+			return ((void)printf("%sX%s parse_file() failed test:%d (return value)\n",
+				BRED, NC, test_number));
+		if (test_map(NULL, g_d->map) == false)
+			return ((void)printf("%sX%s parse_file() failed test:%d (invalid map)\n",
+				BRED, NC, test_number));
+		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
+		destroy_g_d(g_d);
+	}
+
 	printf("%sV%s parse_file() tests:%d\n", BGRN, NC, test_number);
 }
 
@@ -547,7 +579,7 @@ int main()
 	tested_func = "is_valid_map()";
 	run_func_tests(t_is_valid_map, 20);
 	tested_func = "parse_file()";
-	run_func_tests(t_parse_file, 8);
+	run_func_tests(t_parse_file, 10);
 
 	return (0);
 }
