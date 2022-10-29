@@ -139,15 +139,15 @@ void	draw_map(t_game_data *gd)
 	int	j;
 
 	i = 0;
-	my_pixel_put(g_mlx->img, gd->player->position.x / (MAP_RES / 8), gd->player->position.y / (MAP_RES / 8), 0x00800000);
+	my_pixel_put(g_mlx->img, gd->player->position.y / (MAP_RES / 8), gd->player->position.x / (MAP_RES / 8), 0x00800000);
 	while (gd->map[i])
 	{
 		j = 0;
 		while (gd->map[i][j])
 		{
 			if (gd->map[i][j] == '1')
-				my_pixel_put(g_mlx->img, i / (MAP_RES / 8),
-					j / (MAP_RES / 8), 0x00ff0000);
+				my_pixel_put(g_mlx->img, j / (MAP_RES / 8),
+					i / (MAP_RES / 8), 0x00ff0000);
 			j += MAP_RES / 8;
 		}
 		i += MAP_RES / 8;
