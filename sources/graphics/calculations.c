@@ -6,7 +6,7 @@
 /*   By: hnickole <hnickole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 19:26:41 by hnickole          #+#    #+#             */
-/*   Updated: 2022/10/29 19:35:30 by hnickole         ###   ########.fr       */
+/*   Updated: 2022/11/01 12:28:32 by hnickole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,8 @@ t_point	cast_ray(t_game_data *gd, int col)
 {
 	t_fpoint	dir;
 	t_fpoint	pos;
-	t_point		ret;
 	int			i;
 
-	ret.x = -1;
-	ret.y = -1;
 	i = -1;
 	init_points(&dir, &pos, gd, col);
 	while (++i < MAP_RES)
@@ -78,10 +75,8 @@ t_point	cast_ray(t_game_data *gd, int col)
 				pos.x -= dir.x;
 				pos.y -= dir.y;
 			}
-			ret.x = (int)(pos.x + dir.x);
-			ret.y = (int)(pos.y + dir.y);
-			return (ret);
+			return ((t_point){(int)(pos.x + dir.x), (int)(pos.y + dir.y)});
 		}
 	}
-	return (ret);
+	return ((t_point){-1, -1});
 }

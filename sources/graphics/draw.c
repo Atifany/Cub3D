@@ -12,7 +12,8 @@
 
 #include "../_headers/cub3d.h"
 
-static void	draw_line(int col, t_point collision, t_game_data *gd, t_img *texture)
+static void	draw_line(int col, t_point collision,
+	t_game_data *gd, t_img *texture)
 {
 	float			d;
 	int				ag[5];
@@ -47,7 +48,7 @@ void	draw_map(t_game_data *gd)
 
 	i = 0;
 	my_pixel_put(g_mlx->img, gd->player->position.y / (MAP_RES / 8),
-		gd->player->position.x / (MAP_RES / 8), 0x00800000);
+		gd->player->position.x / (MAP_RES / 8), 0xFFFFFFFF);
 	while (gd->map[i])
 	{
 		ag[4] = 0;
@@ -60,6 +61,18 @@ void	draw_map(t_game_data *gd)
 		}
 		i += MAP_RES / 8;
 	}
+}
+
+static t_img	*get_texture(t_point collision, t_game_data *gd)
+{
+	if (gd->map[collision.x][collision.y + 1] == '0')
+		return (g_mlx->texture_north);
+	else if (gd->map[collision.x + 1][collision.y] == '0')
+		return (g_mlx->texture_west);
+	else if (gd->map[collision.x][collision.y - 1] == '0')
+		return (g_mlx->texture_east);
+	else
+		return (g_mlx->texture_south);
 }
 
 void	draw_frame(t_game_data *gd)
@@ -79,14 +92,7 @@ void	draw_frame(t_game_data *gd)
 		collision = cast_ray(gd, gd->res.x - i);
 		if (collision.x >= 0)
 		{
-			if (gd->map[collision.x][collision.y + 1] == '0')
-				texture = g_mlx->texture_north;
-			else if (gd->map[collision.x + 1][collision.y] == '0')
-				texture = g_mlx->texture_west;
-			else if (gd->map[collision.x][collision.y - 1] == '0')
-				texture = g_mlx->texture_east;
-			else
-				texture = g_mlx->texture_south;
+			texture = get_texture(collision, gd);
 			draw_line(i, collision, gd, texture);
 		}
 	}
