@@ -206,7 +206,7 @@ static void display_fps(t_game_data *g_d)
 	string_to_display = ft_itoa(oldfps);
 	mlx_string_put(g_mlx->mlx, g_mlx->win,
 			g_d->res.x - 100, 50,
-			0x00FF0000, string_to_display);
+			0x00FFFFFF, string_to_display);
 	free(string_to_display);
 	secs = cur_time(timestart);
 }
@@ -218,9 +218,9 @@ void	update(t_game_data *g_d)
 	{
 		lastframe = cur_time(0);
 		list_active_keys(g_d);
-		display_fps(g_d);
 		draw_frame(g_d);
 		mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
+		display_fps(g_d);
 		mlx_destroy_image(g_mlx->mlx, g_mlx->img->img);
 	}
 }
