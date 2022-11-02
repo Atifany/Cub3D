@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:45:54 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 15:39:56 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 16:48:15 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,14 @@ int	read_texture(void *_texture, char *split_line)
 {
 	t_img **texture = (t_img **)_texture;
 	if (!split_line)
-		return (7);
+		return (ERR_INVALID_FILE_HEAD);
 	if (!*(texture))
 	{
 		*(texture) = init_textures(split_line);
 		if (*(texture) == NULL)
-			return (10);
+			return (ERR_INVALID_TEXTURE_PATH);
 	}
-	return (-1);
+	return (SUCCESS);
 }
 
 int	read_color(void *_color_hex, char *color_line)
@@ -76,18 +76,18 @@ int	read_color(void *_color_hex, char *color_line)
 	char	**color_rgb;
 
 	if (!color_line)
-		return (7);
+		return (ERR_INVALID_FILE_HEAD);
 	color_rgb = ft_split(color_line, ',');
 	if (!color_rgb[0] || !color_rgb[1] || !color_rgb[2] || color_rgb[3]
 		|| !is_valid_color(color_rgb[0], color_rgb[1], color_rgb[2]))
 	{
 		free_array(color_rgb);
-		return (5);
+		return (ERR_INVALID_COLOR);
 	}
 	*color_hex = (ft_atoi(color_rgb[0]) << 16) + (ft_atoi(color_rgb[1]) << 8)
 		+ ft_atoi(color_rgb[2]);
 	free_array(color_rgb);
-	return (-1);
+	return (SUCCESS);
 }
 
 void	write_line_to_map(char *cut_text, char **map)

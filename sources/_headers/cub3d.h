@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 15:40:09 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 16:42:55 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 
 // Embedded headers
 # include "data_structures.h"
+# include "error_codes.h"
 
 // General macros
 # define READ 0		// never touch 'em

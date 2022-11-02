@@ -18,13 +18,13 @@ int	parse_head_line(t_head_map **h_map, char **split_line)
 		if (ft_strcmp((*h_map)[i].id, split_line[0]) == 0)
 		{
 			if ((*h_map)[i].is_found == true)
-				return (7);
+				return (ERR_INVALID_FILE_HEAD);
 			(*h_map)[i].is_found = true;
 			return ((*h_map)[i].read_f((*h_map)[i].obj, split_line[1]));
 		}
 		i++;
 	}
-	return (7);
+	return (ERR_INVALID_FILE_HEAD);
 }
 
 int	parse_head(char **file_text, t_game_data *g_d)
@@ -48,13 +48,13 @@ int	parse_head(char **file_text, t_game_data *g_d)
 		split_line = ft_split(file_text[i], ' ');
 		ret = parse_head_line(&h_map_buf, split_line);
 		free_array(split_line);
-		if (ret != -1)
+		if (ret != SUCCESS)
 			return (ret);
 		i++;
 	}
 	if (i != 6)
-		return (7);
-	return (-1);
+		return (ERR_INVALID_FILE_HEAD);
+	return (SUCCESS);
 }
 
 char	**read_file(char *file_path)

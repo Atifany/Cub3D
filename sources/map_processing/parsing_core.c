@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:47:26 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 14:59:19 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 16:44:40 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ int	parse_file(t_game_data *g_d, char *file_path)
 
 	shift_to_map = 6;
 	if (!is_valid_file(file_path))
-		return (2);
+		return (ERR_INVALID_FILENAME);
 	file_text = read_file(file_path);
 	if (!file_text)
-		return (3);
+		return (ERR_CANNOT_OPEN);
 	ret = parse_head(file_text, g_d);
-	if (ret >= 0)
+	if (ret != SUCCESS)
 	{
 		free_array(file_text);
 		return (ret);
@@ -34,12 +34,12 @@ int	parse_file(t_game_data *g_d, char *file_path)
 	if (!is_valid_map(file_text + shift_to_map))
 	{
 		free_array(file_text);
-		return (4);
+		return (ERR_INVALID_MAP);
 	}
 	cut_text = cut_trailings(file_text + shift_to_map);
 	free_array(file_text);
 	clean_spaces(g_d, cut_text);
 	g_d->map = multiply_size(cut_text);
 	free_array(cut_text);
-	return (-1);
+	return (SUCCESS);
 }
