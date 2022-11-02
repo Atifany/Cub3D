@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 17:20:28 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 22:37:10 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,20 +74,22 @@ extern t_mlx_data	*g_mlx;
 // Inits
 int				init_window(t_game_data *g_d);
 void			init_g_d_defaults(t_game_data *g_d);
+t_img			*init_textures(char *path);
+t_img			*create_background(t_game_data *g_d);
 
 // Hooks
+void			list_active_keys(t_game_data *g_d);
+void			simple_press_hook(int keycode, t_game_data *g_d);
 int				key_down_hook(int keycode, t_game_data *g_d);
 int				key_up_hook(int keycode, t_list **keys_pressed);
 int				mouse_move(int x, int y, t_game_data *g_d);
-void			set_new_mouse_pos(int x, int y);
 int				die_hook(t_game_data *g_d);
 void			update(t_game_data *g_d);
 int				loop_hook(t_game_data *g_d);
-int				focus_in(t_game_data *g_d);
-int				focus_out(t_game_data *g_d);
+void			set_new_mouse_pos(int x, int y);
+void			get_mouse_pos(int *mousex, int *mousey);
 
 // Utils
-t_img			*init_textures(char *path);
 int				ft_strcmp(char *str1, char *str2);
 void			error_die(t_game_data *g_d, int err_code, int exit_status);
 void			free_array(char **arr);
@@ -129,9 +131,15 @@ int				parse_head_line(t_head_map **h_map, char **split_line);
 int				move_player(t_fpoint shift, t_game_data *g_d);
 int				rotate_player(float shift, t_game_data *g_d);
 
+// Focus change hooks
+void			focus_change_button(t_game_data *g_d);
+int				focus_in(t_game_data *g_d);
+int				focus_out(t_game_data *g_d);
+
 // TMP <- delete them later
 void			display_charpp(char **arr);
 
+// Graphics
 float			distance(t_point p1, t_fpoint p2);
 void			my_pixel_put(t_img *img, int x, int y, int color);
 unsigned int	darker(int c, int d);

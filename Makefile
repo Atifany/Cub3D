@@ -4,10 +4,15 @@ NAME := cub3D
 # sources
 _SRC :=	core/main.c								\
 		core/body.c								\
+		core/inits.c							\
 		graphics/draw.c							\
 		graphics/pixel_operations.c				\
 		graphics/calculations.c					\
 		hooks/hooks.c							\
+		hooks/focus_hooks.c						\
+		hooks/mouse_hooks.c						\
+		hooks/key_hooks.c						\
+		hooks/process_user_input.c				\
 		utils/utils.c							\
 		utils/utils_1.c							\
 		map_processing/validation.c				\
