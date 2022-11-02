@@ -10,7 +10,6 @@ void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize)
 	if (size == 0)
 		return (NULL);
 	ret = malloc(size);
-	//printf("{%-20s%p}\n", "ft_realloc:", ret);
 	if (!ret)
 		return (ptr);
 	if (!ptr || oldsize == 0)
@@ -21,6 +20,8 @@ void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize)
 		ret[i] = ptr_cpy[i];
 		i++;
 	}
+	while (i < size)
+		ret[i++] = 0;
 	free(ptr);
 	return (ret);
 }

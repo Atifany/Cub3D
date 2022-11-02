@@ -1,57 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_functions.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/02 16:54:49 by atifany           #+#    #+#             */
+/*   Updated: 2022/11/02 17:17:41 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/cub3d.h"
-
-typedef struct s_head_map
-{
-	char	*id;
-	int		(*read_f)(void *, char *);
-	void	*obj;
-	bool	is_found;
-} t_head_map;
-
-int	parse_head_line(t_head_map **h_map, char **split_line)
-{
-	int	i;
-
-	i = 0;
-	while (i < 6)
-	{
-		if (ft_strcmp((*h_map)[i].id, split_line[0]) == 0)
-		{
-			if ((*h_map)[i].is_found == true)
-				return (ERR_INVALID_FILE_HEAD);
-			(*h_map)[i].is_found = true;
-			return ((*h_map)[i].read_f((*h_map)[i].obj, split_line[1]));
-		}
-		i++;
-	}
-	return (ERR_INVALID_FILE_HEAD);
-}
 
 int	parse_head(char **file_text, t_game_data *g_d)
 {
-	int		ret;
-	int		i;
-	char	**split_line;
-	t_head_map h_map[6] = {
-		{"NO", &read_texture, &(g_mlx->texture_north), false},
-		{"EA", &read_texture, &(g_mlx->texture_east), false},
-		{"WE", &read_texture, &(g_mlx->texture_west), false},
-		{"SO", &read_texture, &(g_mlx->texture_south), false},
-		{"F", &read_color, &(g_d->floor), false},
-		{"C", &read_color, &(g_d->ceiling), false}
-	};
-	t_head_map *h_map_buf = h_map;
+	int			ret;
+	int			i;
+	char		**split_line;
+	t_head_map	*h_map;
 
+	h_map = init_head_map(g_d);
 	i = 0;
 	while (file_text[i] && i < 6)
 	{
 		split_line = ft_split(file_text[i], ' ');
-		ret = parse_head_line(&h_map_buf, split_line);
+		ret = parse_head_line(&h_map, split_line);
 		free_array(split_line);
 		if (ret != SUCCESS)
+		{
+			free(h_map);
 			return (ret);
+		}
 		i++;
 	}
+	free(h_map);
 	if (i != 6)
 		return (ERR_INVALID_FILE_HEAD);
 	return (SUCCESS);
@@ -75,9 +57,8 @@ char	**read_file(char *file_path)
 		if (ft_strcmp(str, "\n") != 0)
 		{
 			file_text = ft_realloc_charpp(file_text, (i + 1) * sizeof(char *),
-				i * sizeof(char *));
+					i * sizeof(char *));
 			file_text[i - 1] = ft_strtrim(str, "\n");
-			file_text[i] = NULL;
 			i++;
 		}
 		free(str);
@@ -108,7 +89,6 @@ char	**cut_trailings(char **file_text)
 				j * sizeof(char *));
 		cut_text[j - 1] = ft_substr(file_text[i], leftest_border,
 				find_right_border(file_text[i]) - leftest_border + 1);
-		cut_text[j] = NULL;
 		j++;
 	}
 	return (cut_text);
@@ -159,27 +139,3 @@ char	**multiply_size(char **cut_text)
 	}
 	return (map);
 }
-
-// char	**multiply_size(char **cut_text)
-// {
-// 	int		j;
-// 	int		i;
-// 	char	*line_cpy;
-// 	char	**map;
-//
-// 	map = (char **)ft_calloc(
-// 			count_items_charpp(cut_text) * MAP_RES + 1, sizeof(char *));
-// 	i = 0;
-// 	while (cut_text[i])
-// 	{
-// 		line_cpy = multiply_line(cut_text[i]);
-// 		j = i * MAP_RES;
-// 		// | | This cycle is daaamn slooooow... find a way to speed things up
-// 		// V V
-// 		while (j < (i + 1) * MAP_RES)
-// 			map[j++] = ft_strdup(line_cpy);
-// 		free(line_cpy);
-// 		i++;
-// 	}
-// 	return (map);
-// }

@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:45:54 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 16:48:15 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 16:54:33 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ bool	is_valid_color(char *r, char *g, char *b)
 
 int	read_texture(void *_texture, char *split_line)
 {
-	t_img **texture = (t_img **)_texture;
+	t_img	**texture;
+
+	texture = (t_img **)_texture;
 	if (!split_line)
 		return (ERR_INVALID_FILE_HEAD);
 	if (!*(texture))
@@ -72,9 +74,10 @@ int	read_texture(void *_texture, char *split_line)
 
 int	read_color(void *_color_hex, char *color_line)
 {
-	int		*color_hex = (int *)_color_hex;
+	int		*color_hex;
 	char	**color_rgb;
 
+	color_hex = (int *)_color_hex;
 	if (!color_line)
 		return (ERR_INVALID_FILE_HEAD);
 	color_rgb = ft_split(color_line, ',');

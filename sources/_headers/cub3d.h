@@ -6,12 +6,14 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 16:42:55 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 17:20:28 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // do not remove this comment
 // do not forget to get back flags in makefile!!!
+// recheck leaks in parser,
+//	 because there is no leak-checker capable of doing so on linux!
 
 #ifndef CUB3D_H
 # define CUB3D_H
@@ -67,10 +69,12 @@
 
 extern t_mlx_data	*g_mlx;
 
-# endif
+# endif // GLOBAL
 
 // Inits
 int				init_window(t_game_data *g_d);
+void			init_g_d_defaults(t_game_data *g_d);
+
 // Hooks
 int				key_down_hook(int keycode, t_game_data *g_d);
 int				key_up_hook(int keycode, t_list **keys_pressed);
@@ -81,11 +85,11 @@ void			update(t_game_data *g_d);
 int				loop_hook(t_game_data *g_d);
 int				focus_in(t_game_data *g_d);
 int				focus_out(t_game_data *g_d);
+
 // Utils
 t_img			*init_textures(char *path);
 int				ft_strcmp(char *str1, char *str2);
 void			error_die(t_game_data *g_d, int err_code, int exit_status);
-void			init_g_d_defaults(t_game_data *g_d);
 void			free_array(char **arr);
 double			dabs(double x);
 double			deg_to_rad(float a);
@@ -94,6 +98,7 @@ void			set_player_transform(t_game_data *g_d,
 float			fto_pos(float x);
 void			*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize);
 void			destroy_g_d(t_game_data *g_d);
+
 // Map processing
 int				parse_file(t_game_data *g_d, char *file_path);
 bool			is_valid_file(char *file_path);
@@ -115,6 +120,10 @@ void			parse_player(t_game_data *g_d, int x, int y, char dir);
 int				read_texture(void *texture, char *split_line);
 int				read_color(void *color_hex, char *color_line);
 void			write_line_to_map(char *cut_text, char **map);
+
+// Parsing head functions
+t_head_map		*init_head_map(t_game_data *g_d);
+int				parse_head_line(t_head_map **h_map, char **split_line);
 
 // Movement
 int				move_player(t_fpoint shift, t_game_data *g_d);

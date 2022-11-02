@@ -2,20 +2,21 @@
 NAME := cub3D
 
 # sources
-_SRC :=	core/main.c							\
-		core/body.c							\
-		graphics/draw.c						\
-		graphics/pixel_operations.c			\
-		graphics/calculations.c				\
-		hooks/hooks.c						\
-		utils/utils.c						\
-		utils/utils_1.c						\
-		map_processing/validation.c			\
-		map_processing/parsing_core.c		\
-		map_processing/parsing_functions.c	\
-		map_processing/parsing_utils.c		\
-		map_processing/parsing_utils_1.c	\
-		movement/movement.c					\
+_SRC :=	core/main.c								\
+		core/body.c								\
+		graphics/draw.c							\
+		graphics/pixel_operations.c				\
+		graphics/calculations.c					\
+		hooks/hooks.c							\
+		utils/utils.c							\
+		utils/utils_1.c							\
+		map_processing/validation.c				\
+		map_processing/parsing_core.c			\
+		map_processing/parsing_functions.c		\
+		map_processing/parse_head_functions.c	\
+		map_processing/parsing_utils.c			\
+		map_processing/parsing_utils_1.c		\
+		movement/movement.c						\
 
 # sources preparation
 SRC_DIR := sources
