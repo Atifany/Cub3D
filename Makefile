@@ -16,15 +16,14 @@ _SRC :=	core/main.c							\
 		map_processing/parsing_utils.c		\
 		map_processing/parsing_utils_1.c	\
 		movement/movement.c					\
-		utils/get_next_line.c				\
-		utils/get_next_line_utils.c			\
 
-# tester source lsit
-_SRCT := $(filter-out core/main.c, $(_SRC))
-_SRCT += "_tests/tests.c"
 # sources preparation
 SRC_DIR := sources
 SRC := $(_SRC:%=$(SRC_DIR)/%)
+# tester source list
+_SRCT := $(filter-out core/main.c, $(_SRC))
+SRCT := $(_SRCT:%=$(SRC_DIR)/%)
+SRCT += "tests/tests.c"
 # tmp files
 OBJ := $(SRC:%.c=%.o)
 DPS := $(SRC:%.c=%.d)
@@ -48,7 +47,7 @@ LIBS +=	$(LIBFT:%=$(LIBFT_DIR)%) \
 		$(MLX:%=$(MLX_DIR)%)
 
 # flags
-#C_FLAGS = -O2 -Wall -Wextra -Werror
+#C_FLAGS += -O2 -Wall -Wextra -Werror
 
 # Make commands
 CC := gcc
@@ -74,7 +73,7 @@ $(NAME): $(OBJ)
 -include $(DPS)
 
 test: compile_libs
-	@$(MAKE) start NAME="test.out" _SRC="$(_SRCT)"
+	@$(MAKE) start NAME="test.out" SRC="$(SRCT)"
 
 clean:
 	@printf "\n>> clean tmp files\n"

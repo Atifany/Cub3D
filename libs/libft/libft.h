@@ -15,6 +15,8 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdlib.h>
+# include "get_next_line.h"
+
 # define INT_MAX 2147483647
 # define INT_MIN -2147483648
 # define ULL unsigned long long

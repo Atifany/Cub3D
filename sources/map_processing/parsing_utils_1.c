@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils_1.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/02 14:45:54 by atifany           #+#    #+#             */
+/*   Updated: 2022/11/02 15:39:56 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/cub3d.h"
 
-void	parse_player_transform(t_game_data *g_d, int x, int y, char dir)
+void	parse_player(t_game_data *g_d, int x, int y, char dir)
 {
 	t_fpoint	position;
 	int			view_angle;
@@ -44,36 +56,38 @@ bool	is_valid_color(char *r, char *g, char *b)
 	return (true);
 }
 
-bool	read_texture(t_img **texture, char *split_line, t_game_data *g_d)
+int	read_texture(void *_texture, char *split_line)
 {
+	t_img **texture = (t_img **)_texture;
 	if (!split_line)
-		return (false);
+		return (7);
 	if (!*(texture))
 	{
 		*(texture) = init_textures(split_line);
 		if (*(texture) == NULL)
-			return (false);
+			return (10);
 	}
-	return (true);
+	return (-1);
 }
 
-bool	read_color(int *color_hex, char *color_line)
+int	read_color(void *_color_hex, char *color_line)
 {
+	int		*color_hex = (int *)_color_hex;
 	char	**color_rgb;
 
 	if (!color_line)
-		return (false);
+		return (7);
 	color_rgb = ft_split(color_line, ',');
 	if (!color_rgb[0] || !color_rgb[1] || !color_rgb[2] || color_rgb[3]
 		|| !is_valid_color(color_rgb[0], color_rgb[1], color_rgb[2]))
 	{
 		free_array(color_rgb);
-		return (false);
+		return (5);
 	}
 	*color_hex = (ft_atoi(color_rgb[0]) << 16) + (ft_atoi(color_rgb[1]) << 8)
-			+ ft_atoi(color_rgb[2]);
+		+ ft_atoi(color_rgb[2]);
 	free_array(color_rgb);
-	return (true);
+	return (-1);
 }
 
 void	write_line_to_map(char *cut_text, char **map)

@@ -1,4 +1,4 @@
-#include "../_headers/get_next_line.h"
+#include "../get_next_line.h"
 
 static void	zero_fill(char **buf, short call_return)
 {

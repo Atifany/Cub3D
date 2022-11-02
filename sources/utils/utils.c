@@ -63,8 +63,8 @@ void	error_die(t_game_data *g_d, int err_code, int exit_status)
 		/*2*/ "Cub3D: Error: Invalid filename.\n",
 		/*3*/ "Cub3D: Error: Cannot open given file.\n",
 		/*4*/ "Cub3D: Error: Invalid map.\n",
-		/*5*/ "Cub3D: Error: Wrong floor color.\n",
-		/*6*/ "Cub3D: Error: Wrong ceiling color.\n",
+		/*5*/ "Cub3D: Error: Wrong color.\n",
+		/*6*/ "Cub3D: Error: Wrong ceiling color.\n", // <- not used
 		/*7*/ "Cub3D: Error: File's head is corrupted.\n",
 		/*8*/ "Cub3D: Esc key was presssed.\n",
 		/*9*/ "Cub3D: Exit button was pressed.\n",
