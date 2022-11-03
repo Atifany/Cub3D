@@ -56,3 +56,30 @@ int	parse_head_line(t_head_map **h_map, char **split_line)
 	}
 	return (ERR_INVALID_FILE_HEAD);
 }
+
+int	parse_head(char **file_text, t_game_data *g_d)
+{
+	int			ret;
+	int			i;
+	char		**split_line;
+	t_head_map	*h_map;
+
+	h_map = init_head_map(g_d);
+	i = 0;
+	while (file_text[i] && i < 6)
+	{
+		split_line = ft_split(file_text[i], ' ');
+		ret = parse_head_line(&h_map, split_line);
+		free_array(split_line);
+		if (ret != SUCCESS)
+		{
+			free(h_map);
+			return (ret);
+		}
+		i++;
+	}
+	free(h_map);
+	if (i != 6)
+		return (ERR_INVALID_FILE_HEAD);
+	return (SUCCESS);
+}

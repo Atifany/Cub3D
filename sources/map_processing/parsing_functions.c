@@ -12,33 +12,6 @@
 
 #include "../_headers/cub3d.h"
 
-int	parse_head(char **file_text, t_game_data *g_d)
-{
-	int			ret;
-	int			i;
-	char		**split_line;
-	t_head_map	*h_map;
-
-	h_map = init_head_map(g_d);
-	i = 0;
-	while (file_text[i] && i < 6)
-	{
-		split_line = ft_split(file_text[i], ' ');
-		ret = parse_head_line(&h_map, split_line);
-		free_array(split_line);
-		if (ret != SUCCESS)
-		{
-			free(h_map);
-			return (ret);
-		}
-		i++;
-	}
-	free(h_map);
-	if (i != 6)
-		return (ERR_INVALID_FILE_HEAD);
-	return (SUCCESS);
-}
-
 char	**read_file(char *file_path)
 {
 	int		i;
@@ -68,14 +41,12 @@ char	**read_file(char *file_path)
 	return (file_text);
 }
 
-char	**cut_trailings(char **file_text)
+static int	find_border(char **file_text)
 {
 	int		leftest_border;
 	int		i;
 	int		j;
-	char	**cut_text;
 
-	cut_text = ft_calloc(1, sizeof(char *));
 	leftest_border = INT_MAX;
 	j = 1;
 	i = -1;
@@ -85,6 +56,24 @@ char	**cut_trailings(char **file_text)
 			continue ;
 		if (find_left_border(file_text[i]) < leftest_border)
 			leftest_border = find_left_border(file_text[i]);
+		j++;
+	}
+	return (leftest_border);
+}
+
+char	**cut_trailings(char **file_text)
+{
+	int		leftest_border;
+	int		i;
+	int		j;
+	char	**cut_text;
+
+	cut_text = ft_calloc(1, sizeof(char *));
+	leftest_border = find_border(file_text);
+	j = 1;
+	i = -1;
+	while ((++i != -1) && file_text[i])
+	{
 		cut_text = ft_realloc_charpp(cut_text, (j + 1) * sizeof(char *),
 				j * sizeof(char *));
 		cut_text[j - 1] = ft_substr(file_text[i], leftest_border,
