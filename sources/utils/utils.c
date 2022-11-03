@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/02 17:32:00 by atifany           #+#    #+#             */
+/*   Updated: 2022/11/02 17:37:22 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/cub3d.h"
 
 void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize)
@@ -10,7 +22,6 @@ void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize)
 	if (size == 0)
 		return (NULL);
 	ret = malloc(size);
-	//printf("{%-20s%p}\n", "ft_realloc:", ret);
 	if (!ret)
 		return (ptr);
 	if (!ptr || oldsize == 0)
@@ -21,6 +32,8 @@ void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize)
 		ret[i] = ptr_cpy[i];
 		i++;
 	}
+	while (i < size)
+		ret[i++] = 0;
 	free(ptr);
 	return (ret);
 }
@@ -57,19 +70,20 @@ int	ft_strcmp(char *str1, char *str2)
 
 void	error_die(t_game_data *g_d, int err_code, int exit_status)
 {
-	char *error_texts[] = {
-		/*0*/ "Cub3D: Error: Initialization failed.\n",
-		/*1*/ "Cub3D: Error: Invalid input.\nUsage: ./cub3D [filename].cub\n",
-		/*2*/ "Cub3D: Error: Invalid filename.\n",
-		/*3*/ "Cub3D: Error: Cannot open given file.\n",
-		/*4*/ "Cub3D: Error: Invalid map.\n",
-		/*5*/ "Cub3D: Error: Wrong floor color.\n",
-		/*6*/ "Cub3D: Error: Wrong ceiling color.\n",
-		/*7*/ "Cub3D: Error: File's head is corrupted.\n",
-		/*8*/ "Cub3D: Esc key was presssed.\n",
-		/*9*/ "Cub3D: Exit button was pressed.\n",
-		/*10*/ "Cub3D: Error: Texture not found\n"
-	};
+	char	*error_texts[11];
+
+	error_texts[0] = "Cub3D: Error: Initialization failed.\n";
+	error_texts[1] = "Cub3D: Error: Invalid input.\n\
+		Usage: ./cub3D [filename].cub\n";
+	error_texts[2] = "Cub3D: Error: Invalid filename.\n";
+	error_texts[3] = "Cub3D: Error: Cannot open given file.\n";
+	error_texts[4] = "Cub3D: Error: Invalid map.\n";
+	error_texts[5] = "Cub3D: Error: Wrong color.\n";
+	error_texts[6] = "Cub3D: Error: Wrong ceiling color.\n";
+	error_texts[7] = "Cub3D: Error: File's head is corrupted.\n";
+	error_texts[8] = "Cub3D: Esc key was presssed.\n";
+	error_texts[9] = "Cub3D: Exit button was pressed.\n";
+	error_texts[10] = "Cub3D: Error: Texture not found\n";
 	if (g_d)
 		destroy_g_d(g_d);
 	if (g_mlx)
@@ -78,12 +92,12 @@ void	error_die(t_game_data *g_d, int err_code, int exit_status)
 	exit(exit_status);
 }
 
-void display_charpp(char** arr)
-{
-	int i = 0;
-	while (arr != NULL && arr[i] != NULL)
-	{
-		printf("%s\n", arr[i++]);
-		//sleep(500000);
-	}
-}
+// void display_charpp(char** arr)
+// {
+// 	int i = 0;
+// 	while (arr != NULL && arr[i] != NULL)
+// 	{
+// 		printf("%s\n", arr[i++]);
+// 		//sleep(500000);
+// 	}
+// }

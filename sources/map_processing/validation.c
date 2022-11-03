@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validation.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/02 14:46:43 by atifany           #+#    #+#             */
+/*   Updated: 2022/11/02 14:47:09 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../_headers/cub3d.h"
 
 bool	is_valid_file(char *file_path)
 {
 	if (file_path == NULL || ft_strcmp(
-		&(file_path[ft_strlen(file_path) - ft_strlen(".cub")]), ".cub")
+			&(file_path[ft_strlen(file_path) - ft_strlen(".cub")]), ".cub")
 		|| ft_strlen(file_path) == ft_strlen(".cub"))
 		return (false);
 	return (true);

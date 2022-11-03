@@ -1,18 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
+/*   Updated: 2022/11/02 22:37:10 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 // do not remove this comment
 // do not forget to get back flags in makefile!!!
-//
-// I guess it leaks when validator shows error
+// recheck leaks in parser,
+//	 because there is no leak-checker capable of doing so on linux!
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
 // Standart libs
 # include <X11/X.h>
-// # include <X11/keysym.h>  <-- does not work somewhy
 # include <sys/time.h>
 # include <stdio.h>
 # include <stdbool.h>
 # include <math.h>
+# include <sys/time.h>
 // Embedded libs
 # include "../../libs/libft/libft.h"
 
@@ -27,7 +39,7 @@
 
 // Embedded headers
 # include "data_structures.h"
-# include "get_next_line.h"
+# include "error_codes.h"
 
 // General macros
 # define READ 0		// never touch 'em
@@ -57,90 +69,85 @@
 
 extern t_mlx_data	*g_mlx;
 
-# endif
+# endif // GLOBAL
 
 // Inits
-int		init_window(t_game_data *g_d);
+int				init_window(t_game_data *g_d);
+void			init_g_d_defaults(t_game_data *g_d);
+t_img			*init_textures(char *path);
+t_img			*create_background(t_game_data *g_d);
+
 // Hooks
-int		key_down_hook(int keycode, t_game_data *g_d);
-int		key_up_hook(int keycode, t_list **keys_pressed);
-int		mouse_move(int x, int y, t_game_data *g_d);
-void	set_new_mouse_pos(int x, int y);
-int		die_hook(t_game_data *g_d);
-void	update(t_game_data *g_d);
-int		loop_hook(t_game_data *g_d);
-int		focus_in(t_game_data *g_d);
-int		focus_out(t_game_data *g_d);
+void			list_active_keys(t_game_data *g_d);
+void			simple_press_hook(int keycode, t_game_data *g_d);
+int				key_down_hook(int keycode, t_game_data *g_d);
+int				key_up_hook(int keycode, t_list **keys_pressed);
+int				mouse_move(int x, int y, t_game_data *g_d);
+int				die_hook(t_game_data *g_d);
+void			update(t_game_data *g_d);
+int				loop_hook(t_game_data *g_d);
+void			set_new_mouse_pos(int x, int y);
+void			get_mouse_pos(int *mousex, int *mousey);
+
 // Utils
-t_img	*init_textures(char *path);
-int		ft_strcmp(char *str1, char *str2);
-void	error_die(t_game_data *g_d, int err_code, int exit_status);
-void	init_g_d_defaults(t_game_data *g_d);
-void	free_array(char **arr);
-double	dabs(double x);
-double	deg_to_rad(float a);
-void	set_player_transform(t_game_data *g_d,
-			t_fpoint position, int view_angle);
-float	fto_pos(float x);
-void	*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize);
-void	destroy_g_d(t_game_data *g_d);
+int				ft_strcmp(char *str1, char *str2);
+void			error_die(t_game_data *g_d, int err_code, int exit_status);
+void			free_array(char **arr);
+double			dabs(double x);
+double			deg_to_rad(float a);
+void			set_player_transform(t_game_data *g_d,
+					t_fpoint position, int view_angle);
+float			fto_pos(float x);
+void			*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize);
+void			destroy_g_d(t_game_data *g_d);
+
 // Map processing
-int		parse_file(t_game_data *g_d, char *file_path);
-bool	is_valid_file(char *file_path);
-bool	is_valid_map(char **file_text);
-int		parse_head(char **file_text, t_game_data *g_d);
-char	**read_file(char *file_path);
-char	**cut_trailings(char **file_text);
-void	clean_spaces(t_game_data *g_d, char **cut_text);
-int		find_right_border(char *line);
-int		find_left_border(char *line);
-bool	is_spawner(char c);
-char	*multiply_line(char *line);
-char	**multiply_size(char **cut_text);
-int		count_items_charpp(char **charpp);
+int				parse_file(t_game_data *g_d, char *file_path);
+bool			is_valid_file(char *file_path);
+bool			is_valid_map(char **file_text);
+int				parse_head(char **file_text, t_game_data *g_d);
+char			**read_file(char *file_path);
+char			**cut_trailings(char **file_text);
+void			clean_spaces(t_game_data *g_d, char **cut_text);
+int				find_right_border(char *line);
+int				find_left_border(char *line);
+bool			is_spawner(char c);
+char			*multiply_line(char *line);
+char			**multiply_size(char **cut_text);
+int				count_items_charpp(char **charpp);
+
 // Map process utils
-bool	is_valid_color(char *r, char *g, char *b);
-void	parse_player_transform(t_game_data *g_d, int x, int y, char dir);
-bool	read_texture(t_img **texture, char *split_line, t_game_data *g_d);
-bool	read_color(int *color_hex, char *color_line);
-void	write_line_to_map(char *cut_text, char **map);
+bool			is_valid_color(char *r, char *g, char *b);
+void			parse_player(t_game_data *g_d, int x, int y, char dir);
+int				read_texture(void *texture, char *split_line);
+int				read_color(void *color_hex, char *color_line);
+void			write_line_to_map(char *cut_text, char **map);
+
+// Parsing head functions
+t_head_map		*init_head_map(t_game_data *g_d);
+int				parse_head_line(t_head_map **h_map, char **split_line);
 
 // Movement
-int		move_player(t_fpoint shift, t_game_data *g_d);
-int		rotate_player(float shift, t_game_data *g_d);
+int				move_player(t_fpoint shift, t_game_data *g_d);
+int				rotate_player(float shift, t_game_data *g_d);
+
+// Focus change hooks
+void			focus_change_button(t_game_data *g_d);
+int				focus_in(t_game_data *g_d);
+int				focus_out(t_game_data *g_d);
 
 // TMP <- delete them later
-void	display_charpp(char **arr);
+void			display_charpp(char **arr);
 
-float distance(t_point p1, t_fpoint p2);
-void	my_pixel_put(t_img *img, int x, int y, int color);
-unsigned int darker(int c, int d);
-void draw_map(t_game_data *gd);
-void	draw_frame(t_game_data *gd);
-int loop_hook(t_game_data *g_d);
+// Graphics
+float			distance(t_point p1, t_fpoint p2);
+void			my_pixel_put(t_img *img, int x, int y, int color);
+unsigned int	darker(int c, int d);
+void			draw_map(t_game_data *gd);
+void			draw_frame(t_game_data *gd);
+int				loop_hook(t_game_data *g_d);
 unsigned int	my_pixel_get(t_img *img, int x, int y);
-double	deg_to_rad(float a);
-t_point	cast_ray(t_game_data *gd, int col);
-
-#include <sys/time.h>
-
-//colors
-# define BLK "\e[0;30m"
-# define BBLK "\e[1;30m"
-# define RED "\e[0;31m"
-# define BRED "\e[1;31m"
-# define GRN "\e[0;32m"
-# define BGRN "\e[1;32m"
-# define YEL "\e[0;33m"
-# define BYEL "\e[1;33m"
-# define BLU "\e[0;34m"
-# define BBLU "\e[1;34m"
-# define MAG "\e[0;35m"
-# define BMAG "\e[1;35m"
-# define CYN "\e[0;36m"
-# define BCYN "\e[1;36m"
-# define WHT "\e[0;37m"
-# define BWHT "\e[1;37m"
-# define NC "\e[0m"
+double			deg_to_rad(float a);
+t_point			cast_ray(t_game_data *gd, int col);
 
 #endif

@@ -1,6 +1,6 @@
 
-# include "../_headers/cub3d.h"
-# include "../_headers/colors.h"
+# include "../sources/_headers/cub3d.h"
+# include "../sources/_headers/colors.h"
 # include <signal.h>
 # include <sys/wait.h>
 
@@ -470,22 +470,6 @@ void t_parse_file()
 		g_d = ft_calloc(1, sizeof(t_game_data));
 		init_g_d_defaults(g_d);
 		init_window(g_d);
-		file_path = "maps/map_invalid_ceiling.cub";
-		if (test_int(6, parse_file(g_d, file_path)) == false)
-			return ((void)printf("%sX%s parse_file() failed test:%d (return value)\n",
-				BRED, NC, test_number));
-		if (test_map(NULL, g_d->map) == false)
-			return ((void)printf("%sX%s parse_file() failed test:%d (invalid map)\n",
-				BRED, NC, test_number));
-		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
-		destroy_g_d(g_d);
-	}
-
-	test_number = 7;
-	{
-		g_d = ft_calloc(1, sizeof(t_game_data));
-		init_g_d_defaults(g_d);
-		init_window(g_d);
 		file_path = "maps/map_invalid_head.cub";
 		if (test_int(7, parse_file(g_d, file_path)) == false)
 			return ((void)printf("%sX%s parse_file() failed test:%d (return value)\n",
@@ -497,7 +481,7 @@ void t_parse_file()
 		destroy_g_d(g_d);
 	}
 
-	test_number = 8;
+	test_number = 7;
 	{
 		g_d = ft_calloc(1, sizeof(t_game_data));
 		init_g_d_defaults(g_d);
@@ -513,7 +497,7 @@ void t_parse_file()
 		destroy_g_d(g_d);
 	}
 
-	test_number = 9;
+	test_number = 8;
 	{
 		g_d = ft_calloc(1, sizeof(t_game_data));
 		init_g_d_defaults(g_d);
@@ -529,7 +513,7 @@ void t_parse_file()
 		destroy_g_d(g_d);
 	}
 
-	test_number = 10;
+	test_number = 9;
 	{
 		g_d = ft_calloc(1, sizeof(t_game_data));
 		init_g_d_defaults(g_d);
@@ -579,7 +563,7 @@ int main()
 	tested_func = "is_valid_map()";
 	run_func_tests(t_is_valid_map, 20);
 	tested_func = "parse_file()";
-	run_func_tests(t_parse_file, 10);
+	run_func_tests(t_parse_file, 9);
 
 	return (0);
 }

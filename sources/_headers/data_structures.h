@@ -1,8 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   data_structures.h                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/02 14:33:29 by atifany           #+#    #+#             */
+/*   Updated: 2022/11/02 17:13:17 by atifany          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef DATA_STRUCTURES_H
 # define DATA_STRUCTURES_H
 
 // Exterior libraries
 # include <stdbool.h>
+
+// parser helper for function mapping
+typedef struct s_head_map
+{
+	char	*id;
+	int		(*read_f)(void *, char *);
+	void	*obj;
+	bool	is_found;
+}	t_head_map;
 
 typedef struct s_img
 {
