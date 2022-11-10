@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:45:54 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 16:54:33 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/10 17:07:25 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	parse_player(t_game_data *g_d, int x, int y, char dir)
 	int			view_angle;
 
 	view_angle = 180;
-	position.x = (x + 1) * MAP_RES - MAP_RES / 2;
-	position.y = (y + 1) * MAP_RES - MAP_RES / 2;
+	position.x = x + 0.5f;
+	position.y = y + 0.5f;
 	if (dir == 'W')
 		view_angle = 270;
 	else if (dir == 'E')

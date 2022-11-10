@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 22:37:10 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/10 17:34:13 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,6 @@ int				focus_out(t_game_data *g_d);
 void			display_charpp(char **arr);
 
 // Graphics
-float			distance(t_point p1, t_fpoint p2);
 void			my_pixel_put(t_img *img, int x, int y, int color);
 unsigned int	darker(int c, int d);
 void			draw_map(t_game_data *gd);
@@ -148,6 +147,5 @@ void			draw_frame(t_game_data *gd);
 int				loop_hook(t_game_data *g_d);
 unsigned int	my_pixel_get(t_img *img, int x, int y);
 double			deg_to_rad(float a);
-t_point			cast_ray(t_game_data *gd, int col);
 
 #endif

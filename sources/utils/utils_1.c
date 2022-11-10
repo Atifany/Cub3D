@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:45:05 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 14:45:12 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/10 16:13:22 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	init_g_d_defaults(t_game_data *g_d)
 	g_d->res = (t_point){1920, 1080};
 	g_d->keys_pressed = NULL;
 	g_d->player_rot_speed = 0.1f;
-	g_d->player_speed = 20.0f;
+	g_d->player_speed = 0.05f;
 	g_d->is_focused = true;
 }
 

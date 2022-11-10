@@ -12,72 +12,123 @@
 
 #include "../_headers/cub3d.h"
 
-static void	draw_line(int col, t_point collision,
-	t_game_data *gd, t_img *texture)
-{
-	float			d;
-	int				ag[5];
-	unsigned int	t_pixel;
+int map_multi = 100;
 
-	ag[3] = (collision.x + collision.y) / 2 % 128;
-	ag[1] = 0;
-	d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
-	if ((d < 256))
-	{
-		ag[2] = (gd->res.y * 16) / d;
-		ag[0] = 0;
-		if (d >= 16)
-			ag[0] = (gd->res.y - ag[2]) >> 1;
-		else
-			ag[1] = (ag[2] - gd->res.y) >> 1;
-		while (ag[1] < ag[2] && ag[0] < gd->res.y)
-		{
-			ag[4] = ag[2] >> 8;
-			t_pixel = darker(my_pixel_get(texture, ag[3],
-						((ag[1] << 7) / ag[2]) % 128), d);
-			while (ag[4]-- >= 0 && ag[0] < gd->res.y && ag[1]++ + 1)
-				my_pixel_put(g_mlx->img, col, ag[0]++, t_pixel);
-		}
-	}
+float	distance_between_two_points(t_fpoint p1, t_fpoint p2)
+{
+	return (sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2)));
 }
 
 void	draw_map(t_game_data *gd)
 {
 	int	i;
-	int	ag[4];
+	int	j;
 
 	i = 0;
-	my_pixel_put(g_mlx->img, gd->player->position.y / (MAP_RES / 8),
-		gd->player->position.x / (MAP_RES / 8), 0xFFFFFFFF);
 	while (gd->map[i])
 	{
-		ag[4] = 0;
-		while (gd->map[i][ag[4]])
+		j = 0;
+		while (gd->map[i][j])
 		{
-			if (gd->map[i][ag[4]] == '1')
-				my_pixel_put(g_mlx->img, ag[4] / (MAP_RES / 8),
-					i / (MAP_RES / 8), 0x00ff0000);
-			ag[4] += MAP_RES / 8;
+			if (gd->map[i][j] == '1')
+			{
+				for (int m = i * map_multi; m < (i + 1) * map_multi; m++)
+				{
+					for (int n = j * map_multi; n < (j + 1) * map_multi; n++)
+					{
+						my_pixel_put(g_mlx->img, n, m, 0x880000);
+					}
+				}
+			}
+			j++;
 		}
-		i += MAP_RES / 8;
+		i++;
 	}
+	my_pixel_put(g_mlx->img, gd->player->position.y * map_multi,
+		gd->player->position.x * map_multi, 0xFFFFFFFF);
 }
 
-static t_img	*get_texture(t_point collision, t_game_data *gd)
+t_fpoint is_intersect_segments(t_fpoint p1, t_fpoint p2, t_fpoint p3, t_fpoint p4)
 {
-	if (gd->map[collision.x][collision.y + 1] == '0')
-		return (g_mlx->texture_north);
-	else if (gd->map[collision.x + 1][collision.y] == '0')
-		return (g_mlx->texture_west);
-	else if (gd->map[collision.x][collision.y - 1] == '0')
-		return (g_mlx->texture_east);
-	else
-		return (g_mlx->texture_south);
+	const float d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+	const float t = ((p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x)) / d;
+	const float u = ((p1.x - p3.x) * (p1.y - p2.y) - (p1.y - p3.y) * (p1.x - p2.x)) / d;
+	if (!(0 < u && u < 1 && t > 0))
+		return ((t_fpoint){-1.0f, -1.0f});
+	return ((t_fpoint){p3.x + u * (p4.x - p3.x), p3.y + u * (p4.y - p3.y)});
+}
+
+t_fpoint run_block(t_game_data *gd, t_fpoint dir, int x, int y)
+{
+	t_fpoint collision;
+	int rot[4][4] = {{0, 0, 1, 0},
+					 {1, 0, 1, 1},
+					 {1, 1, 0, 1},
+					 {0, 1, 0, 0}};
+	float buf_dist = -1.0f;
+	float record_dist = INT_MAX;
+	t_fpoint record_col = {-1.0f, -1.0f};
+	
+	for (int i = 0; i < 4; i++)
+	{
+		collision = is_intersect_segments(
+		gd->player->position,
+		(t_fpoint){dir.x, dir.y},
+		(t_fpoint){x + rot[i][0], y + rot[i][1]}, (t_fpoint){x + rot[i][2], y + rot[i][3]});
+		if (collision.x <= 0.0f)
+			continue;
+		buf_dist = distance_between_two_points(gd->player->position, collision);
+		if (buf_dist < record_dist)
+		{
+			record_dist = buf_dist;
+			record_col = collision;
+		}
+	}
+	return (record_col);
+}
+
+static void cast_ray(t_game_data *gd, int col)
+{
+	const t_fpoint dir = {
+		gd->player->position.x + cos(deg_to_rad(
+			gd->player->view_angle - (float)(gd->fov / 2)
+				+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col)))),
+		gd->player->position.y + sin(deg_to_rad(
+			gd->player->view_angle - (float)(gd->fov / 2)
+				+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col))))};
+	
+	t_fpoint collision;
+	float buf_dist = -1.0f;
+	float record_dist = INT_MAX;
+	t_fpoint record_col = {-1.0f, -1.0f};
+
+	int i = 0;
+	int j = 0;
+	while (gd->map[i] != NULL)
+	{
+		j = 0;
+		while (gd->map[i][j] != 0)
+		{
+			if (gd->map[i][j] == '1')
+			{
+				collision = run_block(gd, dir, i, j);
+				buf_dist = distance_between_two_points(gd->player->position, collision);
+				if (buf_dist < record_dist)
+				{
+					record_dist = buf_dist;
+					record_col = collision;
+				}
+			}
+			j++;
+		}
+		i++;
+	}
+	if (record_col.x >= 0.0f)
+		my_pixel_put(g_mlx->img, record_col.y * map_multi, record_col.x * map_multi, 0x00FF00);
 }
 
 void	draw_frame(t_game_data *gd)
 {
-	int		i;
 	t_point	collision;
 	t_img	*texture;
 
@@ -86,15 +137,9 @@ void	draw_frame(t_game_data *gd)
 			&g_mlx->img->line_length, &g_mlx->img->endian);
 	ft_memcpy(g_mlx->img->addr, g_mlx->bg->addr, gd->res.x
 		* gd->res.y * (g_mlx->img->bpp / 8));
-	i = -1;
-	while (++i < gd->res.x)
-	{
-		collision = cast_ray(gd, gd->res.x - i);
-		if (collision.x >= 0)
-		{
-			texture = get_texture(collision, gd);
-			draw_line(i, collision, gd, texture);
-		}
-	}
 	draw_map(gd);
+	for (int i = 0; i < gd->res.x; i++)
+	{
+		cast_ray(gd, i);
+	}
 }

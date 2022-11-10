@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 21:38:45 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 21:39:37 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/10 18:13:10 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ int	body(t_game_data *g_d)
 		&(g_d->keys_pressed));
 	mlx_hook(g_mlx->win, FocusIn, FocusChangeMask, focus_in, g_d);
 	mlx_hook(g_mlx->win, FocusOut, FocusChangeMask, focus_out, g_d);
+	// delete later
+	draw_frame(g_d);
+	mlx_put_image_to_window(g_mlx->mlx, g_mlx->win, g_mlx->img->img, 0, 0);
+	// ^^^^^^^^^^^^
 	mlx_loop_hook(g_mlx->mlx, loop_hook, g_d);
 	mlx_loop(g_mlx->mlx);
 	return (0);

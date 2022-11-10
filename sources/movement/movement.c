@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:37:18 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/02 14:37:19 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/10 16:12:44 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,14 @@ int	move_player(t_fpoint shift, t_game_data *g_d)
 	sin_dir = sin(deg_to_rad(g_d->player->view_angle));
 	new_pos.x = g_d->player->position.x + shift.x * cos_dir + shift.y * sin_dir;
 	new_pos.y = g_d->player->position.y + shift.x * sin_dir - shift.y * cos_dir;
-	ret = is_collision(g_d, new_pos);
-	if ((!ret[NORTH] && new_pos.x < g_d->player->position.x)
-		|| (!ret[SOUTH] && new_pos.x >= g_d->player->position.x))
+	// ret = is_collision(g_d, new_pos);
+	// if ((!ret[NORTH] && new_pos.x < g_d->player->position.x)
+	// 	|| (!ret[SOUTH] && new_pos.x >= g_d->player->position.x))
 		g_d->player->position.x = new_pos.x;
-	if ((!ret[WEST] && new_pos.y < g_d->player->position.y)
-		|| (!ret[EAST] && new_pos.y >= g_d->player->position.y))
+	// if ((!ret[WEST] && new_pos.y < g_d->player->position.y)
+	// 	|| (!ret[EAST] && new_pos.y >= g_d->player->position.y))
 		g_d->player->position.y = new_pos.y;
-	free(ret);
+	// free(ret);
 	return (0);
 }
 
