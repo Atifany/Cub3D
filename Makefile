@@ -5,8 +5,8 @@ NAME := cub3D
 _SRC :=	core/main.c								\
 		core/body.c								\
 		core/inits.c							\
-		graphics/draw.c							\
 		graphics/pixel_operations.c				\
+		graphics/draw.c							\
 		graphics/calculations.c					\
 		hooks/hooks.c							\
 		hooks/focus_hooks.c						\

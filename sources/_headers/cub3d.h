@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/10 17:34:13 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/11 20:05:48 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ extern t_mlx_data	*g_mlx;
 // Inits
 int				init_window(t_game_data *g_d);
 void			init_g_d_defaults(t_game_data *g_d);
-t_img			*init_textures(char *path);
+t_img			*init_textures(char *path, char* name);
 t_img			*create_background(t_game_data *g_d);
 
 // Hooks
@@ -102,6 +102,11 @@ void			*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize);
 void			destroy_g_d(t_game_data *g_d);
 
 // Map processing
+// new:
+int				parse_textures(char** file_text);
+int				parse_map(t_game_data* g_d, char** file_text);
+int				charpp_length(char** arr);
+//
 int				parse_file(t_game_data *g_d, char *file_path);
 bool			is_valid_file(char *file_path);
 bool			is_valid_map(char **file_text);

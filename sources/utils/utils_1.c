@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:45:05 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/10 16:13:22 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/11 20:05:56 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	set_player_transform(t_game_data *g_d,
 
 void	init_g_d_defaults(t_game_data *g_d)
 {
-	g_d->map = NULL;
+	g_d->scene = NULL;
 	g_d->fov = 90;
 	g_d->player = (t_transform *)ft_calloc(1, sizeof(t_transform));
 	g_d->player->position = (t_fpoint){0.0f, 0.f};
@@ -60,4 +60,11 @@ void	free_array(char **arr)
 	while (arr[i])
 		free(arr[i++]);
 	free(arr);
+}
+
+int	charpp_length(char** arr)
+{
+	int i = 0;
+	while (arr != NULL && arr[i] != NULL) { i++; }
+	return (i);
 }
