@@ -12,7 +12,7 @@
 
 #include "../_headers/cub3d.h"
 
-int map_multi = 100;
+int map_multi = 10;
 
 float	distance_between_two_points(t_fpoint p1, t_fpoint p2)
 {
@@ -87,7 +87,7 @@ t_fpoint run_block(t_game_data *gd, t_fpoint dir, int x, int y)
 	return (record_col);
 }
 
-static void cast_ray(t_game_data *gd, int col)
+static t_fpoint cast_ray(t_game_data *gd, int col, float* dist)
 {
 	const t_fpoint dir = {
 		gd->player->position.x + cos(deg_to_rad(
@@ -99,7 +99,6 @@ static void cast_ray(t_game_data *gd, int col)
 	
 	t_fpoint collision;
 	float buf_dist = -1.0f;
-	float record_dist = INT_MAX;
 	t_fpoint record_col = {-1.0f, -1.0f};
 
 	int i = 0;
@@ -113,9 +112,9 @@ static void cast_ray(t_game_data *gd, int col)
 			{
 				collision = run_block(gd, dir, i, j);
 				buf_dist = distance_between_two_points(gd->player->position, collision);
-				if (buf_dist < record_dist)
+				if (buf_dist < *dist)
 				{
-					record_dist = buf_dist;
+					*dist = buf_dist;
 					record_col = collision;
 				}
 			}
@@ -123,14 +122,42 @@ static void cast_ray(t_game_data *gd, int col)
 		}
 		i++;
 	}
-	if (record_col.x >= 0.0f)
-		my_pixel_put(g_mlx->img, record_col.y * map_multi, record_col.x * map_multi, 0x00FF00);
+	return (record_col);
+	// if (record_col.x >= 0.0f)
+	//	 my_pixel_put(g_mlx->img, record_col.y * map_multi, record_col.x * map_multi, 0x00FF00);
+}
+
+void	draw_line(t_game_data *gd, t_fpoint collision, float dist, int col)
+{
+	const float dist_to_full_screen = 0.5f;
+
+	int height = gd->res.y * (dist_to_full_screen / dist);
+	int px_start = 0 + (gd->res.y - height) / 2;
+	int px_end = gd->res.y - (gd->res.y - height) / 2;
+	// kostil:
+	if (px_start < 0)
+		px_start = 0;
+	if (px_start > gd->res.y)
+		px_start = gd->res.y;
+	if (px_end < 0)
+		px_end = 0;
+	if (px_end > gd->res.y)
+		px_end = gd->res.y;
+
+	for (int i = px_start; i < px_end; i++)
+	{
+		if (0 > i && i > gd->res.y)
+			continue ;
+		//printf("x=%d y=%d\n", i, col);
+		my_pixel_put(g_mlx->img, gd->res.x - col, i, 0xAAAAAA);
+	}
 }
 
 void	draw_frame(t_game_data *gd)
 {
-	t_point	collision;
-	t_img	*texture;
+	float		dist;
+	t_fpoint	collision;
+	t_img		*texture;
 
 	g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->res.x, gd->res.y);
 	g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bpp,
@@ -140,6 +167,10 @@ void	draw_frame(t_game_data *gd)
 	draw_map(gd);
 	for (int i = 0; i < gd->res.x; i++)
 	{
-		cast_ray(gd, i);
+		dist = INT_MAX;
+		collision = cast_ray(gd, i, &dist);
+		if (collision.x < 0.0f)
+			continue ;
+		draw_line(gd, collision, dist, i);
 	}
 }

@@ -5,7 +5,7 @@
 
 
 F 255,255,255
-C 0,1,12
+C 0,0,0
 
 
 NO ./textures/wall1.xpm
@@ -13,20 +13,15 @@ SO ./textures/wall2.xpm
 WE ./textures/wall3.xpm
 EA ./textures/wall4.xpm
 
-11111
+11 // <- thats why this map segfaults!
 1
 1
 1
 11111111111
-1E000000001
+1W000000001
 11110000001
-10000000011     1
+10000000011
 1000000011
 1110000111
 1000000001
-1111111111 	 	1
-
-
-
-
-1
+1111111111
