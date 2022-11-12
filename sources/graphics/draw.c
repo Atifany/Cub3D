@@ -154,25 +154,30 @@ static t_collision cast_ray(t_game_data *gd, int col, float* dist)
 void	draw_col(t_game_data *gd, t_collision collision,
 	float dist, int col)
 {
-	const float dist_to_full_screen = 0.5f;
+	const float dist_to_full_screen = 1.0f;
 
-	int height = gd->res.y * (dist_to_full_screen / dist);
-	if (height > gd->res.y)
-		height = gd->res.y;
-	int px_start = 0 + (gd->res.y - height) / 2;
-	int px_end = gd->res.y - (gd->res.y - height) / 2;
+	float tx_start = 0;
+	float tx_end = collision.wall->texture->height;
+	int px_to_pass = gd->res.y * (dist_to_full_screen / dist);
+	if (px_to_pass > gd->res.y)
+	{
+		float tx_height = (float)collision.wall->texture->height
+			* (dist_to_full_screen / dist);
+		tx_start = ((float)collision.wall->texture->height / 2)
+			* (1.0f - (float)collision.wall->texture->height / tx_height);
+		tx_end = (float)collision.wall->texture->height - tx_start;
+		px_to_pass = gd->res.y;
+	}
+	int px_start = 0 + (gd->res.y - px_to_pass) / 2;
+	int px_end = gd->res.y - (gd->res.y - px_to_pass) / 2;
 
 	for (int i = px_start; i < px_end; i++)
 	{
-		// my_pixel_put(g_mlx->img, gd->res.x - col - 1, i,
-		// 	my_pixel_get(g_mlx->texture_east,
-		// 	(int)(shift * g_mlx->texture_east->width),
-		// 	(int)(((float)(i - px_start) / (px_end - px_start)) * g_mlx->texture_east->height)));
-		// my_pixel_put(g_mlx->img, gd->res.x - col - 1, i, 0xAAAAAA);
 		my_pixel_put(g_mlx->img, gd->res.x - col - 1, i,
 			my_pixel_get(collision.wall->texture,
 			(int)(collision.texture_shift * (float)(collision.wall->texture->width)),
-			(int)(((float)(i - px_start) / (px_end - px_start)) * (float)(collision.wall->texture->height))));
+			(int)(((float)(i - px_start) / (px_end - px_start))
+			* (tx_end - tx_start) + tx_start)));
 	}
 }
 
