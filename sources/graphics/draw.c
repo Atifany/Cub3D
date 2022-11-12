@@ -12,7 +12,13 @@
 
 #include "../_headers/cub3d.h"
 
-float	shift = 0.0f;
+typedef struct s_collision
+{
+	t_wall		*wall;
+	t_fpoint	collision;
+	float		texture_shift;
+}	t_collision;
+
 int		map_multi = 10;
 
 float	distance_between_two_points(t_fpoint p1, t_fpoint p2)
@@ -68,42 +74,46 @@ void	draw_map(t_game_data *gd)
 		gd->player->position.x * map_multi, 0xFFFFFFFF);
 }
 
-t_fpoint is_intersect_segments(t_fpoint p1, t_fpoint p2, t_fpoint p3, t_fpoint p4)
+void is_intersect_segments(t_fpoint p1, t_fpoint p2, t_fpoint p3, t_fpoint p4,
+	t_collision *collision)
 {
 	const float d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
 	const float t = ((p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x)) / d;
 	const float u = ((p1.x - p3.x) * (p1.y - p2.y) - (p1.y - p3.y) * (p1.x - p2.x)) / d;
+	(*collision).texture_shift = u;
 	if (!(0 < u && u < 1 && t > 0))
-		return ((t_fpoint){-1.0f, -1.0f});
-	shift = u;
-	return ((t_fpoint){p3.x + u * (p4.x - p3.x), p3.y + u * (p4.y - p3.y)});
+	{
+		(*collision).collision = (t_fpoint){-1.0f, -1.0f};
+		return ;
+	}
+	(*collision).collision = (t_fpoint){p3.x + u * (p4.x - p3.x), p3.y + u * (p4.y - p3.y)};
 }
 
-t_fpoint run_block(t_game_data *gd, t_fpoint dir, t_wall* wall)
+// this func is actually a rudimentary one, but can be usefull
+// for calculating collisions for a more complex figures then a line segment.
+t_collision run_block(t_game_data *gd, t_fpoint dir, t_wall* wall)
 {
-	t_fpoint collision;
+	t_collision collision;
 	float buf_dist = -1.0f;
 	float record_dist = INT_MAX;
-	t_fpoint record_col = {-1.0f, -1.0f};
+	t_collision record_col = {wall, (t_fpoint){-1.0f, -1.0f}, -1.0f};
 
-	for (int i = 0; i < 4; i++)
+	is_intersect_segments(
+		gd->player->position,
+		(t_fpoint){dir.x, dir.y}, wall->v1, wall->v2, &collision);
+	if (collision.collision.x <= 0.0f)
+		return (record_col);
+	buf_dist = distance_between_two_points(gd->player->position, collision.collision);
+	if (buf_dist < record_dist)
 	{
-		collision = is_intersect_segments(
-			gd->player->position,
-			(t_fpoint){dir.x, dir.y}, wall->v1, wall->v2);
-		if (collision.x <= 0.0f)
-			continue;
-		buf_dist = distance_between_two_points(gd->player->position, collision);
-		if (buf_dist < record_dist)
-		{
-			record_dist = buf_dist;
-			record_col = collision;
-		}
+		record_dist = buf_dist;
+		record_col.collision = collision.collision;
+		record_col.texture_shift = collision.texture_shift;
 	}
 	return (record_col);
 }
 
-static t_fpoint cast_ray(t_game_data *gd, int col, float* dist)
+static t_collision cast_ray(t_game_data *gd, int col, float* dist)
 {
 	const t_fpoint dir = {
 		gd->player->position.x + cos(deg_to_rad(
@@ -113,24 +123,26 @@ static t_fpoint cast_ray(t_game_data *gd, int col, float* dist)
 			gd->player->view_angle - (float)(gd->fov / 2)
 				+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col))))};
 	
-	t_fpoint collision;
+	t_collision collision;
 	float buf_dist = -1.0f;
-	t_fpoint record_col = {-1.0f, -1.0f};
+	t_collision record_col = {NULL, (t_fpoint){-1.0f, -1.0f}, -1.0f};
 
 	t_list* tmp = gd->scene;
 	while (tmp != NULL)
 	{
 		collision = run_block(gd, dir, (t_wall *)(tmp->content));
-		if (collision.x < 0)
+		if (collision.collision.x < 0)
 		{
 			tmp = tmp->next;
 			continue;
 		}
-		buf_dist = distance_between_two_points(gd->player->position, collision);
+		buf_dist = distance_between_two_points(gd->player->position, collision.collision);
 		if (buf_dist < *dist)
 		{
 			*dist = buf_dist;
-			record_col = collision;
+			record_col.collision = collision.collision;
+			record_col.texture_shift = collision.texture_shift;
+			record_col.wall = collision.wall;
 		}
 		tmp = tmp->next;
 	}
@@ -139,7 +151,7 @@ static t_fpoint cast_ray(t_game_data *gd, int col, float* dist)
 	//	 my_pixel_put(g_mlx->img, record_col.y * map_multi, record_col.x * map_multi, 0x00FF00);
 }
 
-void	draw_col(t_game_data *gd, t_fpoint collision,
+void	draw_col(t_game_data *gd, t_collision collision,
 	float dist, int col)
 {
 	const float dist_to_full_screen = 0.5f;
@@ -156,14 +168,18 @@ void	draw_col(t_game_data *gd, t_fpoint collision,
 		// 	my_pixel_get(g_mlx->texture_east,
 		// 	(int)(shift * g_mlx->texture_east->width),
 		// 	(int)(((float)(i - px_start) / (px_end - px_start)) * g_mlx->texture_east->height)));
-		my_pixel_put(g_mlx->img, gd->res.x - col - 1, i, 0xAAAAAA);
+		// my_pixel_put(g_mlx->img, gd->res.x - col - 1, i, 0xAAAAAA);
+		my_pixel_put(g_mlx->img, gd->res.x - col - 1, i,
+			my_pixel_get(collision.wall->texture,
+			(int)(collision.texture_shift * (float)(collision.wall->texture->width)),
+			(int)(((float)(i - px_start) / (px_end - px_start)) * (float)(collision.wall->texture->height))));
 	}
 }
 
 void	draw_frame(t_game_data *gd)
 {
 	float		dist;
-	t_fpoint	collision;
+	t_collision	collision;
 	t_img		*texture;
 
 	g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->res.x, gd->res.y);
@@ -175,9 +191,8 @@ void	draw_frame(t_game_data *gd)
 	{
 		dist = INT_MAX;
 		collision = cast_ray(gd, i, &dist);
-		if (collision.x < 0.0f)
+		if (collision.collision.x < 0.0f)
 			continue ;
-		my_pixel_put(g_mlx->img, collision.y * map_multi, collision.x * map_multi, 0xAAAAAA);
 		draw_col(gd, collision, dist, i);
 	}
 	draw_map(gd);

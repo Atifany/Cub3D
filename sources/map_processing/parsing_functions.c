@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 16:54:49 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/11 20:33:26 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/12 12:58:25 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ t_wall* init_wall(char** map_line)
 	t_list* tmp = g_mlx->textures;
 	while (tmp != NULL)
 	{
-		if (ft_strcmp(((t_img *)(tmp->content))->name, map_line[5]))
+		if (ft_strcmp(((t_img *)(tmp->content))->name, map_line[5]) == 0)
 		{
-			wall->texture = tmp->content;
+			wall->texture = (t_img *)(tmp->content);
 			break ;
 		}
 		tmp = tmp->next;
