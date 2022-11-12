@@ -41,7 +41,7 @@ void	draw_line(t_fpoint p1, t_fpoint p2)
 	cur = p1;
 	while (cur.x != p2.x || cur.y != p2.y)
 	{
-		my_pixel_put(g_mlx->img, cur.x, cur.y, 0xFF0000);
+		my_pixel_put(g_mlx->img, cur.y, cur.x, 0xFF0000);
 		if ((error[1] = error[0] * 2) > -delta.y)
 		{
 			error[0] -= delta.y;

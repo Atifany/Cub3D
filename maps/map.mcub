@@ -11,7 +11,7 @@ Wall:1.0f:2.0f:1.0f:3.0f:WTX1
 Wall:1.0f:3.0f:1.0f:4.0f:WTX1
 
 Wall:1.0f:4.0f:2.0f:4.0f:WTX2
-Wall:2.0f:4.0f:3.0f:4.0f:WTX2
+#Wall:2.0f:4.0f:3.0f:4.0f:WTX2
 Wall:3.0f:4.0f:4.0f:4.0f:WTX2
 
 Wall:1.0f:1.0f:2.0f:1.0f:WTX3
