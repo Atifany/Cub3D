@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 21:38:28 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/12 12:56:20 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/13 15:45:38 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,6 @@ t_img	*init_textures(char *path, char* name)
 	image->name = ft_strdup(name);
 	image->addr = mlx_get_data_addr(image->img, &image->bpp,
 			&image->line_length, &image->endian);
+	image->bypp = image->bpp / 8;
 	return (image);
 }

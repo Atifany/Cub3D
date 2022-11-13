@@ -158,26 +158,36 @@ void	draw_col(t_game_data *gd, t_collision collision,
 
 	float tx_start = 0;
 	float tx_end = collision.wall->texture->height;
-	int px_to_pass = gd->res.y * (dist_to_full_screen / dist);
-	if (px_to_pass > gd->res.y)
+	int height = gd->res.y * (dist_to_full_screen / dist);
+	if (height > gd->res.y)
 	{
 		float tx_height = (float)collision.wall->texture->height
 			* (dist_to_full_screen / dist);
 		tx_start = ((float)collision.wall->texture->height / 2)
 			* (1.0f - (float)collision.wall->texture->height / tx_height);
 		tx_end = (float)collision.wall->texture->height - tx_start;
-		px_to_pass = gd->res.y;
+		height = gd->res.y;
 	}
-	int px_start = 0 + (gd->res.y - px_to_pass) / 2;
-	int px_end = gd->res.y - (gd->res.y - px_to_pass) / 2;
+	const int px_start = 0 + (gd->res.y - height) / 2;
+	const int px_end = gd->res.y - px_start;
+
+	// these const variables help to get ~2.75fps
+	// the formula is following:
+	// percentage_of_pixels_on_screen
+	//	* tx_pixels_to_pass
+	//	+ where_to_start_reading_texture
+	// where percentage_of_pixels_on_screen = (cur_pixel - pixel_start) / pixels_to_pass
+	const float a = (tx_end - tx_start) / (px_end - px_start);
+	const float a1 = (float)px_start * a - tx_start;
+	const int y = (float)collision.texture_shift * (float)(collision.wall->texture->width);
+	const int col_to_px = gd->res.x - col - 1;
 
 	for (int i = px_start; i < px_end; i++)
 	{
-		my_pixel_put(g_mlx->img, gd->res.x - col - 1, i,
-			my_pixel_get(collision.wall->texture,
-			(int)(collision.texture_shift * (float)(collision.wall->texture->width)),
-			(int)(((float)(i - px_start) / (px_end - px_start))
-			* (tx_end - tx_start) + tx_start)));
+		// getting texture using my_pixel_get() leads to a loss of ~1.25fps.
+		my_pixel_put(g_mlx->img, col_to_px, i,
+			my_pixel_get(collision.wall->texture, y,
+			(int)((float)(i * a) - a1)));
 	}
 }
 
@@ -190,6 +200,7 @@ void	draw_frame(t_game_data *gd)
 	g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->res.x, gd->res.y);
 	g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bpp,
 			&g_mlx->img->line_length, &g_mlx->img->endian);
+	g_mlx->img->bypp = g_mlx->img->bpp / 8;
 	// ft_memcpy(g_mlx->img->addr, g_mlx->bg->addr, gd->res.x
 	// 	* gd->res.y * (g_mlx->img->bpp / 8));
 	for (int i = 0; i < gd->res.x; i++)

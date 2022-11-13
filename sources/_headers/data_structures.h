@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:33:29 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/11 20:57:33 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/13 15:45:00 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_img
 	void	*img;
 	char	*addr;
 	int		bpp;
+	int		bypp;
 	int		line_length;
 	int		endian;
 	int		width;

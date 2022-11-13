@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/11 20:05:48 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/13 15:59:12 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int				focus_out(t_game_data *g_d);
 void			display_charpp(char **arr);
 
 // Graphics
-void			my_pixel_put(t_img *img, int x, int y, int color);
+void			my_pixel_put(t_img *img, int x, int y, unsigned int color);
 unsigned int	darker(int c, int d);
 void			draw_map(t_game_data *gd);
 void			draw_frame(t_game_data *gd);
