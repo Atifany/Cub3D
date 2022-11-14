@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 16:54:49 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/12 12:58:25 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/14 21:41:09 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	init_player(char** map_line, t_game_data* g_d)
 	{
 		if (map_line[3][0] == map[i])
 			break ;
-		g_d->player->view_angle += 90;
+		g_d->player->view_angle_h += 90;
 	}
 }
 

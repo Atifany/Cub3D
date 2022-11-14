@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 19:26:41 by hnickole          #+#    #+#             */
-/*   Updated: 2022/11/10 16:08:59 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/15 01:41:59 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 double	deg_to_rad(float a)
 {
 	return (a * M_PI / 180);
+}
+
+double	rad_to_deg(float a)
+{
+	return (a / M_PI * 180);
 }
 
 unsigned int	darker(int c, int d)

@@ -116,8 +116,13 @@ t_collision run_block(t_game_data *gd, t_fpoint dir, t_wall* wall)
 
 static t_collision cast_ray(t_game_data *gd, int col, float* dist)
 {
-	const float angle = gd->player->view_angle - (float)(gd->fov / 2)
+	const float dist_to_full_screen = 1.0f;
+	const float angle = gd->player->view_angle_h - (float)(gd->fov / 2)
 				+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col));
+	// const float angle = gd->player->view_angle_h +
+	// 	rad_to_deg(atan2((float)col / gd->res.x - 0.5f, dist_to_full_screen));
+	// const float angle = rad_to_deg(deg_to_rad(gd->player->view_angle_h) -
+	// 	atan((gd->res.x / 2 - col) / dist_to_full_screen));
 	const t_fpoint dir = {
 		gd->player->position.x + cos(deg_to_rad(angle)),
 		gd->player->position.y + sin(deg_to_rad(angle))};
@@ -147,10 +152,12 @@ static t_collision cast_ray(t_game_data *gd, int col, float* dist)
 		}
 		tmp = tmp->next;
 	}
+	// if (record_col.collision.x >= 0.0f)
+	// 	my_pixel_put(g_mlx->img, record_col.collision.y * map_multi + 1, record_col.collision.x * map_multi + 1, 0x22FF22);
 	return (record_col);
 }
 
-void	draw_col(t_game_data *gd, t_collision collision,
+void	draw_col1(t_game_data *gd, t_collision collision,
 	float dist, int col)
 {
 	// add a shift from the top, wich will be contolled by the mouse
@@ -170,8 +177,8 @@ void	draw_col(t_game_data *gd, t_collision collision,
 		tx_end = (float)collision.wall->texture->height - tx_start;
 		px_height = gd->res.y;
 	}
-	const int px_start = 0 + (gd->res.y - px_height) / 2;
-	const int px_end = gd->res.y - px_start;
+	int px_start = 0 + (gd->res.y - px_height) / 2;
+	int px_end = gd->res.y - px_start;
 
 	// these const variables help to get ~2.75fps
 	// the formula is following:
@@ -189,27 +196,77 @@ void	draw_col(t_game_data *gd, t_collision collision,
 	// for a new pixel from the texture every time it drew a pixel to the screen
 	// which was significantly more often then it should. Now it calls for a
 	// new pixel only texture->width times.
-	int tx_change = -1;
-	int cur_tx_line = 0;
-	int last_px = px_start;
+	// int tx_change = -1;
+	// int cur_tx_line = 0;
+	// int last_px = px_start;
+
 
 	for (int i = px_start; i < px_end; i++)
 	{
-		cur_tx_line = (int)((float)(i * a) - a1);
-		if (cur_tx_line != tx_change)
-		{
-			my_pixel_put_range(g_mlx->img, col_to_px, last_px, i,
-				my_pixel_get(collision.wall->texture, x, cur_tx_line));
-			tx_change = cur_tx_line;
-			last_px = i;
-		}
+		// cur_tx_line = (int)((float)(i * a) - a1);
+		// if (cur_tx_line != tx_change)
+		// {
+		// 	my_pixel_put_range(g_mlx->img, col_to_px, last_px, i,
+		// 		my_pixel_get(collision.wall->texture, x, cur_tx_line));
+		// 	tx_change = cur_tx_line;
+		// 	last_px = i;
+		// }
 
 		// old way.
-		// my_pixel_put(g_mlx->img, col_to_px, i,
-		// 	my_pixel_get(collision.wall->texture, x, (int)((float)(i * a) - a1)));
+		my_pixel_put(g_mlx->img, col_to_px, i,
+			my_pixel_get(collision.wall->texture, x, (int)((float)(i * a) - a1)));
 	}
-	my_pixel_put_range(g_mlx->img, col_to_px, last_px, px_end,
-		my_pixel_get(collision.wall->texture, x, cur_tx_line));
+	// my_pixel_put_range(g_mlx->img, col_to_px, last_px, px_end,
+	// 	my_pixel_get(collision.wall->texture, x, cur_tx_line));
+}
+
+void	draw_col(t_game_data *gd, t_collision collision,
+	float dist, int col)
+{
+	const int vertical_shift = (gd->res.y)
+		* cos(deg_to_rad(gd->player->view_angle_v));
+	const float dist_to_full_screen = 1.0f;
+	const int col_to_px = gd->res.x - col - 1;
+	const int x = (float)collision.texture_shift
+		* (float)(collision.wall->texture->width);
+	const float v_fov = ((float)gd->fov * (float)(gd->res.y) / (float)(gd->res.x));
+	
+	dist *= cos(deg_to_rad((dabs(col - gd->res.x / 2) / gd->res.x) * gd->fov));
+	// printf("%d:%f\n", col, cos(deg_to_rad((dabs(col - gd->res.x / 2) / gd->res.x) * gd->fov)));
+
+	float px_height = (float)(gd->res.y) * (dist_to_full_screen / dist);
+	
+	// if (col == 0 || col == gd->res.x / 2)
+	// 	printf("%d : %f\n", col, cos(deg_to_rad((dabs(col - gd->res.x / 2) / gd->res.x) * v_fov)));
+	// px_height *= cos(deg_to_rad((dabs(col - gd->res.x / 2) / gd->res.x) * v_fov));
+	// px_height *= cos(deg_to_rad(v_fov / 2));
+	// printf("%d:%f\n", col, cos(deg_to_rad((dabs(col - gd->res.x / 2) / gd->res.x)
+	// 	* ((float)gd->fov * (float)(gd->res.y) / (float)(gd->res.x) / 2))));
+	
+	// const float tx_height = (float)(collision.wall->texture->height)
+	// 	* (dist_to_full_screen / dist);
+
+	int px_start = 0 + ((float)gd->res.y - px_height) / 2 + vertical_shift;
+	if (px_start < 0)
+		px_start = 0;
+	int px_end = gd->res.y - ((float)gd->res.y - px_height) / 2 + vertical_shift;
+	if (px_end > gd->res.y)
+		px_end = gd->res.y;
+
+	// int tx_start =
+	// 	0 + ((float)(collision.wall->texture->width) - tx_height) / 2;
+	// int tx_end = (float)(collision.wall->texture->width) - 
+	// 	((float)(collision.wall->texture->width) - tx_height) / 2;
+	// float tx_iter = tx_start;
+	// float tx_incre = (float)(tx_end - tx_start) / (float)(px_end - px_start);
+
+	for (int px = px_start; px < px_end; px++)
+	{	
+		// my_pixel_put(g_mlx->img, col_to_px, px,
+		// 	my_pixel_get(collision.wall->texture, x, tx_iter));
+		// tx_iter += tx_incre;
+		my_pixel_put(g_mlx->img, col_to_px, px, 0xAAAAAA);
+	}
 }
 
 void	draw_frame(t_game_data *gd)

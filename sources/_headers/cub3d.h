@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/14 17:08:14 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/15 01:42:18 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,11 +130,11 @@ void			write_line_to_map(char *cut_text, char **map);
 
 // Parsing head functions
 t_head_map		*init_head_map(t_game_data *g_d);
-int				parse_head_line(t_head_map **h_map, char **split_line);
+int				parseg_d_head_line(t_head_map **h_map, char **split_line);
 
 // Movement
 int				move_player(t_fpoint shift, t_game_data *g_d);
-int				rotate_player(float shift, t_game_data *g_d);
+int				rotate_player(float shift_h, float shift_v, t_game_data *g_d);
 
 // Focus change hooks
 void			focus_change_button(t_game_data *g_d);
@@ -153,5 +153,6 @@ void			draw_frame(t_game_data *gd);
 int				loop_hook(t_game_data *g_d);
 unsigned int	my_pixel_get(t_img *img, int x, int y);
 double			deg_to_rad(float a);
+double			rad_to_deg(float a);
 
 #endif

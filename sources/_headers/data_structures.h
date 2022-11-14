@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:33:29 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/14 16:41:53 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/14 21:40:27 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ typedef struct s_player_transform
 {
 	t_fpoint	size;
 	t_fpoint	position;
-	float		view_angle;
+	float		view_angle_h;
+	float		view_angle_v;
 }	t_transform;
 
 typedef struct s_wall
