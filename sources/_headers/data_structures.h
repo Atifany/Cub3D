@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:33:29 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/13 15:45:00 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/14 16:41:53 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,6 @@ typedef struct s_mlx_data
 	void	*mlx;
 	void	*win;
 	t_img	*img;
-	// t_img	*bg;
-	// t_img	*texture_north;
-	// t_img	*texture_west;
-	// t_img	*texture_east;
-	// t_img	*texture_south;
 	t_list	*textures;
 }	t_mlx_data;
 
@@ -84,13 +79,10 @@ typedef struct s_game_data
 	float		player_speed;
 	float		player_rot_speed;
 	t_list		*scene;
-	// char		**map;
 	t_transform	*player;
 	int			fov;
 	t_point		res;
 	t_list		*keys_pressed;
-	// int			floor;
-	// int			ceiling;
 	bool		is_focused;
 }	t_game_data;
 
