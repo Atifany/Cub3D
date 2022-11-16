@@ -114,22 +114,8 @@ t_collision run_block(t_game_data *gd, t_fpoint dir, t_wall* wall)
 	return (record_col);
 }
 
-static t_collision cast_ray(t_game_data *gd, int col, float* dist)
+static t_collision cast_ray(t_game_data *gd, float angle, float* dist)
 {
-	const float focal_length = 1.0f;
-
-	const float angle_progress = (float)(col) / (gd->res.x);
-	const float focal_plane_width = 2 * tan(deg_to_rad(gd->fov / 2)) * focal_length;
-	const float angle = gd->player->view_angle_h + rad_to_deg(atan(
-		(focal_plane_width * angle_progress - focal_plane_width / 2)
-		/ focal_length));
-	// if (abs(gd->res.x / 2 - col) < 3 || col < 5 || col > gd->res.x - 5)
-	// 	printf("[%d %f %f %f %f]\n", col, angle_progress, focal_plane_width, angle,
-	// 		(focal_plane_width * angle_progress - focal_plane_width / 2)
-	// 		/ focal_length);
-
-	// const float angle = gd->player->view_angle_h - (float)(gd->fov / 2)
-	// 			+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col));
 	const t_fpoint dir = {
 		gd->player->position.x + cos(deg_to_rad(angle)),
 		gd->player->position.y + sin(deg_to_rad(angle))};
@@ -163,7 +149,7 @@ static t_collision cast_ray(t_game_data *gd, int col, float* dist)
 }
 
 void	draw_col(t_game_data *gd, t_collision collision,
-	float dist, int col)
+	float dist, float angle, int col_to_draw)
 {
 	// shift to allow looking up and down.
 	const int px_vertical_shift = (gd->res.y)
@@ -171,27 +157,15 @@ void	draw_col(t_game_data *gd, t_collision collision,
 	const int tx_vertical_shift = (collision.wall->texture->height)
 		* cos(deg_to_rad(gd->player->view_angle_v));
 
-	// distance at which the wall will cover the whole screen height
-	const float focal_length = sin(deg_to_rad(gd->fov));
-
-	// mirrors the image correctly
-	const int col_to_px = gd->res.x - col - 1;
 	// texture colomn according to this pixel colomn
 	const int x = (float)collision.texture_shift
 		* (float)(collision.wall->texture->width);
 	
-	// angle of current ray
-	// TODO: add how I got this formulas for angle later!!!!
-	const float angle_progress = (float)(col) / (gd->res.x);
-	const float focal_plane_width = 2 * tan(deg_to_rad(gd->fov / 2)) * focal_length;
-	const float angle = rad_to_deg(atan(
-		(focal_plane_width * angle_progress - focal_plane_width / 2)
-		/ focal_length));
 	//fixes fisheye effect
 	dist *= cos(deg_to_rad(angle));
 
 	// shows how many pixels it would take to draw current vertical line.
-	const float px_height = (float)(gd->res.y) * (focal_length / dist);
+	const float px_height = (float)(gd->res.y) * (gd->focal_length / dist);
 	
 	// these are the boundaries of vertical line in pixels.
 	int px_start = 0 + ((float)gd->res.y - px_height) / 2 + px_vertical_shift;
@@ -221,7 +195,7 @@ void	draw_col(t_game_data *gd, t_collision collision,
 
 	for (int px = px_start; px < px_end; px++)
 	{	
-		my_pixel_put(g_mlx->img, col_to_px, px,
+		my_pixel_put(g_mlx->img, col_to_draw, px,
 			my_pixel_get(collision.wall->texture, x, tx_iter));
 		tx_iter += tx_incr;
 	}
@@ -233,6 +207,10 @@ void	draw_frame(t_game_data *gd)
 	t_collision	collision;
 	t_img		*texture;
 
+	// screen projection plane width
+	const float focal_plane_width =
+		2 * tan(deg_to_rad(gd->fov / 2)) * gd->focal_length;
+
 	// new frame init
 	g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->res.x, gd->res.y);
 	g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bpp,
@@ -241,11 +219,25 @@ void	draw_frame(t_game_data *gd)
 
 	for (int i = 0; i < gd->res.x; i++)
 	{
+		// angle of current ray
+		// This formula for an angle projects virtual screen to a real one.
+		// The virtual one has a circular form from -fov/2 to +fov/2, but
+		// the screen has rectangular form, so it is only logical to project
+		// this virtual circular screen to a real one, by casting rays
+		// according not to the angle of the ray, but its screen representation.
+		// tg(angle) = (focal_progress - (focal_plane_width / 2) / focal_length)
+		// where focal_progress = (col / res.x) * focal_plane_width
+		// and tg(fov/2) = (focal_plane_width / 2) / focal_length
+		const float angle_progress = (float)(i) / (gd->res.x);
+		const float angle = rad_to_deg(atan(
+			(focal_plane_width * angle_progress - focal_plane_width / 2)
+			/ gd->focal_length));
+
 		dist = INT_MAX;
-		collision = cast_ray(gd, i, &dist);
+		collision = cast_ray(gd, gd->player->view_angle_h + angle, &dist);
 		if (collision.collision.x < 0.0f) // no collision detected
 			continue ;
-		draw_col(gd, collision, dist, i);
+		draw_col(gd, collision, dist, angle, gd->res.x - i - 1);
 	}
 	draw_map(gd);
 }

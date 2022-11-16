@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:33:29 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/14 21:40:27 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/16 17:29:51 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_game_data
 	t_point		res;
 	t_list		*keys_pressed;
 	bool		is_focused;
+	float		focal_length;
 }	t_game_data;
 
 #endif
