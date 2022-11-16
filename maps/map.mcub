@@ -3,6 +3,7 @@ WTX1 ./textures/wall1.xpm
 WTX2 ./textures/wall2.xpm
 WTX3 ./textures/wall3.xpm
 WTX4 ./textures/wall4.xpm
+WTX5 ./textures/greystone.xpm
 
 MAP
 
@@ -11,7 +12,7 @@ Wall:1.0f:2.0f:1.0f:3.0f:WTX1
 Wall:1.0f:3.0f:1.0f:4.0f:WTX1
 
 Wall:1.0f:4.0f:2.0f:4.0f:WTX2
-#Wall:2.0f:4.0f:3.0f:4.0f:WTX2
+Wall:2.0f:4.0f:3.0f:4.0f:WTX5
 Wall:3.0f:4.0f:4.0f:4.0f:WTX2
 
 Wall:1.0f:1.0f:2.0f:1.0f:WTX3

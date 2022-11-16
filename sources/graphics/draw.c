@@ -117,8 +117,19 @@ t_collision run_block(t_game_data *gd, t_fpoint dir, t_wall* wall)
 static t_collision cast_ray(t_game_data *gd, int col, float* dist)
 {
 	const float focal_length = 1.0f;
-	const float angle = gd->player->view_angle_h - (float)(gd->fov / 2)
-				+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col));
+
+	const float angle_progress = (float)(col) / (gd->res.x);
+	const float focal_plane_width = 2 * tan(deg_to_rad(gd->fov / 2)) * focal_length;
+	const float angle = gd->player->view_angle_h + rad_to_deg(atan(
+		(focal_plane_width * angle_progress - focal_plane_width / 2)
+		/ focal_length));
+	// if (abs(gd->res.x / 2 - col) < 3 || col < 5 || col > gd->res.x - 5)
+	// 	printf("[%d %f %f %f %f]\n", col, angle_progress, focal_plane_width, angle,
+	// 		(focal_plane_width * angle_progress - focal_plane_width / 2)
+	// 		/ focal_length);
+
+	// const float angle = gd->player->view_angle_h - (float)(gd->fov / 2)
+	// 			+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col));
 	const t_fpoint dir = {
 		gd->player->position.x + cos(deg_to_rad(angle)),
 		gd->player->position.y + sin(deg_to_rad(angle))};
@@ -161,7 +172,7 @@ void	draw_col(t_game_data *gd, t_collision collision,
 		* cos(deg_to_rad(gd->player->view_angle_v));
 
 	// distance at which the wall will cover the whole screen height
-	const float focal_length = 1.0f;
+	const float focal_length = sin(deg_to_rad(gd->fov));
 
 	// mirrors the image correctly
 	const int col_to_px = gd->res.x - col - 1;
@@ -170,11 +181,14 @@ void	draw_col(t_game_data *gd, t_collision collision,
 		* (float)(collision.wall->texture->width);
 	
 	// angle of current ray
-	const float angle = deg_to_rad(gd->player->view_angle_h)
-		- deg_to_rad(gd->player->view_angle_h - (float)(gd->fov / 2)
-		+ (((float)(gd->fov) / (float)(gd->res.x)) * (float)(col)));
-	// partially fixes fisheye effect
-	dist *= (cos(angle));
+	// TODO: add how I got this formulas for angle later!!!!
+	const float angle_progress = (float)(col) / (gd->res.x);
+	const float focal_plane_width = 2 * tan(deg_to_rad(gd->fov / 2)) * focal_length;
+	const float angle = rad_to_deg(atan(
+		(focal_plane_width * angle_progress - focal_plane_width / 2)
+		/ focal_length));
+	//fixes fisheye effect
+	dist *= cos(deg_to_rad(angle));
 
 	// shows how many pixels it would take to draw current vertical line.
 	const float px_height = (float)(gd->res.y) * (focal_length / dist);
