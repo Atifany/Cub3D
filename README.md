@@ -42,6 +42,7 @@ In the game you can use a mouse to rotate the camera, WASD to move on the scene.
 
 - Currently segfaults if a player runs away from a screen.
 - After a program finish KeyAutoRepeat option on Linux bugs out and requires a manual switch to turn it back on.
+- Parser isn't tested well so it might behave unpredictably with incorrect maps.
 
 ## Notes
 
