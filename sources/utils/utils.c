@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 17:32:00 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/11 20:07:11 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/24 12:16:57 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,13 @@ void	error_die(t_game_data *g_d, int err_code, int exit_status)
 	error_texts[8] = "Cub3D: Esc key was presssed.\n";
 	error_texts[9] = "Cub3D: Exit button was pressed.\n";
 	error_texts[10] = "Cub3D: Error: Texture not found\n";
+	mlx_do_key_autorepeaton(g_mlx->mlx);
 	if (g_d)
 		destroy_g_d(g_d);
 	if (g_mlx)
+	{
 		mlx_destroy_window(g_mlx->mlx, g_mlx->win);
+	}
 	printf("%s", error_texts[err_code]);
 	exit(exit_status);
 }
