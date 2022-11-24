@@ -37,6 +37,8 @@ e.g.:
 ```
 
 In the game you can use a mouse to rotate the camera, WASD to move on the scene.
+Use Q key to let go the cursor.
+Esc will exit the program.
 
 ## Known issues
 
@@ -46,4 +48,5 @@ In the game you can use a mouse to rotate the camera, WASD to move on the scene.
 
 ## Notes
 
+I created this version to implement my own graphics algorythms. The original project is stored on branch apple in this repo.
 Because this project was built on top of another project some parts of its code are quite messy. I should probably clean it someday.
