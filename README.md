@@ -1,5 +1,7 @@
 # CUB3D
 
+![Alt Text](https://im5.ezgif.com/tmp/ezgif-5-bec91d83de.webp)
+
 School 21 C project aimed to learn the ray casting technology
 
 ## Description
