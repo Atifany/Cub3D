@@ -12,232 +12,89 @@
 
 #include "../_headers/cub3d.h"
 
-typedef struct s_collision
+static void	draw_line(int col, t_point collision,
+	t_game_data *gd, t_img *texture)
 {
-	t_wall		*wall;
-	t_fpoint	collision;
-	float		texture_shift;
-}	t_collision;
+	float			d;
+	int				ag[5];
+	unsigned int	t_pixel;
 
-int		map_multi = 10;
-
-float	distance_between_two_points(t_fpoint p1, t_fpoint p2)
-{
-	return (sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2)));
-}
-
-void	draw_line(t_fpoint p1, t_fpoint p2)
-{
-	t_fpoint	delta;
-	t_fpoint	sign;
-	t_fpoint	cur;
-	int		error[2];
-
-	delta.x = abs(p2.x - p1.x);
-	delta.y = abs(p2.y - p1.y);
-	sign.x = p1.x < p2.x ? 1 : -1;
-	sign.y = p1.y < p2.y ? 1 : -1;
-	error[0] = delta.x - delta.y;
-	cur = p1;
-	while (cur.x != p2.x || cur.y != p2.y)
+	ag[3] = (collision.x + collision.y) / 2 % 128;
+	ag[1] = 0;
+	d = distance(collision, (gd->player->position)) * 64 / MAP_RES;
+	if ((d < 256))
 	{
-		my_pixel_put(g_mlx->img, cur.y, cur.x, 0xFF0000);
-		if ((error[1] = error[0] * 2) > -delta.y)
+		ag[2] = (gd->res.y * 16) / d;
+		ag[0] = 0;
+		if (d >= 16)
+			ag[0] = (gd->res.y - ag[2]) >> 1;
+		else
+			ag[1] = (ag[2] - gd->res.y) >> 1;
+		while (ag[1] < ag[2] && ag[0] < gd->res.y)
 		{
-			error[0] -= delta.y;
-			cur.x += sign.x;
-		}
-		if (error[1] < delta.x)
-		{
-			error[0] += delta.x;
-			cur.y += sign.y;
+			ag[4] = ag[2] >> 8;
+			t_pixel = darker(my_pixel_get(texture, ag[3],
+						((ag[1] << 7) / ag[2]) % 128), d);
+			while (ag[4]-- >= 0 && ag[0] < gd->res.y && ag[1]++ + 1)
+				my_pixel_put(g_mlx->img, col, ag[0]++, t_pixel);
 		}
 	}
 }
 
 void	draw_map(t_game_data *gd)
 {
-	t_list* tmp = gd->scene;
+	int	i;
+	int	ag[4];
 
-	while (tmp != NULL)
+	i = 0;
+	my_pixel_put(g_mlx->img, gd->player->position.y / (MAP_RES / 8),
+		gd->player->position.x / (MAP_RES / 8), 0xFFFFFFFF);
+	while (gd->map[i])
 	{
-		draw_line(
-			(t_fpoint){
-				((t_wall *)(tmp->content))->v1.x * map_multi,
-				((t_wall *)(tmp->content))->v1.y * map_multi},
-			(t_fpoint){
-				((t_wall *)(tmp->content))->v2.x * map_multi,
-				((t_wall *)(tmp->content))->v2.y * map_multi});
-		tmp = tmp->next;
-	}
-	my_pixel_put(g_mlx->img, gd->player->position.y * map_multi,
-		gd->player->position.x * map_multi, 0xFFFFFFFF);
-}
-
-void is_intersect_segments(t_fpoint p1, t_fpoint p2, t_fpoint p3, t_fpoint p4,
-	t_collision *collision)
-{
-	const float d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
-	const float t = ((p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x)) / d;
-	const float u = ((p1.x - p3.x) * (p1.y - p2.y) - (p1.y - p3.y) * (p1.x - p2.x)) / d;
-	(*collision).texture_shift = u;
-	if (!(0 < u && u < 1 && t > 0))
-	{
-		(*collision).collision = (t_fpoint){-1.0f, -1.0f};
-		return ;
-	}
-	(*collision).collision = (t_fpoint){p3.x + u * (p4.x - p3.x), p3.y + u * (p4.y - p3.y)};
-}
-
-// this func is actually a rudimentary one, but can be usefull
-// for calculating collisions for a more complex figures then a line segment.
-t_collision run_block(t_game_data *gd, t_fpoint dir, t_wall* wall)
-{
-	t_collision collision;
-	float buf_dist = -1.0f;
-	float record_dist = INT_MAX;
-	t_collision record_col = {wall, (t_fpoint){-1.0f, -1.0f}, -1.0f};
-
-	is_intersect_segments(
-		gd->player->position,
-		(t_fpoint){dir.x, dir.y}, wall->v1, wall->v2, &collision);
-	if (collision.collision.x <= 0.0f)
-		return (record_col);
-	buf_dist = distance_between_two_points(
-		gd->player->position, collision.collision);
-	if (buf_dist < record_dist)
-	{
-		record_dist = buf_dist;
-		record_col.collision = collision.collision;
-		record_col.texture_shift = collision.texture_shift;
-	}
-	return (record_col);
-}
-
-static t_collision cast_ray(t_game_data *gd, float angle, float* dist)
-{
-	const t_fpoint dir = {
-		gd->player->position.x + cos(deg_to_rad(angle)),
-		gd->player->position.y + sin(deg_to_rad(angle))};
-	
-	t_collision collision;
-	float buf_dist = -1.0f;
-	t_collision record_col = {NULL, (t_fpoint){-1.0f, -1.0f}, -1.0f};
-
-	// runs through all the objects on the map
-	t_list* tmp = gd->scene;
-	while (tmp != NULL)
-	{
-		collision = run_block(gd, dir, (t_wall *)(tmp->content));
-		if (collision.collision.x < 0)
+		ag[4] = 0;
+		while (gd->map[i][ag[4]])
 		{
-			tmp = tmp->next;
-			continue;
+			if (gd->map[i][ag[4]] == '1')
+				my_pixel_put(g_mlx->img, ag[4] / (MAP_RES / 8),
+					i / (MAP_RES / 8), 0x00ff0000);
+			ag[4] += MAP_RES / 8;
 		}
-		buf_dist = distance_between_two_points(
-			gd->player->position, collision.collision);
-		if (buf_dist < *dist)
-		{
-			*dist = buf_dist;
-			record_col.collision = collision.collision;
-			record_col.texture_shift = collision.texture_shift;
-			record_col.wall = collision.wall;
-		}
-		tmp = tmp->next;
+		i += MAP_RES / 8;
 	}
-	return (record_col);
 }
 
-void	draw_col(t_game_data *gd, t_collision collision,
-	float dist, float angle, int col_to_draw)
+static t_img	*get_texture(t_point collision, t_game_data *gd)
 {
-	// shift to allow looking up and down.
-	const int px_vertical_shift = (gd->res.y)
-		* cos(deg_to_rad(gd->player->view_angle_v));
-	const int tx_vertical_shift = (collision.wall->texture->height)
-		* cos(deg_to_rad(gd->player->view_angle_v));
-
-	// texture colomn according to this pixel colomn
-	const int x = (float)collision.texture_shift
-		* (float)(collision.wall->texture->width);
-	
-	//fixes fisheye effect
-	dist *= cos(deg_to_rad(angle));
-
-	// shows how many pixels it would take to draw current vertical line.
-	const float px_height = (float)(gd->res.y) * (gd->focal_length / dist);
-	
-	// these are the boundaries of vertical line in pixels.
-	int px_start = 0 + ((float)gd->res.y - px_height) / 2 + px_vertical_shift;
-	int px_end = gd->res.y - ((float)gd->res.y - px_height) / 2 + px_vertical_shift;
-	// these are the boundaries in which the texture will be taken.
-	// by default the whole texture will be taken.
-	float tx_start = 0;
-	float tx_end = collision.wall->texture->height;
-	// if height of a line is greater then a screen height then the line height
-	// will be limited to a screen boundary and the texture offset
-	// will be calculated accoringly.
-	if (px_start < 0)
-	{
-		tx_start += ((0 - px_start) / px_height) * collision.wall->texture->height;
-		px_start = 0;
-	}
-	// set iterator to run through the texture along with pixels iteration.
-	// if the line goes beyond screen's bottom, iterator will stop when all screen pixels
-	// are visited, so there is no need to adjust texture iterator from below.
-	float tx_iter = tx_start;
-	float tx_incr = (float)(tx_end - tx_start) / (float)(px_end - px_start);
-	// limit the line height from below to a screen height.
-	if (px_end > gd->res.y)
-	{
-		px_end = gd->res.y;
-	}
-
-	for (int px = px_start; px < px_end; px++)
-	{	
-		my_pixel_put(g_mlx->img, col_to_draw, px,
-			my_pixel_get(collision.wall->texture, x, tx_iter));
-		tx_iter += tx_incr;
-	}
+	if (gd->map[collision.x][collision.y + 1] == '0')
+		return (g_mlx->texture_north);
+	else if (gd->map[collision.x + 1][collision.y] == '0')
+		return (g_mlx->texture_west);
+	else if (gd->map[collision.x][collision.y - 1] == '0')
+		return (g_mlx->texture_east);
+	else
+		return (g_mlx->texture_south);
 }
 
 void	draw_frame(t_game_data *gd)
 {
-	float		dist;
-	t_collision	collision;
-	t_img		*texture;
+	int		i;
+	t_point	collision;
+	t_img	*texture;
 
-	// screen projection plane width
-	const float focal_plane_width =
-		2 * tan(deg_to_rad(gd->fov / 2)) * gd->focal_length;
-
-	// new frame init
 	g_mlx->img->img = mlx_new_image(g_mlx->mlx, gd->res.x, gd->res.y);
 	g_mlx->img->addr = mlx_get_data_addr(g_mlx->img->img, &g_mlx->img->bpp,
 			&g_mlx->img->line_length, &g_mlx->img->endian);
-	g_mlx->img->bypp = g_mlx->img->bpp / 8;
-
-	for (int i = 0; i < gd->res.x; i++)
+	ft_memcpy(g_mlx->img->addr, g_mlx->bg->addr, gd->res.x
+		* gd->res.y * (g_mlx->img->bpp / 8));
+	i = -1;
+	while (++i < gd->res.x)
 	{
-		// angle of current ray
-		// This formula for an angle projects virtual screen to a real one.
-		// The virtual one has a circular form from -fov/2 to +fov/2, but
-		// the screen has rectangular form, so it is only logical to project
-		// this virtual circular screen to a real one, by casting rays
-		// according not to the angle of the ray, but its screen representation.
-		// tg(angle) = (focal_progress - (focal_plane_width / 2) / focal_length)
-		// where focal_progress = (col / res.x) * focal_plane_width
-		// and tg(fov/2) = (focal_plane_width / 2) / focal_length
-		const float angle_progress = (float)(i) / (gd->res.x);
-		const float angle = rad_to_deg(atan(
-			(focal_plane_width * angle_progress - focal_plane_width / 2)
-			/ gd->focal_length));
-
-		dist = INT_MAX;
-		collision = cast_ray(gd, gd->player->view_angle_h + angle, &dist);
-		if (collision.collision.x < 0.0f) // no collision detected
-			continue ;
-		draw_col(gd, collision, dist, angle, gd->res.x - i - 1);
+		collision = cast_ray(gd, gd->res.x - i);
+		if (collision.x >= 0)
+		{
+			texture = get_texture(collision, gd);
+			draw_line(i, collision, gd, texture);
+		}
 	}
 	draw_map(gd);
 }

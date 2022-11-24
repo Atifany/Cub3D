@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:39:23 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/15 01:42:18 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 22:37:10 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ extern t_mlx_data	*g_mlx;
 // Inits
 int				init_window(t_game_data *g_d);
 void			init_g_d_defaults(t_game_data *g_d);
-t_img			*init_textures(char *path, char* name);
+t_img			*init_textures(char *path);
 t_img			*create_background(t_game_data *g_d);
 
 // Hooks
@@ -102,11 +102,6 @@ void			*ft_realloc_charpp(void *ptr, size_t size, size_t oldsize);
 void			destroy_g_d(t_game_data *g_d);
 
 // Map processing
-// new:
-int				parse_textures(char** file_text);
-int				parse_map(t_game_data* g_d, char** file_text);
-int				charpp_length(char** arr);
-//
 int				parse_file(t_game_data *g_d, char *file_path);
 bool			is_valid_file(char *file_path);
 bool			is_valid_map(char **file_text);
@@ -130,11 +125,11 @@ void			write_line_to_map(char *cut_text, char **map);
 
 // Parsing head functions
 t_head_map		*init_head_map(t_game_data *g_d);
-int				parseg_d_head_line(t_head_map **h_map, char **split_line);
+int				parse_head_line(t_head_map **h_map, char **split_line);
 
 // Movement
 int				move_player(t_fpoint shift, t_game_data *g_d);
-int				rotate_player(float shift_h, float shift_v, t_game_data *g_d);
+int				rotate_player(float shift, t_game_data *g_d);
 
 // Focus change hooks
 void			focus_change_button(t_game_data *g_d);
@@ -145,14 +140,14 @@ int				focus_out(t_game_data *g_d);
 void			display_charpp(char **arr);
 
 // Graphics
-void			my_pixel_put_range(t_img *img, int x, int y1, int y2, unsigned int color);
-void			my_pixel_put(t_img *img, int x, int y, unsigned int color);
+float			distance(t_point p1, t_fpoint p2);
+void			my_pixel_put(t_img *img, int x, int y, int color);
 unsigned int	darker(int c, int d);
 void			draw_map(t_game_data *gd);
 void			draw_frame(t_game_data *gd);
 int				loop_hook(t_game_data *g_d);
 unsigned int	my_pixel_get(t_img *img, int x, int y);
 double			deg_to_rad(float a);
-double			rad_to_deg(float a);
+t_point			cast_ray(t_game_data *gd, int col);
 
 #endif

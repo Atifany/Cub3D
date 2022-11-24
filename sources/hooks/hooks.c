@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 21:57:01 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/12 12:19:39 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 23:15:13 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	update(t_game_data *g_d)
 {
 	static long long	lastframe = 0;
 
-	if (cur_time(lastframe) > 1)
+	if (cur_time(lastframe) > 30)
 	{
 		lastframe = cur_time(0);
 		list_active_keys(g_d);

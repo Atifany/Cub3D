@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 17:32:00 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/11 20:07:11 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 17:37:22 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	destroy_g_d(t_game_data *g_d)
 {
 	if (!g_d)
 		return ;
-	if (g_d->scene)
-		ft_lstclear(&(g_d->scene), free); // <- will need a special func
+	if (g_d->map)
+		free_array(g_d->map);
 	if (g_d->player)
 		free(g_d->player);
 	ft_lstclear(&(g_d->keys_pressed), free);
@@ -92,12 +92,12 @@ void	error_die(t_game_data *g_d, int err_code, int exit_status)
 	exit(exit_status);
 }
 
-void display_charpp(char** arr)
-{
-	int i = 0;
-	while (arr != NULL && arr[i] != NULL)
-	{
-		printf("%s\n", arr[i++]);
-		//sleep(500000);
-	}
-}
+// void display_charpp(char** arr)
+// {
+// 	int i = 0;
+// 	while (arr != NULL && arr[i] != NULL)
+// 	{
+// 		printf("%s\n", arr[i++]);
+// 		//sleep(500000);
+// 	}
+// }

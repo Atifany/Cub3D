@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 21:38:45 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/11 19:26:13 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 21:39:37 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,6 @@ int	input_start(int argc, char **argv)
 	parse_ret = parse_file(g_d, argv[1]);
 	if (parse_ret >= 0)
 		error_die(g_d, parse_ret, 1);
-	// g_mlx->bg = create_background(g_d);
+	g_mlx->bg = create_background(g_d);
 	return (body(g_d));
 }

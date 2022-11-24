@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 22:05:42 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/14 21:52:36 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 22:23:44 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	mouse_move(int x, int y, t_game_data *g_d)
 {
+	(void)y;
 	if (!g_d->is_focused)
 		return (0);
-	if (x != g_d->res.x / 2 || y != g_d->res.y / 2)
+	if (x != g_d->res.x / 2)
 	{
-		rotate_player(((g_d->res.x / 2) - x) * (g_d->player_rot_speed),
-			-1 * ((g_d->res.y / 2) - y) * (g_d->player_rot_speed), g_d);
+		rotate_player(((g_d->res.x / 2) - x) * (g_d->player_rot_speed), g_d);
 		set_new_mouse_pos(g_d->res.x / 2, g_d->res.y / 2);
 	}
 	return (0);

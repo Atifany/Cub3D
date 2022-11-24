@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 16:54:49 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/14 21:41:09 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 17:17:41 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	**read_file(char *file_path)
 	file_text = ft_calloc(1, sizeof(char *));
 	while (str)
 	{
-		if (ft_strcmp(str, "\n") != 0 && *str != '#')
+		if (ft_strcmp(str, "\n") != 0)
 		{
 			file_text = ft_realloc_charpp(file_text, (i + 1) * sizeof(char *),
 					i * sizeof(char *));
@@ -41,100 +41,90 @@ char	**read_file(char *file_path)
 	return (file_text);
 }
 
-int	parse_textures(char** file_text)
+static int	find_border(char **file_text)
 {
-	void*	texture;
-	char**	texture_line;
+	int		leftest_border;
+	int		i;
+	int		j;
 
-	int i = 0;
-	while (file_text[i] != NULL
-		&& ft_strcmp(file_text[i], "MAP") != 0)
+	leftest_border = INT_MAX;
+	j = 1;
+	i = -1;
+	while ((++i != -1) && file_text[i])
 	{
-		texture_line = ft_split(file_text[i], ' ');
-		if (charpp_length(texture_line) != 2)
-		{
-			free_array(texture_line);
-			return (ERR_INVALID_FILE_HEAD);
-		}
-		texture = init_textures(texture_line[1], texture_line[0]);
-		if (texture == NULL)
-		{
-			free_array(texture_line);
-			return (ERR_INVALID_TEXTURE_PATH);
-		}
-		ft_lstadd_back(&(g_mlx->textures),
-			ft_lstnew(texture));
-		free_array(texture_line);
-		i++;
+		if (*(file_text[i]) == 0)
+			continue ;
+		if (find_left_border(file_text[i]) < leftest_border)
+			leftest_border = find_left_border(file_text[i]);
+		j++;
 	}
-	return (SUCCESS);
+	return (leftest_border);
 }
 
-t_wall* init_wall(char** map_line)
+char	**cut_trailings(char **file_text)
 {
-	t_wall* wall = ft_calloc(1, sizeof(t_wall));
-	wall->v1 = (t_fpoint){ atof(map_line[1]), atof(map_line[2])};
-	wall->v2 = (t_fpoint){ atof(map_line[3]), atof(map_line[4])};
-	
-	t_list* tmp = g_mlx->textures;
-	while (tmp != NULL)
+	int		leftest_border;
+	int		i;
+	int		j;
+	char	**cut_text;
+
+	cut_text = ft_calloc(1, sizeof(char *));
+	leftest_border = find_border(file_text);
+	j = 1;
+	i = -1;
+	while ((++i != -1) && file_text[i])
 	{
-		if (ft_strcmp(((t_img *)(tmp->content))->name, map_line[5]) == 0)
-		{
-			wall->texture = (t_img *)(tmp->content);
-			break ;
-		}
-		tmp = tmp->next;
+		cut_text = ft_realloc_charpp(cut_text, (j + 1) * sizeof(char *),
+				j * sizeof(char *));
+		cut_text[j - 1] = ft_substr(file_text[i], leftest_border,
+				find_right_border(file_text[i]) - leftest_border + 1);
+		j++;
 	}
-	return (wall);
+	return (cut_text);
 }
 
-void	init_player(char** map_line, t_game_data* g_d)
+void	clean_spaces(t_game_data *g_d, char **cut_text)
 {
-	char* map = "SENW";
-	
-	g_d->player->position =
-		(t_fpoint){ atof(map_line[1]), atof(map_line[2])};
-	for (int i = 0; i < 4; i++)
-	{
-		if (map_line[3][0] == map[i])
-			break ;
-		g_d->player->view_angle_h += 90;
-	}
-}
+	int		i;
+	int		j;
 
-int parse_map(t_game_data* g_d, char** file_text)
-{
-	void*	wall;
-	char**	map_line;
-
-	int i = 0;
-	while (file_text[i] != NULL
-		&& ft_strcmp(file_text[i], "MAP") != 0) { i++; }
-	i++;
-	while (file_text[i] != NULL)
+	i = 0;
+	while (cut_text[i])
 	{
-		map_line = ft_split(file_text[i], ':');
-		if (charpp_length(map_line) == 6 &&
-			ft_strcmp(map_line[0], "Wall") == 0)
+		j = 0;
+		while (cut_text[i][j])
 		{
-			wall = init_wall(map_line);
-			ft_lstadd_back(&(g_d->scene),
-				ft_lstnew(wall));
-			free_array(map_line);
-		}
-		else if (charpp_length(map_line) == 4 &&
-			ft_strcmp(map_line[0], "Player") == 0)
-		{
-			init_player(map_line, g_d);
-		}
-		else
-		{
-			free_array(map_line);
-			return (ERR_INVALID_MAP);
+			if (ft_isspace(cut_text[i][j]))
+				cut_text[i][j] = '1';
+			else if (is_spawner(cut_text[i][j]))
+			{
+				parse_player(g_d, i, j, cut_text[i][j]);
+				cut_text[i][j] = '0';
+			}
+			j++;
 		}
 		i++;
 	}
+}
 
-	return (SUCCESS);
+char	**multiply_size(char **cut_text)
+{
+	int		i;
+	int		j;
+	char	**map;
+
+	map = (char **)ft_calloc(
+			count_items_charpp(cut_text) * MAP_RES + 1, sizeof(char *));
+	i = 0;
+	while (cut_text[i])
+	{
+		j = 0;
+		while (j < MAP_RES)
+		{
+			write_line_to_map(cut_text[i], &(map[i * MAP_RES + j]));
+			j++;
+		}
+		i++;
+	}
+	return (map);
 }

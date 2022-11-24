@@ -6,7 +6,7 @@
 /*   By: atifany <atifany@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:46:43 by atifany           #+#    #+#             */
-/*   Updated: 2022/11/11 19:24:51 by atifany          ###   ########.fr       */
+/*   Updated: 2022/11/02 14:47:09 by atifany          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 bool	is_valid_file(char *file_path)
 {
 	if (file_path == NULL || ft_strcmp(
-			&(file_path[ft_strlen(file_path) - ft_strlen(".mcub")]), ".mcub")
-		|| ft_strlen(file_path) == ft_strlen(".mcub"))
+			&(file_path[ft_strlen(file_path) - ft_strlen(".cub")]), ".cub")
+		|| ft_strlen(file_path) == ft_strlen(".cub"))
 		return (false);
 	return (true);
 }
